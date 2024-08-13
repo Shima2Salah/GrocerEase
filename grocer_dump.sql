@@ -227,20 +227,56 @@ INSERT INTO admins (admin_name, email, password_hash, admin_role_id, status) VAL
 
 -- Insert data into categories table
 INSERT INTO categories (category_name, created_by_admin_id, created_at, updated_at) VALUES
-('Fruits & Vegetables', 1, NOW(), NOW()),
-('Dairy Products', 1, NOW(), NOW()),
-('Beverages', 2, NOW(), NOW());
+('Bakery & Bread', 1, NOW(), NOW()),
+('Meat & Seafood', 2, NOW(), NOW()),
+('Frozen Foods', 1, NOW(), NOW()),
+('Snacks & Sweets', 1, NOW(), NOW()),
+('Beverages', 1, NOW(), NOW()),
+('Vegetables & Fruits', 2, NOW(), NOW());
+
 
 -- Insert data into suppliers table
 INSERT INTO suppliers (supplier_name, contact_number, address, created_by_admin_id, company_name, email, notes, created_at, updated_at) VALUES
 ('Fresh Farms', '123-456-7890', '123 Farm Lane', 1, 'Fresh Farms Co.', 'contact@freshfarms.com', 'Premium quality produce supplier', NOW(), NOW()),
-('Dairy Best', '234-567-8901', '456 Dairy Road', 2, 'Dairy Best Ltd.', 'contact@dairybest.com', 'Leading dairy products supplier', NOW(), NOW());
+('Dairy Best', '234-567-8901', '456 Dairy Road', 2, 'Dairy Best Ltd.', 'contact@dairybest.com', 'Leading dairy products supplier', NOW(), NOW()),
+('Frozen Delight', '345-678-9012', '789 Frozen Blvd', 1, 'Frozen Delight Inc.', 'contact@frozendelight.com', 'Frozen foods supplier', NOW(), NOW()),
+('Sweet Snacks', '456-789-0123', '101 Sweet St', 2, 'Sweet Snacks Ltd.', 'contact@sweetsnacks.com', 'Snacks & sweets supplier', NOW(), NOW()),
+('Beverage World', '567-890-1234', '202 Beverage Ave', 2, 'Beverage World Co.', 'contact@beverageworld.com', 'Beverages supplier', NOW(), NOW()),
+('Green Harvest', '678-901-2345', '303 Green Way', 2, 'Green Harvest LLC', 'contact@greenharvest.com', 'Vegetables & fruits supplier', NOW(), NOW());
+
 
 -- Insert data into products table
 INSERT INTO products (product_name, unit_price, description, image_url, supplier_id, created_by_admin_id, discount_id, stock_weight, weight, category_id, created_at, updated_at) VALUES
-('Apple', 1.99, 'Fresh red apples', 'apple.jpg', 1, 1, 1, 100.00, 1.00, 1, NOW(), NOW()),
-('Milk', 0.99, '1L of fresh milk', 'milk.jpg', 2, 2, NULL, 500.00, 1.00, 2, NOW(), NOW()),
-('Orange Juice', 2.50, '1L of pure orange juice', 'orange_juice.jpg', 1, 2, 2, 200.00, 1.00, 3, NOW(), NOW());
+('Whole Wheat Bread', 2.99, 'Freshly baked whole wheat bread', 'whole_wheat_bread.jpg', 1, 1, NULL, 50.00, 1.00, 1, NOW(), NOW()),
+('Croissants', 4.99, 'Flaky buttery croissants', 'croissants.jpg', 1, 1, NULL, 30.00, 0.50, 1, NOW(), NOW()),
+('Bagels', 3.49, 'Assorted bagels', 'bagels.jpg', 1, 1, NULL, 40.00, 1.00, 1, NOW(), NOW()),
+('Chicken Breast', 6.99, 'Boneless skinless chicken breast', 'chicken_breast.jpg', 2, 2, NULL, 100.00, 2.00, 2, NOW(), NOW()),
+('Salmon Fillets', 12.99, 'Fresh Atlantic salmon fillets', 'salmon_fillets.jpg', 2, 2, NULL, 50.00, 1.00, 2, NOW(), NOW()),
+('Ground Beef', 8.49, 'Lean ground beef', 'ground_beef.jpg', 2, 2, NULL, 80.00, 2.00, 2, NOW(), NOW()),
+('Frozen Pizza', 7.99, 'Pepperoni frozen pizza', 'frozen_pizza.jpg', 3, 1, NULL, 60.00, 1.50, 3, NOW(), NOW()),
+('Ice Cream', 4.49, 'Vanilla ice cream', 'ice_cream.jpg', 3, 1, NULL, 40.00, 1.00, 3, NOW(), NOW()),
+('Frozen Vegetables', 3.99, 'Mixed frozen vegetables', 'frozen_vegetables.jpg', 3, 1, NULL, 100.00, 2.00, 3, NOW(), NOW()),
+('Chocolate Bar', 1.99, 'Dark chocolate bar', 'chocolate_bar.jpg', 4, 3, NULL, 200.00, 0.10, 4, NOW(), NOW()),
+('Potato Chips', 2.49, 'Salted potato chips', 'potato_chips.jpg', 4, 3, NULL, 150.00, 0.20, 4, NOW(), NOW()),
+('Gummy Bears', 3.29, 'Fruit-flavored gummy bears', 'gummy_bears.jpg', 4, 3, NULL, 120.00, 0.25, 4, NOW(), NOW()),
+('Orange Juice', 4.99, 'Freshly squeezed orange juice', 'orange_juice.jpg', 5, 1, NULL, 60.00, 2.00, 5, NOW(), NOW()),
+('Cola', 1.29, 'Carbonated cola drink', 'cola.jpg', 5, 1, NULL, 100.00, 0.50, 5, NOW(), NOW()),
+('Bottled Water', 0.99, 'Spring bottled water', 'bottled_water.jpg', 5, 1, NULL, 500.00, 1.00, 5, NOW(), NOW()),
+('Lettuce', 1.79, 'Fresh iceberg lettuce', 'lettuce.jpg', 6, 2, NULL, 80.00, 1.00, 6, NOW(), NOW()),
+('Tomatoes', 2.49, 'Juicy red tomatoes', 'tomatoes.jpg', 6, 2, NULL, 120.00, 1.50, 6, NOW(), NOW()),
+('Bananas', 1.29, 'Bunch of ripe bananas', 'bananas.jpg', 6, 2, NULL, 200.00, 2.00, 6, NOW(), NOW()),
+('Broccoli', 2.49, 'Fresh organic broccoli', 'broccoli.jpg', 6, 2, NULL, 100.00, 1.00,6, NOW(), NOW()),
+('Carrots', 1.99, 'Bag of fresh carrots', 'carrots.jpg', 6, 2, NULL, 200.00, 1.00, 6, NOW(), NOW()),
+('Spinach', 3.49, 'Fresh organic spinach leaves', 'spinach.jpg', 6, 2, NULL, 150.00, 0.75, 6, NOW(), NOW()),
+('Cucumbers', 1.99, 'Bag of fresh cucumber', 'cucumbers.jpg', 6, 2, NULL, 300.00, 0.50, 6, NOW(), NOW()),
+('Bell Peppers', 3.99, 'Mixed color bell peppers', 'bell_peppers.jpg', 6, 2, NULL, 120.00, 0.50, 6, NOW(), NOW()),
+('Potatoes', 2.79, 'Bag of fresh potatoes', 'potatoes.jpg', 6, 2, NULL, 300.00, 2.00, 6, NOW(), NOW()),
+('Apples', 4.99, 'Bag of fresh apples', 'apples.jpg', 6, 2, NULL, 100.00, 1.50, 6, NOW(), NOW()),
+('Oranges', 3.49, 'Fresh juicy oranges', 'oranges.jpg', 6, 2, NULL, 200.00, 2.00, 6, NOW(), NOW()),
+('Strawberries', 5.99, 'Box of fresh strawberries', 'strawberries.jpg', 6, 2, NULL, 100.00, 0.50, 6, NOW(), NOW()),
+('Blueberries', 4.99, 'Box of fresh blueberries', 'blueberries.jpg', 6, 2, NULL, 80.00, 0.50, 6, NOW(), NOW()),
+('Grapes', 3.99, 'Bag of seedless grapes', 'grapes.jpg', 6, 2, NULL, 120.00, 1.00, 6, NOW(), NOW());
+
 
 -- Insert data into users table
 INSERT INTO users (first_name, last_name, email, contact_number, country, company_name, address, state_or_country, postal_or_zip, order_notes, password_hash, created_at, updated_at, is_create_account) VALUES
