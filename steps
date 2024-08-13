@@ -21,6 +21,7 @@ $ python3
 >>> import MySQLdb
 >>> MySQLdb.version_info 
 (2, 0, 3, 'final', 0)
+>>> exit()
 Install SQLAlchemy module version 1.4.x
 $ sudo pip3 install SQLAlchemy
 ...
@@ -28,12 +29,14 @@ $ python3
 >>> import sqlalchemy
 >>> sqlalchemy.__version__ 
 '1.4.22'
+>>> exit()
 pip install Flask-SQLAlchemy
 pip install python-dotenv
 pip install -U Flask-SQLAlchemy
 pip install PyMySQL
 sudo service mysql status
 sudo service mysql restart
+______________________________________________________
 cat ecomm_dump.sql | mysql -uroot -p
 sudo mysql
 >>> select * from ecommerce.users;
@@ -110,15 +113,17 @@ pip install -U Flask-SQLAlchemy
 pip install PyMySQL
 sudo service mysql status
 sudo service mysql restart
-cat ecomm_dump.sql | mysql -uroot -p
+cat grocer_dump.sql | mysql -uroot -p
 sudo mysql
->>> select * from ecommerce.users;
->>> select * from ecommerce.products;
+use grocerease;
+show tables;
+>>> select * from grocerease.users;
+>>> select * from grocerease.products;
 >>> exit
 
 cat setup_ECommerce.sql | mysql -hlocalhost -uroot -p
 
-ECOMM_MYSQL_USER=ecomm_dev ECOMM_MYSQL_PWD=ecomm_dev_pwd ECOMM_MYSQL_HOST=localhost ECOMM_MYSQL_DB=ecommerce ECOMM_TYPE_STORAGE=db python3 -m web_dynamic.app
+GROCER_MYSQL_USER=grocer_dev GROCER_MYSQL_PWD=grocer_dev_pwd GROCER_MYSQL_HOST=localhost GROCER_MYSQL_DB=grocerease GROCER_TYPE_STORAGE=db python3 -m web_dynamic.app
 python3 app.py
 python3 -m http.server
 sudo lsof -i :5000
