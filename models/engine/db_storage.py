@@ -4,42 +4,58 @@ Contains the class DBStorage
 """
 
 import models
+from models.admin import Admin
+from models.admin_role import AdminRole
 from models.base_model import BaseModel, Base
 from models.category import Category
-from models.color import Color
+from models.delivery import Delivery
+from models.discount import Discount
 from models.order import Order
-from models.orderItem import OrderItem
+from models.order_item import OrderItem
+from models.order_status import OrderStatus
+from models.payment import Payment
 from models.product import Product
-from models.size import Size
 from models.user import User
+from models.supplier import Supplier
 from os import getenv
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-classes = {"BaseModel": BaseModel, "Product": Product, "User": User,
-           "Color": Color, "Size": Size, "Order": Order,
-           "OrderItem": OrderItem, "Category": Category}
-
+classes = {
+    "BaseModel": BaseModel,
+    "Product": Product,
+    "User": User,
+    "Order": Order,
+    "OrderItem": OrderItem,
+    "Category": Category,
+    "Supplier": Supplier,
+    "Admin": Admin,
+    "AdminRole": AdminRole,
+    "Discount": Discount,
+    "Delivery": Delivery,
+    "OrderStatus": OrderStatus,
+    "Payment": Payment
+}
 
 class DBStorage:
-    """interaacts with the MySQL database"""
+    """interacts with the MySQL database"""
     __engine = None
     __session = None
 
     def __init__(self):
         """Instantiate a DBStorage object"""
-        ECOMM_MYSQL_USER = getenv('ECOMM_MYSQL_USER')
-        ECOMM_MYSQL_PWD = getenv('ECOMM_MYSQL_PWD')
-        ECOMM_MYSQL_HOST = getenv('ECOMM_MYSQL_HOST')
-        ECOMM_MYSQL_DB = getenv('ECOMM_MYSQL_DB')
-        ECOMM_ENV = getenv('ECOMM_ENV')
+        GROCER_MYSQL_USER = getenv('GROCER_MYSQL_USER')
+        GROCER_MYSQL_PWD = getenv('GROCER_MYSQL_PWD')
+        GROCER_MYSQL_HOST = getenv('GROCER_MYSQL_HOST')
+        GROCER_MYSQL_DB = getenv('GROCER_MYSQL_DB')
+        GROCER_ENV = getenv('GROCER_ENV')
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
-                                      format(ECOMM_MYSQL_USER,
-                                             ECOMM_MYSQL_PWD,
-                                             ECOMM_MYSQL_HOST,
-                                             ECOMM_MYSQL_DB))
-        if ECOMM_ENV == "test":
+                                      format(GROCER_MYSQL_USER,
+                                             GROCER_MYSQL_PWD,
+                                             GROCER_MYSQL_HOST,
+                                             GROCER_MYSQL_DB))
+        if GROCER_ENV == "test":
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
@@ -51,7 +67,7 @@ class DBStorage:
                 for obj in objs:
                     key = obj.__class__.__name__ + '.' + str(obj.id)
                     new_dict[key] = obj
-        return (new_dict)
+        return new_dict
 
     def new(self, obj):
         """add the object to the current database session"""

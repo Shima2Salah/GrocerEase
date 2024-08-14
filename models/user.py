@@ -5,41 +5,46 @@ import models
 from models.base_model import BaseModel, Base
 from os import getenv
 import sqlalchemy
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, Integer, DateTime
 from sqlalchemy.orm import relationship
 from hashlib import md5
+from datetime import datetime
 
 
 class User(BaseModel, Base):
     """Representation of a user """
     if models.storage_t == 'db':
         __tablename__ = 'users'
-        first_name = Column(String(100), nullable=False)
-        last_name = Column(String(100), nullable=False)
-        contact_number = Column(String(100), nullable=False)
+        first_name = Column(String(255), nullable=False)
+        last_name = Column(String(255), nullable=False)
         email = Column(String(100), nullable=False)
-        password = Column(String(100), nullable=True)
+        contact_number = Column(String(50), nullable=False)
         country = Column(String(100), nullable=False)
         company_name = Column(String(100), nullable=False)
         address = Column(String(100), nullable=False)
         state_or_country = Column(String(100), nullable=False)
         postal_or_zip = Column(String(100), nullable=False)
         order_notes = Column(String(255))
+        password_hash = Column(String(100), nullable=True)
+        is_create_account = Column(Integer)
         Orders = relationship("Order",
                               backref="users",
                               cascade="all, delete, delete-orphan")
     else:
         first_name = ""
         last_name = ""
-        contact_number = ""
         email = ""
-        password = ""
+        contact_number = ""
         country = ""
         company_name = ""
         address = ""
         state_or_country = ""
         postal_or_zip = ""
         order_notes = ""
+        password_hash = ""
+        created_at = None
+        updated_at = None
+        is_create_account = None
 
     def __init__(self, *args, **kwargs):
         """initializes user"""

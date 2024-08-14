@@ -5,20 +5,36 @@ Contains the FileStorage class
 
 import json
 import models
-from models.base_model import BaseModel
+from models.admin import Admin
+from models.admin_role import AdminRole
+from models.base_model import BaseModel, Base
 from models.category import Category
-from models.color import Color
+from models.delivery import Delivery
+from models.discount import Discount
 from models.order import Order
-from models.orderItem import OrderItem
+from models.order_item import OrderItem
+from models.order_status import OrderStatus
+from models.payment import Payment
 from models.product import Product
-from models.size import Size
 from models.user import User
+from models.supplier import Supplier
 from hashlib import md5
 
-classes = {"BaseModel": BaseModel, "Product": Product, "User": User,
-           "Color": Color, "Size": Size, "Order": Order,
-           "OrderItem": OrderItem, "Category": Category}
-
+classes = {
+    "BaseModel": BaseModel,
+    "Product": Product,
+    "User": User,
+    "Order": Order,
+    "OrderItem": OrderItem,
+    "Category": Category,
+    "Supplier": Supplier,
+    "Admin": Admin,
+    "AdminRole": AdminRole,
+    "Discount": Discount,
+    "Delivery": Delivery,
+    "OrderStatus": OrderStatus,
+    "Payment": Payment
+}
 
 class FileStorage:
     """serializes instances to a JSON file & deserializes back to instances"""

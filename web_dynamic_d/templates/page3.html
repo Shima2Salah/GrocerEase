@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/styles/style3.css">
+    <script src="https://kit.fontawesome.com/4fbcb9a71e.js" crossorigin="anonymous"></script>
+    <title>E-commerce</title>
+</head>
+<body>
+    <header>
+        <div class="headup">
+            <div class="logo">
+                <img src="../static/images/images.png" alt="" />
+            </div>
+            <nav class="navbar">
+                <ul id="lists">
+                    <li class="dropdown">
+                        <a href="index.html" class="dropbtn">Home <i class="fa-solid fa-caret-down"></i></a>
+                        <div class="dropdown-content">
+                          <a href="#">Link 1</a>
+                          <a href="#">Link 2</a>
+                          <a href="#">Link 3</a>
+                        </div>
+                      </li>
+                    <li class="dropdown">
+                        <a href="about.html" class="dropbtn">About <i class="fa-solid fa-caret-down"></i></a>
+                        <div class="dropdown-content">
+                          <a href="#">Link 1</a>
+                          <a href="#">Link 2</a>
+                          <a href="#">Link 3</a>
+                        </div>
+                      </li>
+    
+                    <li><a href="page3.html">Shop</a></li>
+                    <li><a href="#">Catalogue</a></li>
+                    <li><a href="#">New Arrivals</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <a href="#" id="close"><i class="fa-solid fa-x"></i></a>
+    
+                  </ul>
+            </nav>
+            <!-- <div class="search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" name="search" id="search-box" placeholder="search">
+            </div> -->
+            <!-- <div class="myname">
+                <span>
+                    Mohamed Hamdy
+                </span>
+            </div> -->
+            <div class="icons">
+               <a href=""><i class="fa-solid fa-user"></i></a> 
+               <a href=""><i class="fa-regular fa-heart"></i></a> 
+               <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a> 
+               <div class="mobile">
+                   <i id="bar" class="fas fa-outdent"></i>
+               </div>
+            </div>
+        </div>
+
+    </header>
+    <div class="bread">
+        <ul class="breadcrumb">
+            <li><a href="index.html">Home</a></li>
+            <li class="sec-li"><a>Shop</a></li>
+          </ul>
+    </div>
+    <div class="container">
+        <aside>
+        <div class="aside-container">
+            <div class="aside-up">
+                <ul>
+                    <li class="aside-cat"><h3>Categories</h3></li>
+                    {% for category in sorted_categories %}
+                        <li class="aside-list"><a href="">{{ category.name }}</a> <span>(2,220)</span></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="aside-down">
+                <div class="content">
+                    <h3>Filter By Price</h3>
+                    <input type="range" name="range" id="range">
+                    <p>$50-$300</p>
+                </div>
+                <div class="content">
+                    <h3>Size</h3>
+                    {% for size in sorted_sizes %}
+                        <div>
+                            <input type="checkbox" name="" id=""> <span>{{ size.size_name }} (2,319)</span>
+                        </div>
+                    {% endfor %}
+
+                </div>
+                <div class="content">
+                    <h3>Color</h3>
+                    {% for color in sorted_colors %}
+                    <div>
+                        <i class="fa-solid fa-circle {{ color.color_name.lower() }}"></i>
+                        <span>
+                            {{ color.color_name.capitalize() }} (50)
+                        </span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        </aside>
+        <section>
+            <div class="upper-text">
+                <div>
+                    <h2>
+                        Shop All
+                    </h2>
+                </div>
+                <div class="right-btn">
+                    <div class="dropdown">
+                        <button>Latest <i class="fa-solid fa-caret-down"></i></button>
+                        <div class="dropdown-content">
+                            <a href="#">Men</a>
+                            <a href="#">Women</a>
+                            <a href="#">Children</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button> Referance <i class="fa-solid fa-caret-down"></i></button>
+                        <div class="dropdown-content">
+                            <a href="#">Relevance</a>
+                            <a href="#">Name,A to Z</a>
+                            <a href="#">Name,Z to A</a>
+                            <hr>
+                            <a href="#">Price,low to High</a>
+                            <a href="#">Price,High to low</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item-lists">
+                {% for i in range(0, sorted_products|length, 3) %}
+                <section class="third-middle">
+                    <div class="three-divs">
+                        {% for product in sorted_products[i:i+3] %}
+                        <div class="shirt">
+                            <div>
+                                <a href="{{ url_for('single', product_id=product.id) }}"><img src="../static/images/{{ product.image_url }}" alt=""></a>
+                            </div>
+                            <div class="shirt-text">
+                                <span class="up">{{ product.product_name }}</span>
+                                <span>{{ product.description }}</span>
+                                <span class="money">{{ product.price }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+                {% endfor %}
+                <div class="circle">
+                    <ul>
+                        <li><a href="#">&lt;</a></li>
+                        <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <!-- <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li> -->
+                        <li><a href="#">&gt;</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+    <section class="last-middle">
+        <div class="category">
+            <hr>
+            <h1>Categories</h1>
+        </div>
+        <section class="sec-middle">
+            <div class="one">
+                <!-- <div class="photo">
+                    <img src="images/women.jpg" alt="">
+                </div> -->
+                <span class="collection">
+                    collections
+                </span>
+                <span class="defined">
+                    women
+                </span>
+    
+                </div>
+            </div>
+            <div class="two">
+                <!-- <div class="photo">
+                    <img src="images/children.jpg" alt="">
+                </div> -->
+                <span class="collection">
+                    collections
+                </span>
+                <span class="defined">
+                    children
+                </span>
+    
+                </div>
+            </div>
+            <div class="three">
+                <!-- <div class="photo">
+                    <img src="images/men.jpg" alt="">
+                </div> -->
+                <span class="collection">
+                    collections
+                </span>
+                <span class="defined">
+                    men
+                </span>
+    
+                </div>
+            </div>
+        </section>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <footer class="footer">
+        
+        <div class="foot-one">
+            
+                <ul>
+                    <li><h3>Navigation</h3></li>
+                    <li>Sell online</li>
+                    <li> Features</li>
+                    <li> shopping cart</li>
+                    <li>Store builder</li>
+                </ul>
+            
+        </div>
+
+        <div class="foot-two">
+            
+                <ul>
+                    <li> Features</li>
+                    <li> shopping cart</li>
+                    <li>Store builder</li>
+                </ul>
+            
+        </div>
+
+        <div class="foot-two">
+            
+                <ul>
+                    <li> Features</li>
+                    <li> shopping cart</li>
+                    <li>Store builder</li>
+                </ul>
+            
+        </div>
+
+        <div class="foot-four">
+            <ul>
+                <li class="head-line">
+                    <h3>
+                        promo
+                    </h3>
+                </li>
+                <li><img src="../static/images/hero_1.jpg" alt=""></li>
+                <li>
+                    <a class="link" href="#">
+                    Finding your perfect shoes
+                    </a>
+                </li>
+                <li class="grey-2" >
+                    promo from january 15-25,2023
+                </li>
+            </ul>
+        </div>
+        <div class="foot-five">
+            <ul>
+                <li class="head-line">
+                    <h3>
+                        contact info
+
+                    </h3>
+                </li>
+                <li>
+                    <i class="fa-solid fa-location-dot"></i>Alexandria,Egypt
+                </li>
+                <li>
+                    <i class="fa-solid fa-phone"></i>
+                    01151316110
+                </li>
+                <li>
+                    <i class="fa-solid fa-envelope"></i>
+                    Mohamedhamdy994@gmail.com<br>
+                    <i class="fa-solid fa-envelope"></i>
+                    Shimaasalah91.13@gmail.com<br>
+                    <i class="fa-solid fa-envelope"></i>
+                    eng.ahmedads@gmail.com
+                </li>
+                <li>Subscribe</li>
+                <li><input type="email" name="" id="input" placeholder="Email"><button class="button-foot">send</button></li>
+    
+            </ul>
+            
+    
+        
+    </div>
+</footer>
+<script src="../static/scripts/script.js"></script>
+<!-- <div class="copyright">
+    <p>
+        Copyright &copy;2023 All rights reserved | This template is made with <i class="fa-solid fa-heart"></i> by <span>Mohamed Hamdy</span> 
+    </p> -->
+</div>
+</body>
+</html>

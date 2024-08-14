@@ -5,7 +5,7 @@ DROP DATABASE IF EXISTS grocerease;
 CREATE DATABASE IF NOT EXISTS grocerease;
 CREATE USER IF NOT EXISTS 'grocer_dev'@'localhost';
 SET PASSWORD FOR 'grocer_dev'@'localhost' = 'grocer_dev_pwd';
-GRANT ALL ON ecommerce.* TO 'grocer_dev'@'localhost';
+GRANT ALL ON grocerease.* TO 'grocer_dev'@'localhost';
 GRANT SELECT ON performance_schema.* TO 'grocer_dev'@'localhost';
 FLUSH PRIVILEGES;
 
@@ -14,14 +14,14 @@ USE grocerease;
 
 DROP TABLE IF EXISTS `admin_roles`;
 CREATE TABLE `admin_roles` (
-    `admin_role_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
     `admin_role_name` VARCHAR(100) NOT NULL,
     `admin_role_description` VARCHAR(255)
 );
 
 DROP TABLE IF EXISTS `discounts`;
 CREATE TABLE `discounts` (
-    `discount_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
     `discount_percentage` DECIMAL(10, 2) NOT NULL,
     `start_date` DATETIME NOT NULL,
     `end_date` DATETIME NOT NULL
@@ -29,7 +29,7 @@ CREATE TABLE `discounts` (
 
 DROP TABLE IF EXISTS `coupons`;
 CREATE TABLE `coupons` (
-    `coupon_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
     `coupon_code` VARCHAR(100) UNIQUE NOT NULL,
     `amount` DECIMAL(10, 2) NOT NULL,
     `start_date` DATETIME NOT NULL,
@@ -38,19 +38,19 @@ CREATE TABLE `coupons` (
 
 DROP TABLE IF EXISTS `payments`;
 CREATE TABLE `payments` (
-    `payment_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
     `payment_method` VARCHAR(100) NOT NULL
 );
 
 DROP TABLE IF EXISTS `orders_statuses`;
 CREATE TABLE `orders_statuses` (
-    `status_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
     `status_name` VARCHAR(100) NOT NULL
 );
 
 DROP TABLE IF EXISTS `deliveries`;
 CREATE TABLE `deliveries` (
-    `delivery_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
     `delivery_name` VARCHAR(100) NOT NULL,
     `contact_number` VARCHAR(50) NOT NULL,
     `address` VARCHAR(100) NOT NULL,
@@ -59,31 +59,31 @@ CREATE TABLE `deliveries` (
 
 DROP TABLE IF EXISTS `admins`;
 CREATE TABLE `admins` (
-    `admin_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
     `admin_name` VARCHAR(100) NOT NULL,
     `email` VARCHAR(100) UNIQUE NOT NULL,
     `password_hash` VARCHAR(100) NOT NULL,
     `admin_role_id` INT NOT NULL,
     `status` INT,
     KEY `admin_role_id` (`admin_role_id`),    
-    CONSTRAINT `fk_admins_admin_role_id` FOREIGN KEY (`admin_role_id`) REFERENCES `admin_roles` (`admin_role_id`)
+    CONSTRAINT `fk_admins_admin_role_id` FOREIGN KEY (`admin_role_id`) REFERENCES admin_roles(`id`)
 );
 
 
 DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories` (
-    `category_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
     `category_name` VARCHAR(255) UNIQUE NOT NULL,
     `created_by_admin_id` INT NOT NULL,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     KEY `created_by_admin_id` (`created_by_admin_id`),
-    CONSTRAINT `fk_categories_created_by_admin_id` FOREIGN KEY (`created_by_admin_id`) REFERENCES `admins` (`admin_id`)
+    CONSTRAINT `fk_categories_created_by_admin_id` FOREIGN KEY (`created_by_admin_id`) REFERENCES admins(`id`)
 );
 
 DROP TABLE IF EXISTS `suppliers`;
 CREATE TABLE `suppliers` (
-    `supplier_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
     `supplier_name` VARCHAR(255) NOT NULL,
     `contact_number` VARCHAR(50) NOT NULL,
     `address` VARCHAR(100) NOT NULL,
@@ -94,11 +94,11 @@ CREATE TABLE `suppliers` (
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     KEY `created_by_admin_id` (`created_by_admin_id`),
-    CONSTRAINT `fk_suppliers_created_by_admin_id` FOREIGN KEY (`created_by_admin_id`) REFERENCES `admins` (`admin_id`)
+    CONSTRAINT `fk_suppliers_created_by_admin_id` FOREIGN KEY (`created_by_admin_id`) REFERENCES admins(`id`)
 );
 DROP TABLE IF EXISTS `products`;
 CREATE TABLE `products` (
-    `product_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
     `product_name` VARCHAR(255) NOT NULL,
     `unit_price` DECIMAL(10, 2),
     `image_url` VARCHAR(255),
@@ -115,15 +115,15 @@ CREATE TABLE `products` (
     KEY `supplier_id` (`supplier_id`),
     KEY `created_by_admin_id` (`created_by_admin_id`),
     KEY `discount_id` (`discount_id`),
-    CONSTRAINT `fk_products_category_id` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`),
-    CONSTRAINT `fk_products_supplier_id` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`supplier_id`),
-    CONSTRAINT `fk_products_created_by_admin_id` FOREIGN KEY (`created_by_admin_id`) REFERENCES `admins` (`admin_id`),
-    CONSTRAINT `fk_products_discount_id` FOREIGN KEY (`discount_id`) REFERENCES `discounts` (`discount_id`)
+    CONSTRAINT `fk_products_category_id` FOREIGN KEY (`category_id`) REFERENCES categories(`id`),
+    CONSTRAINT `fk_products_supplier_id` FOREIGN KEY (`supplier_id`) REFERENCES suppliers(`id`),
+    CONSTRAINT `fk_products_created_by_admin_id` FOREIGN KEY (`created_by_admin_id`) REFERENCES admins(`id`),
+    CONSTRAINT `fk_products_discount_id` FOREIGN KEY (`discount_id`) REFERENCES discounts(`id`)
 );
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
-    `user_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
     `first_name` VARCHAR(255) NOT NULL,
     `last_name` VARCHAR(255) NOT NULL,
     `email` VARCHAR(100) NOT NULL,
@@ -142,7 +142,7 @@ CREATE TABLE `users` (
 
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
-    `order_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
     `user_id` INT NOT NULL,
     `total_price` DECIMAL(10, 2) NOT NULL,
     `delivery_id` INT NOT NULL,
@@ -160,16 +160,16 @@ CREATE TABLE `orders` (
     KEY `status_id` (`status_id`),
     KEY `payment_id` (`payment_id`),
     KEY `coupon_id` (`coupon_id`),
-    CONSTRAINT `fk_orders_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
-    CONSTRAINT `fk_orders_delivery_id` FOREIGN KEY (`delivery_id`) REFERENCES `deliveries` (`delivery_id`),
-    CONSTRAINT `fk_orders_status_id` FOREIGN KEY (`status_id`) REFERENCES `orders_statuses` (`status_id`),
-    CONSTRAINT `fk_orders_payment_id` FOREIGN KEY (`payment_id`) REFERENCES `payments` (`payment_id`),
-    CONSTRAINT `fk_orders_coupon_id` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`coupon_id`)
+    CONSTRAINT `fk_orders_user_id` FOREIGN KEY (`user_id`) REFERENCES users(`id`),
+    CONSTRAINT `fk_orders_delivery_id` FOREIGN KEY (`delivery_id`) REFERENCES deliveries(`id`),
+    CONSTRAINT `fk_orders_status_id` FOREIGN KEY (`status_id`) REFERENCES orders_statuses(`id`),
+    CONSTRAINT `fk_orders_payment_id` FOREIGN KEY (`payment_id`) REFERENCES payments(`id`),
+    CONSTRAINT `fk_orders_coupon_id` FOREIGN KEY (`coupon_id`) REFERENCES coupons(`id`)
 );
 
 DROP TABLE IF EXISTS `order_items`;
 CREATE TABLE `order_items` (
-    `order_items_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
     `product_id` INT NOT NULL,
     `amount` DECIMAL(10, 2) NOT NULL,
     `price` DECIMAL(10, 2) NOT NULL,
@@ -178,8 +178,8 @@ CREATE TABLE `order_items` (
     `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     KEY `order_id` (`order_id`),
     KEY `product_id` (`product_id`),
-    CONSTRAINT `fk_order_items_product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`),
-    CONSTRAINT `fk_order_items_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`)
+    CONSTRAINT `fk_order_items_product_id` FOREIGN KEY (`product_id`) REFERENCES products(`id`),
+    CONSTRAINT `fk_order_items_order_id` FOREIGN KEY (`order_id`) REFERENCES orders(`id`)
 );
 
 -- Insert data into admin_roles table

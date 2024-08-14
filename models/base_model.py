@@ -12,20 +12,19 @@ from sqlalchemy.ext.declarative import declarative_base
 
 time = "%Y-%m-%dT%H:%M:%S.%f"
 
+# Define the base class for SQLAlchemy models
 if models.storage_t == "db":
     Base = declarative_base()
 else:
     Base = object
 
-
 class BaseModel:
-    
     """The BaseModel class from which future classes will be derived"""
-    _id_counter = 0
+
     if models.storage_t == "db":
         id = Column(Integer, primary_key=True, autoincrement=True)
-        created_at = Column(DateTime, default=datetime.utcnow)
-        updated_at = Column(DateTime, default=datetime.utcnow)
+        created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+        updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     def __init__(self, *args, **kwargs):
         """Initialization of the base model"""
@@ -33,19 +32,18 @@ class BaseModel:
             for key, value in kwargs.items():
                 if key != "__class__":
                     setattr(self, key, value)
-            if kwargs.get("created_at", None) and type(self.created_at) is str:
+            if kwargs.get("created_at") and isinstance(self.created_at, str):
                 self.created_at = datetime.strptime(kwargs["created_at"], time)
             else:
                 self.created_at = datetime.utcnow()
-            if kwargs.get("updated_at", None) and type(self.updated_at) is str:
+            if kwargs.get("updated_at") and isinstance(self.updated_at, str):
                 self.updated_at = datetime.strptime(kwargs["updated_at"], time)
             else:
                 self.updated_at = datetime.utcnow()
         else:
+            self.id = None  # Allow the database to auto-generate this if in 'db' mode
             self.created_at = datetime.utcnow()
             self.updated_at = self.created_at
-            self.id = BaseModel._id_counter
-            BaseModel._id_counter += 1 
 
     def __str__(self):
         """String representation of the BaseModel class"""
