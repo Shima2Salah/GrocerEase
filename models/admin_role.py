@@ -16,6 +16,8 @@ class AdminRole(BaseModel, Base):
             backref="admin_roles",  # Singular form since this is a many-to-one relationship
             cascade="all, delete, delete-orphan"
         )
+        # Relationship to Product
+        admins = relationship('Admin', back_populates='admin_role')
     else:
         admin_role_name = ""
         admin_role_description = ""

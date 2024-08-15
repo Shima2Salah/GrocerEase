@@ -8,6 +8,7 @@ from models.admin import Admin
 from models.admin_role import AdminRole
 from models.base_model import BaseModel, Base
 from models.category import Category
+from models.coupon import Coupon
 from models.delivery import Delivery
 from models.discount import Discount
 from models.order import Order
@@ -128,3 +129,14 @@ class DBStorage:
         if cls not in classes.values():
             return None
         return self.__session.query(cls)
+
+    def get_by_username(self, cls, username):
+        """Retrieve an object by username."""
+        if cls == Admin:
+            return self.session.query(cls).filter_by(admin_name=username).first()
+        return None
+
+    @property
+    def session(self):
+        """Provide direct access to the SQLAlchemy session."""
+        return self._DBStorage__session  # Assuming __session is the actual session object

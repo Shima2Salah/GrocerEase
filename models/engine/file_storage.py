@@ -9,6 +9,7 @@ from models.admin import Admin
 from models.admin_role import AdminRole
 from models.base_model import BaseModel, Base
 from models.category import Category
+from models.coupon import Coupon
 from models.delivery import Delivery
 from models.discount import Discount
 from models.order import Order

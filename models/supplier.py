@@ -21,7 +21,9 @@ class Supplier(BaseModel, Base):
             backref="suppliers",  # Singular form since this is a many-to-one relationship
             cascade="all, delete, delete-orphan"
         )
-        
+        # Relationship to Category
+        admin = relationship('Admin', back_populates='suppliers')
+        products = relationship('Product', back_populates='supplier')
     else:
         supplier_name = ""
         contact_number = ""

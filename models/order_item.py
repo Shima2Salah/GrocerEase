@@ -17,6 +17,9 @@ class OrderItem(BaseModel, Base):
         amount = Column(DECIMAL(10, 2), nullable=False)
         price = Column(DECIMAL(10, 2), nullable=False)
         order_id = Column(Integer, ForeignKey('orders.id'), nullable=False)
+        # Relationship to Category
+        product = relationship('Product', back_populates='order_items')
+        order = relationship('Order', back_populates='order_items')
     else:
         order_id = ""
         product_id = ""

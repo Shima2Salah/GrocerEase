@@ -62,9 +62,11 @@ CREATE TABLE `admins` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `admin_name` VARCHAR(100) NOT NULL,
     `email` VARCHAR(100) UNIQUE NOT NULL,
-    `password_hash` VARCHAR(100) NOT NULL,
+    `password_hash` VARCHAR(1024) NOT NULL,
     `admin_role_id` INT NOT NULL,
     `status` INT,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     KEY `admin_role_id` (`admin_role_id`),    
     CONSTRAINT `fk_admins_admin_role_id` FOREIGN KEY (`admin_role_id`) REFERENCES admin_roles(`id`)
 );
@@ -220,10 +222,12 @@ INSERT INTO deliveries (delivery_name, contact_number, address, is_active) VALUE
 ('Standard Delivery', '098-765-4321', '456 Market St, City, Country', 1);
 
 -- Insert data into admins table
-INSERT INTO admins (admin_name, email, password_hash, admin_role_id, status) VALUES
-('John Doe', 'john.doe@example.com', 'hashed_password1', 1, 1),
-('Jane Smith', 'jane.smith@example.com', 'hashed_password2', 2, 1),
-('Mark Johnson', 'mark.johnson@example.com', 'hashed_password3', 3, 1);
+INSERT INTO admins (admin_name, email, password_hash, admin_role_id, status, created_at, updated_at) VALUES
+('John Doe', 'john.doe@example.com'
+, 'scrypt:32768:8:1$o1ZrINufvzvjYtSZ$b83c2094292cd85132cdd7eac55f5204f587ec5e4272b8685daa903c3149562b96b7c0ad5a9662d2c3daec7d0e0b5d0f69dd4cf55e1cbe68558fe8fec32e9501'
+, 1, 1, NOW(), NOW()),
+('Jane Smith', 'jane.smith@example.com', 'hashed_password2', 2, 1, NOW(), NOW()),
+('Mark Johnson', 'mark.johnson@example.com', 'hashed_password3', 3, 1, NOW(), NOW());
 
 -- Insert data into categories table
 INSERT INTO categories (category_name, created_by_admin_id, created_at, updated_at) VALUES

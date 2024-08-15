@@ -26,6 +26,13 @@ class Order(BaseModel, Base):
         order_items = relationship("OrderItem",
                               backref="orders",
                               cascade="all, delete, delete-orphan")
+        # Define the relationship
+        payments = relationship('Payment', back_populates='order')
+        user = relationship('User', back_populates='orders')
+        delivery = relationship('Delivery', back_populates='orders')
+        order_status = relationship('OrderStatus', back_populates='orders')
+        order_items = relationship('OrderItem', back_populates='order')
+        coupon = relationship('Coupon', back_populates='orders')
     else:
         user_id = None
         total_price = None

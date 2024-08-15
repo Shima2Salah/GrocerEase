@@ -3,6 +3,7 @@
 import models
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy.orm import relationship
 
 class Delivery(BaseModel, Base):
     """Representation of Delivery"""
@@ -12,6 +13,8 @@ class Delivery(BaseModel, Base):
         contact_number = Column(String(50), nullable=False)
         address = Column(String(100), nullable=False)
         is_active = Column(Integer, nullable=False)  # Using Integer to match schema
+
+        orders = relationship('Order', back_populates='delivery')
     else:
         delivery_name = ""
         contact_number = ""

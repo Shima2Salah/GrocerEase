@@ -16,6 +16,7 @@ class Discount(BaseModel, Base):
             "Product",
             backref="discounts",  # Singular form since this is a many-to-one relationship
             cascade="all, delete, delete-orphan")
+        products = relationship('Product', back_populates='discount')
     else:
         discount_percentage = 0.00
         start_date = None

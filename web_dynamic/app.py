@@ -40,13 +40,14 @@ def about():
 @app.route('/page3.html', methods=['GET'])
 @app.route('/page3', methods=['GET'])
 def page3():
-    """ Prints a Message when /python is called """
+    """ Prints a Message when /page3 is called """
     products = storage.all(Product)
     sorted_products = sorted(products.values(), key=lambda product: product.product_name)
     categories = storage.all(Category)
     sorted_categories = sorted(categories.values(), key=lambda category: category.category_name)
     return render_template('page3.html', sorted_products=sorted_products,
                            sorted_categories=sorted_categories)
+
 @app.route('/single/<int:product_id>', methods=['GET', 'POST'])
 def single(product_id):
     """Display a single product page and handle adding to cart."""
@@ -139,6 +140,57 @@ def proced():
 def thankyou():
     """Display a thank you page after a successful order."""
     return render_template('thankyou.html')
+
+@app.route('/admin_login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        # Assuming storage.all() returns a dictionary of all objects
+        admins = storage.all(Admin).values()
+        admin = next((admin for admin in admins if admin.admin_name == username), None)
+
+        if admin and admin.verify_password(password):
+            # Successful login
+            session['admin_id'] = admin.id
+            return redirect(url_for('admin_dashboard'))
+        else:
+            # Failed login
+            return render_template('admin_login.html', error="Invalid username or password")
+
+    return render_template('admin_login.html')
+
+
+@app.route('/admin/dashboard')
+def admin_dashboard():
+    """Admin dashboard page."""
+    if 'admin_id' in session:
+        admin_id = session.get('admin_id')
+        admin = storage.get(Admin, admin_id)
+
+        # Fetch products to display on the dashboard
+        products = storage.session.query(Product).all()
+
+        return render_template('admin_dashboard.html', admin=admin, products=products)
+    else:
+        return redirect(url_for('admin_login'))
+
+
+
+@app.route('/admin/some_protected_route')
+def some_protected_route():
+    """Protected admin route."""
+    if 'admin_id' not in session:
+        return redirect(url_for('admin_login'))
+    # Continue with the rest of the view logic
+
+@app.route('/admin/logout')
+def admin_logout():
+    """Admin logout."""
+    session.pop('admin_id', None)
+    return redirect(url_for('admin_login'))
+
 
 @app.teardown_appcontext
 def app_teardown(arg=None):

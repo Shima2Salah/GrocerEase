@@ -27,9 +27,11 @@ class User(BaseModel, Base):
         order_notes = Column(String(255))
         password_hash = Column(String(100), nullable=True)
         is_create_account = Column(Integer)
-        Orders = relationship("Order",
+        orders = relationship("Order",
                               backref="users",
                               cascade="all, delete, delete-orphan")
+        # Relationship to Category
+        orders = relationship('Order', back_populates='user')
     else:
         first_name = ""
         last_name = ""

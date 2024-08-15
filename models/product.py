@@ -25,6 +25,12 @@ class Product(BaseModel, Base):
         order_items = relationship("OrderItem",
                               backref="products",
                               cascade="all, delete, delete-orphan")
+        # Relationships
+        supplier = relationship('Supplier', back_populates='products')
+        admin = relationship('Admin', back_populates='products')
+        discount = relationship('Discount', back_populates='products')
+        category = relationship('Category', back_populates='products')
+        order_items = relationship('OrderItem', back_populates='product')
     else:
         product_name = ""
         unit_price = None

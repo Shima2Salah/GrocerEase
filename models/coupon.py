@@ -3,6 +3,7 @@
 import models
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Integer, String, Numeric, DateTime
+from sqlalchemy.orm import relationship
 
 class Coupon(BaseModel, Base):
     """Representation of Coupon"""
@@ -12,6 +13,8 @@ class Coupon(BaseModel, Base):
         amount = Column(Numeric(10, 2), nullable=False)
         start_date = Column(DateTime, nullable=False)
         end_date = Column(DateTime, nullable=False)
+        # Define the relationship
+        orders = relationship('Order', back_populates='coupon')
     else:
         coupon_code = ""
         amount = 0.00
