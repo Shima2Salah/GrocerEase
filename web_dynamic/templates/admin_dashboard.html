@@ -9,7 +9,17 @@
 <body>
     <h1>Welcome, {{ admin.admin_name }}</h1>
     <a href="{{ url_for('admin_logout') }}">Logout</a>
-
+    <h2>Admin Dashboard</h2>
+    <div class="admin-buttons">
+        <button onclick="window.location.href='/admin/suppliers'">Suppliers</button>
+        <button onclick="window.location.href='/admin/categories'">Categories</button>
+        <button onclick="window.location.href='/admin/products'">Products</button>
+        <button onclick="window.location.href='/admin/admins'">Admins</button>
+        <button onclick="window.location.href='/admin/discounts'">Discounts</button>
+        <button onclick="window.location.href='/admin/coupons'">Coupons</button>
+        <button onclick="window.location.href='/admin/deliveries'">Deliveries</button>
+        <button onclick="window.location.href='/admin/orders'">Orders</button>
+    </div>
     <h2>Products</h2>
     <table>
         <thead>
@@ -31,5 +41,64 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Add New Category Form -->
+    <h2>Add New Category</h2>
+    <form action="{{ url_for('add_category') }}" method="POST">
+        <label for="category_name">Category Name:</label>
+        <input type="text" id="category_name" name="category_name" required>
+        <button type="submit">Add Category</button>
+    </form>
+
+    <!-- Add New Product Form -->
+    <h2>Add New Product</h2>
+    <form action="{{ url_for('add_product') }}" method="POST">
+        <label for="product_name">Product Name:</label>
+        <input type="text" id="product_name" name="product_name" required>
+        <label for="category_id">Category ID:</label>
+        <input type="number" id="category_id" name="category_id" required>
+        <label for="unit_price">Unit Price:</label>
+        <input type="number" id="unit_price" name="unit_price" step="0.01" required>
+        <label for="weight">Weight:</label>
+        <input type="text" id="weight" name="weight" required>
+        <button type="submit">Add Product</button>
+    </form>
+
+    <!-- Add New Supplier Form -->
+    <h2>Add New Supplier</h2>
+    <form action="{{ url_for('add_supplier') }}" method="POST">
+        <label for="supplier_name">Supplier Name:</label>
+        <input type="text" id="supplier_name" name="supplier_name" required>
+        <button type="submit">Add Supplier</button>
+    </form>
+
+    <!-- Add New Coupon Form -->
+    <h2>Add New Coupon</h2>
+    <form action="{{ url_for('add_coupon') }}" method="POST">
+        <label for="coupon_code">Coupon Code:</label>
+        <input type="text" id="coupon_code" name="coupon_code" required>
+        <label for="discount_id">Discount ID:</label>
+        <input type="number" id="discount_id" name="discount_id" required>
+        <button type="submit">Add Coupon</button>
+    </form>
+
+    <!-- Add New Discount Form -->
+    <h2>Add New Discount</h2>
+    <form action="{{ url_for('add_discount') }}" method="POST">
+        <label for="discount_value">Discount Value (%):</label>
+        <input type="number" id="discount_value" name="discount_value" required>
+        <button type="submit">Add Discount</button>
+    </form>
+
+    <!-- Add New Admin Form -->
+    <h2>Add New Admin</h2>
+    <form action="{{ url_for('add_admin') }}" method="POST">
+        <label for="admin_name">Admin Name:</label>
+        <input type="text" id="admin_name" name="admin_name" required>
+        <label for="admin_role">Admin Role:</label>
+        <input type="text" id="admin_role" name="admin_role" required>
+        <button type="submit">Add Admin</button>
+    </form>
+
 </body>
 </html>

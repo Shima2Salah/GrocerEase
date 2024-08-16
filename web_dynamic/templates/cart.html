@@ -8,6 +8,15 @@
 </head>
 <body>
     <header>
+        <h1>About Our Grocery Shop</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('page3') }}">Products</a></li>
+                <li><a href="{{ url_for('cart') }}">Cart</a></li>
+            </ul>
+        </nav>
         <h1>Your Cart</h1>
     </header>
     <main>
@@ -18,7 +27,7 @@
                         <img src="{{ item.image_url }}" alt="{{ item.product_name }}">
                         <p>{{ item.product_name }}</p>
                         <p>Price: ${{ item.unit_price }}</p>
-                        <p>Weight: {{ item.weight }} kg</p>
+                        <p>Amount: {{ item.amount }} kg</p>
                         <p>Total: ${{ item.price }}</p>
                     </li>
                 {% endfor %}

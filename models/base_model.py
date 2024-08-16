@@ -7,7 +7,7 @@ from datetime import datetime
 import models
 from os import getenv
 import sqlalchemy
-from sqlalchemy import Column, String, Integer, DateTime, MetaData
+from sqlalchemy import Column, String, Integer, DateTime, MetaData, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 
 time = "%Y-%m-%dT%H:%M:%S.%f"
@@ -25,6 +25,9 @@ class BaseModel:
         id = Column(Integer, primary_key=True, autoincrement=True)
         created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
         updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+        ''', onupdate=datetime.utcnow)'''
+        is_deleted = Column(Boolean, default=False)
+        deleted_at = Column(DateTime, nullable=True)
 
     def __init__(self, *args, **kwargs):
         """Initialization of the base model"""
@@ -72,5 +75,14 @@ class BaseModel:
         return new_dict
 
     def delete(self):
+        """Soft delete the current instance by setting 'is_deleted' and 'deleted_at'"""
+        if models.storage_t == "db":
+            self.is_deleted = True
+            self.deleted_at = datetime.utcnow()
+            self.save()
+        else:
+            models.storage.delete(self)
+
+    '''def delete(self):
         """delete the current instance from the storage"""
-        models.storage.delete(self)
+        models.storage.delete(self)'''

@@ -11,7 +11,13 @@ class Payment(BaseModel, Base):
     if models.storage_t == 'db':
         __tablename__ = 'payments'
         payment_method = Column(String(100), nullable=False)
-        order = relationship('Order', back_populates='payments')
+        orders = relationship("Order",
+                              backref="payments",
+                              cascade="all, delete, delete-orphan")
+        orders = relationship('Order', back_populates='payment')
+        # Override BaseModel columns to remove them
+        created_at = None
+        updated_at = None
     else:
         payment_method = ""
 

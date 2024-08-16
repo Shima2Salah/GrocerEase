@@ -79,9 +79,18 @@ class DBStorage:
         self.__session.commit()
 
     def delete(self, obj=None):
+        """Delete from the current database session obj if not None"""
+        if obj is not None:
+            # Call the model's delete method instead of directly deleting
+            if isinstance(obj, BaseModel):
+                obj.delete()
+            else:
+                self.__session.delete(obj)
+
+    '''def delete(self, obj=None):
         """delete from the current database session obj if not None"""
         if obj is not None:
-            self.__session.delete(obj)
+            self.__session.delete(obj)'''
 
     def reload(self):
         """reloads data from the databases"""
@@ -140,3 +149,9 @@ class DBStorage:
     def session(self):
         """Provide direct access to the SQLAlchemy session."""
         return self._DBStorage__session  # Assuming __session is the actual session object
+
+    def filter_by_category(self, model_class, category_id):
+        """Return all instances of a class filtered by category_id"""
+        if self.__session is None:
+            self.reload()  # Ensure the session is loaded
+        return self.__session.query(model_class).filter_by(category_id=category_id).all()

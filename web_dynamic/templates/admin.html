@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Welcome, {{ admin.admin_name }}</h1>
+    <form action="{{ url_for('admin_logout') }}" method="post">
+        <button type="submit">Logout</button>
+    </form>
+    <h2>Admin Dashboard</h2>
+    <div class="admin-buttons">
+        <button onclick="window.location.href='{{ url_for('admin_suppliers') }}'">Suppliers</button>
+        <button onclick="window.location.href='{{ url_for('admin_categories') }}'">Categories</button>
+        <button onclick="window.location.href='{{ url_for('admin_products') }}'">Products</button>
+        <button onclick="window.location.href='{{ url_for('admin_admins') }}'">Admins</button>
+        <button onclick="window.location.href='{{ url_for('admin_discounts') }}'">Discounts</button>
+        <button onclick="window.location.href='{{ url_for('admin_coupons') }}'">Coupons</button>
+        <button onclick="window.location.href='{{ url_for('admin_deliveries') }}'">Deliveries</button>
+        <button onclick="window.location.href='{{ url_for('admin_orders') }}'">Orders</button>
+    </div>
+</body>
+</html>

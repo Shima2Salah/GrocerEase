@@ -17,6 +17,7 @@ from models.product import Product
 from models.user import User
 from models.supplier import Supplier
 from decimal import Decimal
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SESSION_REFRESH_EACH_REQUEST'] = False
@@ -161,7 +162,85 @@ def admin_login():
 
     return render_template('admin_login.html')
 
+@app.route('/admin')
+def admin_dashboard2():
+    return render_template('admin.html')
 
+@app.route('/admin/products')
+def admin_products():
+    # Add your logic here to retrieve and display products
+    """Admin products page."""
+    if 'admin_id' in session:
+        admin_id = session.get('admin_id')
+        admin = storage.get(Admin, admin_id)
+
+        # Fetch products to display on the products
+        products = storage.session.query(Product).all()
+
+        return render_template('products.html', admin=admin, products=products)
+    else:
+        return redirect(url_for('admin_login'))
+    
+@app.route('/add_category', methods=['POST'])
+def add_category():
+    # Assume admin_id is fetched from the session or request context
+    admin_id = session.get('admin_id')  # or however you retrieve the current admin ID
+    
+    if admin_id is None:
+        return "Admin must be logged in", 400  # Handle the error as needed
+    
+    category_name = request.form.get('category_name')
+    new_category = Category(
+        category_name=category_name,
+        created_by_admin_id=admin_id,
+        created_at=datetime.utcnow(),
+        updated_at=datetime.utcnow()
+    )
+    
+    # Add the new category to the database session
+    storage.new(new_category)  # Use the 'new' method to add the object
+    storage.save()  # Commit the transaction
+    return "Category added successfully", 201
+
+@app.route('/admin/suppliers')
+def admin_suppliers():
+    suppliers = storage.all(Supplier)  # Assuming storage is your DBStorage instance
+    return render_template('suppliers.html', suppliers=suppliers)
+
+
+@app.route('/admin/categories')
+def admin_categories():
+    # Add your logic here to retrieve and display categories
+    return render_template('categories.html')
+
+
+
+@app.route('/admin/admins')
+def admin_admins():
+    # Add your logic here to retrieve and display admins
+    return render_template('admins.html')
+
+@app.route('/admin/discounts')
+def admin_discounts():
+    # Add your logic here to retrieve and display discounts
+    return render_template('discounts.html')
+
+@app.route('/admin/coupons')
+def admin_coupons():
+    # Add your logic here to retrieve and display coupons
+    return render_template('coupons.html')
+
+@app.route('/admin/deliveries')
+def admin_deliveries():
+    # Add your logic here to retrieve and display deliveries
+    return render_template('deliveries.html')
+
+@app.route('/admin/orders')
+def admin_orders():
+    # Add your logic here to retrieve and display orders
+    return render_template('orders.html')
+
+# Route to render the admin dashboard
 @app.route('/admin/dashboard')
 def admin_dashboard():
     """Admin dashboard page."""
@@ -175,6 +254,66 @@ def admin_dashboard():
         return render_template('admin_dashboard.html', admin=admin, products=products)
     else:
         return redirect(url_for('admin_login'))
+
+# Route to add new category
+
+
+
+
+
+
+
+# Route to add new product
+@app.route('/add_product', methods=['POST'])
+def add_product():
+    product_name = request.form['product_name']
+    category_id = request.form['category_id']
+    unit_price = request.form['unit_price']
+    weight = request.form['weight']
+    new_product = Product(name=product_name, category_id=category_id, unit_price=unit_price, weight=weight)
+    storage.new(new_product)
+    storage.save()
+    return redirect(url_for('admin_dashboard'))
+
+# Route to add new supplier
+@app.route('/add_supplier', methods=['POST'])
+def add_supplier():
+    supplier_name = request.form['supplier_name']
+    new_supplier = Supplier(name=supplier_name)
+    storage.new(new_supplier)
+    storage.save()
+    return redirect(url_for('admin_dashboard'))
+
+# Route to add new coupon
+@app.route('/add_coupon', methods=['POST'])
+def add_coupon():
+    coupon_code = request.form['coupon_code']
+    discount_id = request.form['discount_id']
+    new_coupon = Coupon(code=coupon_code, discount_id=discount_id)
+    storage.new(new_coupon)
+    storage.save()
+    return redirect(url_for('admin_dashboard'))
+
+# Route to add new discount
+@app.route('/add_discount', methods=['POST'])
+def add_discount():
+    discount_value = request.form['discount_value']
+    new_discount = Discount(value=discount_value)
+    storage.new(new_discount)
+    storage.save()
+    return redirect(url_for('admin_dashboard'))
+
+# Route to add new admin
+@app.route('/add_admin', methods=['POST'])
+def add_admin():
+    admin_name = request.form['admin_name']
+    admin_role = request.form['admin_role']
+    new_admin = Admin(name=admin_name, role=admin_role)
+    storage.new(new_admin)
+    storage.save()
+    return redirect(url_for('admin_dashboard'))
+
+
 
 
 

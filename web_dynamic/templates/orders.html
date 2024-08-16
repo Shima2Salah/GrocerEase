@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Orders Management</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>first name</th>
+                <th>last name</th>
+                <th>Contact Number</th>
+                <th>Address</th>
+                <th>order date</th>
+                <th>Status</th>
+                <th>Delivery</th>
+                <th>Items</th>
+                <th>Actions</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.user.first_name }}</td>
+                <td>{{ order.user.last_name }}</td>
+                <td>{{ order.user.contact_number }}</td>
+                <td>{{ order.user.address }}</td>
+                <td>{{ order.order_date }}</td>
+                <td>{{ order.order_status.status_name }}</td>
+                <td>{{ order.delivery.delivery_name }}</td>
+                <td>
+                    {% for item in order.order_items %}
+                    <p>{{ item.product.product_name }} ({{ item.amount }})</p>
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{{ url_for('edit_order', order_id=order.id) }}">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

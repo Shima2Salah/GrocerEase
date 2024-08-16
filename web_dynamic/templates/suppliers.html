@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suppliers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Suppliers</h1>
+    <button onclick="window.location.href='/admin'">Back to Dashboard</button>
+    <button onclick="window.location.href='/admin/suppliers/add'">Add Supplier</button>
+    
+    <h2>All Suppliers</h2>
+    <ul>
+        <!-- Loop through your suppliers here -->
+        {% for supplier in suppliers %}
+        <li>{{ supplier.name }} - <a href="/admin/suppliers/edit/{{ supplier.id }}">Edit</a> | <a href="/admin/suppliers/deactivate/{{ supplier.id }}">Deactivate</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

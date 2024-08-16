@@ -19,16 +19,49 @@
         </nav>
     </header>
     <main>
-        <h2>Browse Our Selection</h2>
+        <h2>Products in {{ selected_category.category_name if selected_category_id else 'All Categories' }}</h2>
+        
+        <!-- Category Selection -->
+        <div class="category-select">
+            <label for="category">Select Category:</label>
+            <select id="category" name="category" onchange="window.location.href='{{ url_for('page3') }}?category=' + this.value">
+                <option value="">All Categories</option>
+                {% for category in sorted_categories %}
+                    <option value="{{ category.id }}" {% if selected_category_id and category.id == selected_category_id %}selected{% endif %}>
+                        {{ category.category_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <h2>Products in {{ selected_category.category_name if selected_category else 'All Categories' }}</h2>
+
+
+        <!-- Product Listing -->
         <div class="product-list">
-            {% for product in sorted_products %}
-                <div class="product-item">
-                    <img src="{{ product.image_url }}" alt="{{ product.product_name }}">
-                    <h3>{{ product.product_name }}</h3>
-                    <p>Price: ${{ product.price }}</p>
-                    <a href="{{ url_for('single', product_id=product.id) }}">View Details</a>
-                </div>
-            {% endfor %}
+            {% if paged_products %}
+                {% for product in paged_products %}
+                    <div class="product-item">
+                        <img src="{{ product.image_url }}" alt="{{ product.product_name }}">
+                        <h3>{{ product.product_name }}</h3>
+                        <p>Price: ${{ product.price }}</p>
+                        <a href="{{ url_for('single', product_id=product.id) }}">View Details</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No products available.</p>
+            {% endif %}
+        </div>
+        
+
+        <!-- Pagination -->
+        <div class="pagination">
+            {% if page > 1 %}
+                <a href="{{ url_for('page3', category=selected_category_id, page=page-1) }}">&laquo; Previous</a>
+            {% endif %}
+            <span>Page {{ page }} of {{ total_pages }}</span>
+            {% if page < total_pages %}
+                <a href="{{ url_for('page3', category=selected_category_id, page=page+1) }}">Next &raquo;</a>
+            {% endif %}
         </div>
     </main>
     <footer>

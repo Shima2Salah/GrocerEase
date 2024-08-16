@@ -8,6 +8,15 @@
 </head>
 <body>
     <header>
+        <h1>Our Products</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('page3') }}">Products</a></li>
+                <li><a href="{{ url_for('cart') }}">Cart</a></li>
+            </ul>
+        </nav>
         <h1>{{ product.product_name }}</h1>
     </header>
     <main>
@@ -15,8 +24,8 @@
         <p>Price per unit: ${{ product.price }}</p>
         <form method="POST">
             <input type="hidden" name="product_id" value="{{ product.id }}">
-            <label for="weight">Weight (kg):</label>
-            <input type="number" name="weight" id="weight" required>
+            <label for="amount">Amount (kg):</label>
+            <input type="number" name="amount" id="amount" required>
             <button type="submit">Add to Cart</button>
         </form>
     </main>

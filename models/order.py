@@ -15,9 +15,9 @@ class Order(BaseModel, Base):
         __tablename__ = 'orders'
         user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
         total_price = Column(DECIMAL(10, 2), nullable=False)
-        delivery_id = Column(Integer, ForeignKey('deliveries.id'), nullable=False)
-        order_date = Column(DateTime, nullable=False)
-        status_id = Column(Integer, ForeignKey('orders_statuses.id'))
+        delivery_id = Column(Integer, ForeignKey('deliveries.id'))
+        order_date = Column(DateTime, default=datetime.utcnow, nullable=False)
+        status_id = Column(Integer, ForeignKey('orders_statuses.id'), nullable=False, default=1)
         payment_id = Column(Integer, ForeignKey('payments.id'), nullable=False)
         coupon_id = Column(Integer, ForeignKey('coupons.id'))
         delivery_date = Column(DateTime)
@@ -27,7 +27,7 @@ class Order(BaseModel, Base):
                               backref="orders",
                               cascade="all, delete, delete-orphan")
         # Define the relationship
-        payments = relationship('Payment', back_populates='order')
+        payment = relationship('Payment', back_populates='orders')
         user = relationship('User', back_populates='orders')
         delivery = relationship('Delivery', back_populates='orders')
         order_status = relationship('OrderStatus', back_populates='orders')

@@ -11,6 +11,9 @@ class OrderStatus(BaseModel, Base):
         __tablename__ = 'orders_statuses'
         status_name = Column(String(100), nullable=False)
         orders = relationship('Order', back_populates='order_status')
+        # Override BaseModel columns to remove them
+        created_at = None
+        updated_at = None
     else:
         status_name = ""
 

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Products</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Products</h1>
+    <a href="/admin">Back to Dashboard</a>
+
+    <ul>
+        {% for product in products %}
+        <li>
+            {{ product.product_name }} - ${{ product.price }}
+            <a href="/edit_product/{{ product.id }}">Edit</a> | 
+            <a href="/delete_product/{{ product.id }}">Delete</a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

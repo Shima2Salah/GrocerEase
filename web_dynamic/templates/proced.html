@@ -11,7 +11,8 @@
         <h1>Checkout</h1>
     </header>
     <main>
-        <form method="POST">
+        <form method="POST" action="{{ url_for('proced') }}">
+            <!-- Existing fields -->
             <label for="first_name">First Name:</label>
             <input type="text" name="first_name" id="first_name" required>
 
@@ -24,11 +25,11 @@
             <label for="email">Email:</label>
             <input type="email" name="email" id="email" required>
 
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required>
-
             <label for="country">Country:</label>
             <input type="text" name="country" id="country" required>
+
+            <label for="postal_or_zip">Postal or ZIP Code:</label>
+            <input type="text" name="postal_or_zip" id="postal_or_zip" required>
 
             <label for="company_name">Company Name (optional):</label>
             <input type="text" name="company_name" id="company_name">
@@ -37,4 +38,22 @@
             <input type="text" name="address" id="address" required>
 
             <label for="state_or_country">State or Country:</label>
-            <input type="text" name="state_or
+            <input type="text" name="state_or_country" id="state_or_country" required>
+
+            <!-- New payment method selection -->
+            <label for="payment_method">Payment Method:</label>
+            <select name="payment_method" id="payment_method" required>
+                <option value="" disabled selected>Select a payment method</option>
+                <option value="credit_card">Credit Card</option>
+                <option value="paypal">PayPal</option>
+                <option value="bank_transfer">Bank Transfer</option>
+            </select>
+
+            <label for="order_notes">Order Notes (optional):</label>
+            <textarea name="order_notes" id="order_notes"></textarea>
+
+            <button type="submit">Proceed Order</button>
+        </form>
+    </main>
+</body>
+</html>
