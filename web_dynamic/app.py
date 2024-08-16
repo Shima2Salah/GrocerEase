@@ -147,6 +147,7 @@ def single(product_id):
         product = storage.get(Product, product_id)
 
         if product and amount > 0 and amount <= product.stock_weight:
+            discount = storage.get(Discount, product.discount_id) if product.discount_id else None
             price = round(product.unit_price * amount, 2)
             order_item = {'product_id': product_id, 'amount': amount, 'price': price}
 
@@ -164,7 +165,9 @@ def single(product_id):
             return 'Product not found, invalid amount, or insufficient stock'
     else:
         product = storage.get(Product, product_id)
-        return render_template('single.html', product=product)
+        discount = storage.get(Discount, product.discount_id) if product.discount_id else None
+        return render_template('single.html', product=product, discount=discount)
+
 
 
 

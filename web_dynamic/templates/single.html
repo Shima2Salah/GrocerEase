@@ -21,7 +21,27 @@
     </header>
     <main>
         <img src="{{ product.image_url }}" alt="{{ product.product_name }}">
-        <p>Price per unit: ${{ product.price }}</p>
+
+        <!-- Product Description -->
+        <p><strong>Description:</strong> {{ product.description }}</p>
+
+        <!-- Unit Price -->
+        <p><strong>Unit Price:</strong> ${{ product.unit_price }}</p>
+
+        <!-- Discount Details -->
+        {% if discount and discount.discount_percentage > 0 %}
+            <p><strong>Discount:</strong> {{ discount.discount_percentage }}%</p>
+            <p><strong>Price after discount:</strong> 
+                ${{ (product.unit_price * (1 - (discount.discount_percentage / 100))) | round(2) }}
+            </p>
+        {% else %}
+            <p><strong>No Discount Available</strong></p>
+        {% endif %}
+
+        <!-- Price per unit -->
+        <p><strong>Price per unit:</strong> ${{ product.unit_price }}</p>
+
+        <!-- Add to Cart Form -->
         <form method="POST">
             <input type="hidden" name="product_id" value="{{ product.id }}">
             <label for="amount">Amount (kg):</label>

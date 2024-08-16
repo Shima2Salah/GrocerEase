@@ -222,6 +222,13 @@ INSERT INTO coupons (coupon_code, amount, start_date, end_date, is_deleted, dele
 ('SUMMER15', 15.00, '2024-09-01 00:00:00', '2024-09-30 23:59:59', FALSE, NULL),
 ('FALL20', 20.00, '2024-10-01 00:00:00', '2024-10-31 23:59:59', FALSE, NULL);
 
+-- Insert data into discounts table
+INSERT INTO discounts (discount_percentage, start_date, end_date, is_deleted, deleted_at) VALUES
+(10.00, '2024-08-01 00:00:00', '2024-08-31 23:59:59', FALSE, NULL),
+(15.00, '2024-09-01 00:00:00', '2024-09-30 23:59:59', FALSE, NULL),
+(20.00, '2024-10-01 00:00:00', '2024-10-31 23:59:59', FALSE, NULL),
+(5.00, '2024-08-15 00:00:00', '2024-09-15 23:59:59', FALSE, NULL);
+
 -- Insert data into payments table
 INSERT INTO payments (payment_method, is_deleted, deleted_at) VALUES
 ('Credit Card', FALSE, NULL),
@@ -267,10 +274,10 @@ INSERT INTO suppliers (supplier_name, contact_number, address, created_by_admin_
 
 -- Insert data into products table
 INSERT INTO products (product_name, unit_price, description, image_url, supplier_id, created_by_admin_id, discount_id, stock_weight, weight, category_id, created_at, updated_at, is_deleted, deleted_at) VALUES
-('Whole Wheat Bread', 2.99, 'Freshly baked whole wheat bread', 'whole_wheat_bread.jpg', 1, 1, NULL, 50.00, 1.00, 1, NOW(), NOW(), FALSE, NULL),
-('Croissants', 4.99, 'Flaky buttery croissants', 'croissants.jpg', 1, 1, NULL, 30.00, 0.50, 1, NOW(), NOW(), FALSE, NULL),
-('Bagels', 3.49, 'Assorted bagels', 'bagels.jpg', 1, 1, NULL, 40.00, 1.00, 1, NOW(), NOW(), FALSE, NULL),
-('Chicken Breast', 6.99, 'Boneless skinless chicken breast', 'chicken_breast.jpg', 2, 2, NULL, 100.00, 2.00, 2, NOW(), NOW(), FALSE, NULL),
+('Whole Wheat Bread', 2.99, 'Freshly baked whole wheat bread', 'whole_wheat_bread.jpg', 1, 1, 1, 50.00, 1.00, 1, NOW(), NOW(), FALSE, NULL),
+('Croissants', 4.99, 'Flaky buttery croissants', 'croissants.jpg', 1, 1, 2, 30.00, 0.50, 1, NOW(), NOW(), FALSE, NULL),
+('Bagels', 3.49, 'Assorted bagels', 'bagels.jpg', 1, 1, 1, 40.00, 1.00, 1, NOW(), NOW(), FALSE, NULL),
+('Chicken Breast', 6.99, 'Boneless skinless chicken breast', 'chicken_breast.jpg', 2, 2, 3, 100.00, 2.00, 2, NOW(), NOW(), FALSE, NULL),
 ('Salmon Fillets', 12.99, 'Fresh Atlantic salmon fillets', 'salmon_fillets.jpg', 2, 2, NULL, 50.00, 1.00, 2, NOW(), NOW(), FALSE, NULL),
 ('Ground Beef', 8.49, 'Lean ground beef', 'ground_beef.jpg', 2, 2, NULL, 80.00, 2.00, 2, NOW(), NOW(), FALSE, NULL),
 ('Frozen Pizza', 7.99, 'Pepperoni frozen pizza', 'frozen_pizza.jpg', 3, 1, NULL, 60.00, 1.50, 3, NOW(), NOW(), FALSE, NULL),

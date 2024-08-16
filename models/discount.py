@@ -17,6 +17,9 @@ class Discount(BaseModel, Base):
             backref="discounts",  # Singular form since this is a many-to-one relationship
             cascade="all, delete, delete-orphan")
         products = relationship('Product', back_populates='discount')
+        # Override BaseModel columns to remove them
+        created_at = None
+        updated_at = None
     else:
         discount_percentage = 0.00
         start_date = None
