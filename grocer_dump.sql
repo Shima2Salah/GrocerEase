@@ -33,7 +33,7 @@ DROP TABLE IF EXISTS `coupons`;
 CREATE TABLE `coupons` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `coupon_code` VARCHAR(100) UNIQUE NOT NULL,
-    `amount` DECIMAL(10, 2) NOT NULL,
+    `coupon_amount` DECIMAL(10, 2) NOT NULL,
     `start_date` DATETIME NOT NULL,
     `end_date` DATETIME NOT NULL,
     `is_deleted` BOOLEAN DEFAULT FALSE,
@@ -130,6 +130,7 @@ CREATE TABLE `products` (
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `stock_weight` DECIMAL(10, 2),
+    `min_stock` DECIMAL(10, 2),
     `unit` VARCHAR(255),
     `min_order_amount` DECIMAL(10, 2),
     `category_id` INT NOT NULL,
@@ -159,19 +160,6 @@ BEGIN
 END;
 //
 DELIMITER ;
-
-DELIMITER //
-CREATE TRIGGER update_stock_after_order
-AFTER INSERT ON order_items
-FOR EACH ROW
-BEGIN
-    UPDATE products
-    SET stock_weight = stock_weight - NEW.amount
-    WHERE id = NEW.product_id;
-END;
-//
-DELIMITER ;
-
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
@@ -207,6 +195,7 @@ CREATE TABLE `orders` (
     `delivery_date` DATETIME,
     `payment_date` DATETIME,
     `payment_status` INT,
+    `final_price` DECIMAL(10, 2) NOT NULL,
     `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `is_deleted` BOOLEAN DEFAULT FALSE,
@@ -240,6 +229,46 @@ CREATE TABLE `order_items` (
     CONSTRAINT `fk_order_items_order_id` FOREIGN KEY (`order_id`) REFERENCES orders(`id`)
 );
 
+DELIMITER //
+CREATE TRIGGER update_stock_after_order
+AFTER INSERT ON order_items
+FOR EACH ROW
+BEGIN
+    UPDATE products
+    SET stock_weight = stock_weight - NEW.amount
+    WHERE id = NEW.product_id;
+END;
+//
+DELIMITER ;
+
+
+/* DELIMITER //
+
+CREATE TRIGGER calculate_final_price_before_insert
+BEFORE INSERT ON orders
+FOR EACH ROW
+BEGIN
+    DECLARE v_coupon_amount DECIMAL(10, 2) DEFAULT 0.00;
+    
+    -- Check if a coupon is applied
+    IF NEW.coupon_id IS NOT NULL THEN
+        -- Get the coupon amount
+        SELECT coupon_amount INTO v_coupon_amount
+        FROM coupons
+        WHERE id = NEW.coupon_id AND is_deleted = FALSE;
+
+        -- Set coupon amount to 0 if no valid coupon is found
+        IF v_coupon_amount IS NULL THEN
+            SET v_coupon_amount = 0.00;
+        END IF;
+    END IF;
+    
+    -- Calculate the final price
+    SET NEW.final_price = GREATEST(NEW.total_price - v_coupon_amount, 0.00);
+END //
+
+DELIMITER ;*/
+
 -- Insert data into admin_roles table
 INSERT INTO admin_roles (admin_role_name, admin_role_description) VALUES
 ('Super Admin', 'Has access to all administrative functions'),
@@ -247,10 +276,10 @@ INSERT INTO admin_roles (admin_role_name, admin_role_description) VALUES
 ('Order Manager', 'Handles customer orders and deliveries');
 
 -- Insert data into coupons table
-INSERT INTO coupons (coupon_code, amount, start_date, end_date, is_deleted, deleted_at) VALUES
+INSERT INTO coupons (coupon_code, coupon_amount, start_date, end_date, is_deleted, deleted_at) VALUES
 ('WELCOME10', 10.00, '2024-08-01 00:00:00', '2024-12-31 23:59:59', FALSE, NULL),
-('SUMMER15', 15.00, '2024-09-01 00:00:00', '2024-09-30 23:59:59', FALSE, NULL),
-('FALL20', 20.00, '2024-10-01 00:00:00', '2024-10-31 23:59:59', FALSE, NULL);
+('SUMMER15', 15.00, '2024-08-01 00:00:00', '2024-09-30 23:59:59', FALSE, NULL),
+('FALL20', 20.00, '2024-08-01 00:00:00', '2024-10-31 23:59:59', FALSE, NULL);
 
 -- Insert data into discounts table
 INSERT INTO discounts (discount_percentage, start_date, end_date, is_deleted, deleted_at) VALUES
@@ -303,36 +332,37 @@ INSERT INTO suppliers (supplier_name, contact_number, address, created_by_admin_
 ('Green Harvest', '678-901-2345', '303 Green Way', 2, 'Green Harvest LLC', 'contact@greenharvest.com', 'Vegetables & fruits supplier', NOW(), NOW(), FALSE, NULL);
 
 -- Insert data into products table
-INSERT INTO products (product_name, unit_price, description, image_url, supplier_id, created_by_admin_id, discount_id, stock_weight, unit, min_order_amount, category_id, created_at, updated_at, is_deleted, deleted_at) VALUES
-('Whole Wheat Bread', 2.99, 'Freshly baked whole wheat bread', 'whole_wheat_bread.jpg', 1, 1, 1, 50.00, 'kg', 1.00, 1, NOW(), NOW(), FALSE, NULL),
-('Croissants', 4.99, 'Flaky buttery croissants', 'croissants.jpg', 1, 1, 2, 30.00, 'kg', 1.00, 1, NOW(), NOW(), FALSE, NULL),
-('Bagels', 3.49, 'Assorted bagels', 'bagels.jpg', 1, 1, 1, 40.00, 'kg', 1.00, 1, NOW(), NOW(), FALSE, NULL),
-('Chicken Breast', 6.99, 'Boneless skinless chicken breast', 'chicken_breast.jpg', 2, 2, 3, 100.00, 'kg', 2.00, 2, NOW(), NOW(), FALSE, NULL),
-('Salmon Fillets', 12.99, 'Fresh Atlantic salmon fillets', 'salmon_fillets.jpg', 2, 2, NULL, 50.00, 'kg', 2.00, 2, NOW(), NOW(), FALSE, NULL),
-('Ground Beef', 8.49, 'Lean ground beef', 'ground_beef.jpg', 2, 2, NULL, 80.00, 'kg', 2.00, 2, NOW(), NOW(), FALSE, NULL),
-('Frozen Pizza', 7.99, 'Pepperoni frozen pizza', 'frozen_pizza.jpg', 3, 1, NULL, 60.00, 'kg', 1.50, 3, NOW(), NOW(), FALSE, NULL),
-('Ice Cream', 4.49, 'Vanilla ice cream', 'ice_cream.jpg', 3, 1, NULL, 40.00, 'kg', 1.00, 3, NOW(), NOW(), FALSE, NULL),
-('Frozen Vegetables', 3.99, 'Mixed frozen vegetables', 'frozen_vegetables.jpg', 3, 1, NULL, 100.00, 'kg', 2.00, 3, NOW(), NOW(), FALSE, NULL),
-('Chocolate Bar', 1.99, 'Dark chocolate bar', 'chocolate_bar.jpg', 4, 3, NULL, 200.00, 'kg', 0.10, 4, NOW(), NOW(), FALSE, NULL),
-('Potato Chips', 2.49, 'Salted potato chips', 'potato_chips.jpg', 4, 3, NULL, 150.00, 'kg', 0.20, 4, NOW(), NOW(), FALSE, NULL),
-('Gummy Bears', 3.29, 'Fruit-flavored gummy bears', 'gummy_bears.jpg', 4, 3, NULL, 120.00, 'kg', 0.25, 4, NOW(), NOW(), FALSE, NULL),
-('Orange Juice', 4.99, 'Freshly squeezed orange juice', 'orange_juice.jpg', 5, 1, NULL, 60.00, 'L', 1.00, 5, NOW(), NOW(), FALSE, NULL),
-('Cola', 1.29, 'Carbonated cola drink', 'cola.jpg', 5, 1, NULL, 100.00, 'L', 0.50, 5, NOW(), NOW(), FALSE, NULL),
-('Bottled Water', 0.99, 'Spring bottled water', 'bottled_water.jpg', 5, 1, NULL, 500.00, 'ml', 1.00, 5, NOW(), NOW(), FALSE, NULL),
-('Lettuce', 1.79, 'Fresh iceberg lettuce', 'lettuce.jpg', 6, 2, NULL, 80.00, 'kg', 1.00, 6, NOW(), NOW(), FALSE, NULL),
-('Tomatoes', 2.49, 'Juicy red tomatoes', 'tomatoes.jpg', 6, 2, NULL, 120.00, 'kg', 1.50, 6, NOW(), NOW(), FALSE, NULL),
-('Bananas', 1.29, 'Bunch of ripe bananas', 'bananas.jpg', 6, 2, NULL, 200.00, 'kg', 2.00, 6, NOW(), NOW(), FALSE, NULL),
-('Broccoli', 2.49, 'Fresh organic broccoli', 'broccoli.jpg', 6, 2, NULL, 100.00, 'kg', 1.00, 6, NOW(), NOW(), FALSE, NULL),
-('Carrots', 1.99, 'Bag of fresh carrots', 'carrots.jpg', 6, 2, NULL, 200.00, 'kg', 1.00, 6, NOW(), NOW(), FALSE, NULL),
-('Spinach', 3.49, 'Fresh organic spinach leaves', 'spinach.jpg', 6, 2, NULL, 150.00, 'kg', 0.75, 6, NOW(), NOW(), FALSE, NULL),
-('Cucumbers', 1.99, 'Bag of fresh cucumbers', 'cucumbers.jpg', 6, 2, NULL, 300.00, 'kg', 0.50, 6, NOW(), NOW(), FALSE, NULL),
-('Bell Peppers', 3.99, 'Mixed color bell peppers', 'bell_peppers.jpg', 6, 2, NULL, 120.00, 'kg', 0.50, 6, NOW(), NOW(), FALSE, NULL),
-('Potatoes', 2.79, 'Bag of fresh potatoes', 'potatoes.jpg', 6, 2, NULL, 300.00, 'kg', 2.00, 6, NOW(), NOW(), FALSE, NULL),
-('Apples', 4.99, 'Bag of fresh apples', 'apples.jpg', 6, 2, NULL, 100.00, 'kg', 1.50, 6, NOW(), NOW(), FALSE, NULL),
-('Oranges', 3.49, 'Fresh juicy oranges', 'oranges.jpg', 6, 2, NULL, 200.00, 'kg', 2.00, 6, NOW(), NOW(), FALSE, NULL),
-('Strawberries', 5.99, 'Box of fresh strawberries', 'strawberries.jpg', 6, 2, NULL, 100.00, 'kg', 0.50, 6, NOW(), NOW(), FALSE, NULL),
-('Blueberries', 4.99, 'Box of fresh blueberries', 'blueberries.jpg', 6, 2, NULL, 80.00, 'kg', 0.50, 6, NOW(), NOW(), FALSE, NULL),
-('Grapes', 3.99, 'Bag of seedless grapes', 'grapes.jpg', 6, 2, NULL, 120.00, 'kg', 1.00, 6, NOW(), NOW(), FALSE, NULL);
+INSERT INTO products (product_name, unit_price, description, image_url, supplier_id, created_by_admin_id, discount_id, stock_weight, min_stock, unit, min_order_amount, category_id, created_at, updated_at, is_deleted, deleted_at) VALUES
+('Whole Wheat Bread', 2.99, 'Freshly baked whole wheat bread', 'whole_wheat_bread.jpg', 1, 1, 1, 50.00, 10.00, 'kg', 1.00, 1, NOW(), NOW(), FALSE, NULL),
+('Croissants', 4.99, 'Flaky buttery croissants', 'croissants.jpg', 1, 1, 2, 30.00, 5.00, 'kg', 1.00, 1, NOW(), NOW(), FALSE, NULL),
+('Bagels', 3.49, 'Assorted bagels', 'bagels.jpg', 1, 1, 1, 40.00, 8.00, 'kg', 1.00, 1, NOW(), NOW(), FALSE, NULL),
+('Chicken Breast', 6.99, 'Boneless skinless chicken breast', 'chicken_breast.jpg', 2, 2, 3, 100.00, 15.00, 'kg', 2.00, 2, NOW(), NOW(), FALSE, NULL),
+('Salmon Fillets', 12.99, 'Fresh Atlantic salmon fillets', 'salmon_fillets.jpg', 2, 2, NULL, 50.00, 10.00, 'kg', 2.00, 2, NOW(), NOW(), FALSE, NULL),
+('Ground Beef', 8.49, 'Lean ground beef', 'ground_beef.jpg', 2, 2, NULL, 80.00, 20.00, 'kg', 2.00, 2, NOW(), NOW(), FALSE, NULL),
+('Frozen Pizza', 7.99, 'Pepperoni frozen pizza', 'frozen_pizza.jpg', 3, 1, NULL, 60.00, 10.00, 'kg', 1.50, 3, NOW(), NOW(), FALSE, NULL),
+('Ice Cream', 4.49, 'Vanilla ice cream', 'ice_cream.jpg', 3, 1, NULL, 40.00, 5.00, 'kg', 1.00, 3, NOW(), NOW(), FALSE, NULL),
+('Frozen Vegetables', 3.99, 'Mixed frozen vegetables', 'frozen_vegetables.jpg', 3, 1, NULL, 100.00, 15.00, 'kg', 2.00, 3, NOW(), NOW(), FALSE, NULL),
+('Chocolate Bar', 1.99, 'Dark chocolate bar', 'chocolate_bar.jpg', 4, 3, NULL, 200.00, 30.00, 'kg', 0.10, 4, NOW(), NOW(), FALSE, NULL),
+('Potato Chips', 2.49, 'Salted potato chips', 'potato_chips.jpg', 4, 3, NULL, 150.00, 20.00, 'kg', 0.20, 4, NOW(), NOW(), FALSE, NULL),
+('Gummy Bears', 3.29, 'Fruit-flavored gummy bears', 'gummy_bears.jpg', 4, 3, NULL, 120.00, 15.00, 'kg', 0.25, 4, NOW(), NOW(), FALSE, NULL),
+('Orange Juice', 4.99, 'Freshly squeezed orange juice', 'orange_juice.jpg', 5, 1, NULL, 60.00, 10.00, 'L', 1.00, 5, NOW(), NOW(), FALSE, NULL),
+('Cola', 1.29, 'Carbonated cola drink', 'cola.jpg', 5, 1, NULL, 100.00, 20.00, 'L', 0.50, 5, NOW(), NOW(), FALSE, NULL),
+('Bottled Water', 0.99, 'Spring bottled water', 'bottled_water.jpg', 5, 1, NULL, 500.00, 50.00, 'ml', 1.00, 5, NOW(), NOW(), FALSE, NULL),
+('Lettuce', 1.79, 'Fresh iceberg lettuce', 'lettuce.jpg', 6, 2, NULL, 80.00, 15.00, 'kg', 1.00, 6, NOW(), NOW(), FALSE, NULL),
+('Tomatoes', 2.49, 'Juicy red tomatoes', 'tomatoes.jpg', 6, 2, NULL, 120.00, 20.00, 'kg', 1.50, 6, NOW(), NOW(), FALSE, NULL),
+('Bananas', 1.29, 'Bunch of ripe bananas', 'bananas.jpg', 6, 2, NULL, 200.00, 30.00, 'kg', 2.00, 6, NOW(), NOW(), FALSE, NULL),
+('Broccoli', 2.49, 'Fresh organic broccoli', 'broccoli.jpg', 6, 2, NULL, 100.00, 15.00, 'kg', 1.00, 6, NOW(), NOW(), FALSE, NULL),
+('Carrots', 1.99, 'Bag of fresh carrots', 'carrots.jpg', 6, 2, NULL, 200.00, 30.00, 'kg', 1.00, 6, NOW(), NOW(), FALSE, NULL),
+('Spinach', 3.49, 'Fresh organic spinach leaves', 'spinach.jpg', 6, 2, NULL, 150.00, 20.00, 'kg', 0.75, 6, NOW(), NOW(), FALSE, NULL),
+('Cucumbers', 1.99, 'Bag of fresh cucumbers', 'cucumbers.jpg', 6, 2, NULL, 300.00, 25.00, 'kg', 0.50, 6, NOW(), NOW(), FALSE, NULL),
+('Bell Peppers', 3.99, 'Mixed color bell peppers', 'bell_peppers.jpg', 6, 2, NULL, 120.00, 15.00, 'kg', 0.50, 6, NOW(), NOW(), FALSE, NULL),
+('Potatoes', 2.79, 'Bag of fresh potatoes', 'potatoes.jpg', 6, 2, NULL, 300.00, 30.00, 'kg', 2.00, 6, NOW(), NOW(), FALSE, NULL),
+('Apples', 4.99, 'Bag of fresh apples', 'apples.jpg', 6, 2, NULL, 100.00, 15.00, 'kg', 1.50, 6, NOW(), NOW(), FALSE, NULL),
+('Oranges', 3.49, 'Fresh juicy oranges', 'oranges.jpg', 6, 2, NULL, 200.00, 25.00, 'kg', 2.00, 6, NOW(), NOW(), FALSE, NULL),
+('Strawberries', 5.99, 'Box of fresh strawberries', 'strawberries.jpg', 6, 2, NULL, 100.00, 20.00, 'kg', 0.50, 6, NOW(), NOW(), FALSE, NULL),
+('Blueberries', 4.99, 'Box of fresh blueberries', 'blueberries.jpg', 6, 2, NULL, 80.00, 10.00, 'kg', 0.50, 6, NOW(), NOW(), FALSE, NULL),
+('Grapes', 3.99, 'Bag of seedless grapes', 'grapes.jpg', 6, 2, NULL, 120.00, 15.00, 'kg', 1.00, 6, NOW(), NOW(), FALSE, NULL);
+
 
 
 -- Insert data into users table
@@ -341,9 +371,10 @@ INSERT INTO users (first_name, last_name, email, contact_number, country, compan
 ('Bob', 'Williams', 'bob.williams@example.com', '222-333-4444', 'USA', 'Bob Enterprises', '123 Elm St', 'New York', '10001', 'Deliver after 5 PM', 'hashed_password5', NOW(), NOW(), 1, FALSE, NULL);
 
 -- Insert data into orders table
-INSERT INTO orders (user_id, total_price, delivery_id, order_date, status_id, payment_id, coupon_id, delivery_date, payment_date, payment_status, created_at, updated_at, is_deleted, deleted_at) VALUES
-(1, 10.99, 1, NOW(), 2, 1, 1, NOW() + INTERVAL 3 DAY, NOW(), 1, NOW(), NOW(), FALSE, NULL),
-(2, 15.99, 2, NOW(), 1, 2, 2, NOW() + INTERVAL 5 DAY, NOW(), 0, NOW(), NOW(), FALSE, NULL);
+INSERT INTO orders (user_id, total_price, delivery_id, order_date, status_id, payment_id, coupon_id, delivery_date, payment_date, payment_status,final_price, created_at, updated_at, is_deleted, deleted_at) VALUES
+(1, 10.99, 1, NOW(), 2, 1, 1, NOW() + INTERVAL 3 DAY, NOW(), 1, 8, NOW(), NOW(), FALSE, NULL),
+(1, 50.99, 1, NOW(), 2, 1, 3, NOW() + INTERVAL 3 DAY, NOW(), 1, 20, NOW(), NOW(), FALSE, NULL),
+(2, 15.99, 2, NOW(), 1, 2, 2, NOW() + INTERVAL 5 DAY, NOW(), 0, 5, NOW(), NOW(), FALSE, NULL);
 
 -- Insert data into order_items table
 INSERT INTO order_items (product_id, amount, price, order_id, created_at, updated_at, is_deleted, deleted_at) VALUES

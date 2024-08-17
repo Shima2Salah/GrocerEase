@@ -11,6 +11,15 @@
         <h1>Checkout</h1>
     </header>
     <main>
+        <h2>Your Order</h2>
+        {% if 'final_price' in session %}
+            <p>Coupon Code Applied: {{ session.get('coupon_code', 'None') }}</p>
+            <p>Coupon Amount: ${{ session.get('coupon_amount', 0) }}</p>
+            <p>Total Price: ${{ session.get('total_price', 0) }}</p>
+            <p>Final Price: ${{ session.get('final_price', total_price) }}</p>
+        {% else %}
+            <p>Total Price: ${{ session.get('total_price', 0) }}</p>
+        {% endif %}
         <form method="POST" action="{{ url_for('proced') }}">
             <!-- Existing fields -->
             <label for="first_name">First Name:</label>

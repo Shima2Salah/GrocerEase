@@ -2,6 +2,7 @@
 """ holds class Order"""
 import models
 from models.base_model import BaseModel, Base
+from models.coupon import Coupon
 from os import getenv
 import sqlalchemy
 from sqlalchemy import Column, String, Integer, DECIMAL, ForeignKey, DateTime, ForeignKey
@@ -23,6 +24,7 @@ class Order(BaseModel, Base):
         delivery_date = Column(DateTime)
         payment_date = Column(DateTime)
         payment_status = Column(Integer)
+        final_price = Column(DECIMAL(10, 2), nullable=False)
         order_items = relationship("OrderItem",
                               backref="orders",
                               cascade="all, delete, delete-orphan")
@@ -48,3 +50,28 @@ class Order(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """initializes Order"""
         super().__init__(*args, **kwargs)
+
+    '''@property
+    def calculate_final_price(self):
+        """Calculate the final price after applying a coupon."""
+        if self.coupon_id:
+            coupon = models.storage.get(Coupon, self.coupon_id)
+            if coupon and coupon.start_date <= datetime.utcnow() <= coupon.end_date:
+                return max(self.total_price - float(coupon.coupon_amount), 0)
+        return self.total_price
+
+    @property
+    def final_price(self):
+        """Get or calculate final price."""
+        return self.calculate_final_price
+
+    @final_price.setter
+    def final_price(self, value):
+        """Set final price."""
+        self._final_price = value
+
+    def __init__(self, *args, **kwargs):
+        """initializes Order"""
+        super().__init__(*args, **kwargs)
+        if not self.final_price:
+            self.final_price = self.calculate_final_price'''

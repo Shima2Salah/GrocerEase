@@ -20,6 +20,7 @@ class Product(BaseModel, Base):
         created_by_admin_id = Column(Integer, ForeignKey('admins.id'), nullable=False)
         discount_id = Column(Integer, ForeignKey('discounts.id'))
         stock_weight = Column(DECIMAL(10, 2))
+        min_stock = Column(DECIMAL(10, 2))
         unit = Column(String(255))
         min_order_amount = Column(DECIMAL(10, 2))
         category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
@@ -43,6 +44,7 @@ class Product(BaseModel, Base):
         created_at = None
         updated_at = None
         stock_weight = None
+        min_stock = None
         unit = None
         min_order_amount = None
         category_id = None

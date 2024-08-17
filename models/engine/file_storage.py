@@ -28,6 +28,7 @@ classes = {
     "Order": Order,
     "OrderItem": OrderItem,
     "Category": Category,
+    "Coupon": Coupon,
     "Supplier": Supplier,
     "Admin": Admin,
     "AdminRole": AdminRole,

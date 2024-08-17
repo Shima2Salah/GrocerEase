@@ -7,6 +7,7 @@ from models.admin import Admin
 from models.admin_role import AdminRole
 from models.base_model import BaseModel, Base
 from models.category import Category
+from models.coupon import Coupon
 from models.delivery import Delivery
 from models.discount import Discount
 from models.order import Order
@@ -190,6 +191,9 @@ def cart():
             order_items = session['order']
             total_price = round(sum(float(item['price']) for item in order_items), 2)
 
+            final_price = session.get('final_price', total_price)
+
+
             for item in order_items:
                 product = storage.get(Product, item['product_id'])
                 if product:
@@ -197,24 +201,77 @@ def cart():
                     item['image_url'] = product.image_url
                     item['price_after_discount'] = product.price_after_discount
 
-            return render_template('cart.html', order_items=order_items, total_price=total_price)
+            print(session.keys())  # Print all keys in the session
+            print(session.get('order'))  # Print the 'order' key in the session
+            print(session)
+
+            return render_template('cart.html', order_items=order_items, total_price=total_price, final_price=final_price)
         else:
             return render_template('cart.html', order_items=[], total_price=0)
+
+
+@app.route('/apply_coupon', methods=['POST'])
+def apply_coupon():
+    """Apply a coupon code and update the total price."""
+    coupon_code = request.form.get('coupon_code')
+    
+    # Fetch the coupon details from the database
+    coupon = storage.query(Coupon).filter_by(coupon_code=coupon_code, is_deleted=False).first()
+    
+    # Debugging: Print the coupon object
+    print("Coupon Retrieved:", coupon)
+
+    if coupon and coupon.start_date <= datetime.utcnow() <= coupon.end_date:
+        if 'order' in session:
+            order_items = session['order']
+            total_price = round(sum(float(item['price']) for item in order_items), 2)
+            
+            # Calculate the final price after applying the coupon
+            coupon_amount = float(coupon.coupon_amount)
+            final_price = round(total_price - coupon_amount, 2)
+            final_price = max(final_price, 0)  # Ensure price doesn't go negative
+            
+            # Store final price and coupon details in session
+            session['total_price'] = total_price
+            session['final_price'] = final_price
+            session['coupon_amount'] = coupon_amount
+            session['coupon_code'] = coupon_code  # Store coupon code for display
+
+            return render_template('cart.html', 
+                                   order_items=order_items, 
+                                   total_price=total_price, 
+                                   final_price=final_price, 
+                                   coupon_amount=coupon_amount)
+    else:
+        flash("Invalid or expired coupon code.")
+        return redirect(url_for('cart'))
+
+
 
 @app.route('/clear_cart', methods=['POST'])
 def clear_cart():
     """Clear the shopping cart."""
     if 'order' in session:
         session.pop('order', None)  # Remove the 'order' key from the session
+        session.pop('coupon_id', None)
+        session.pop('coupon_code', None)
+        session.pop('final_price', None)  # Clear final_price after processing
+        session.pop('coupon_amount', None)
         session.modified = True  # Mark the session as modified
+
+        print(session.keys())  # Print all keys in the session
+        print(session.get('order'))  # Print the 'order' key in the session
+        print(session)
 
     flash('Cart has been cleared successfully.', 'success')
     return redirect(url_for('cart'))
 
+
+
 @app.route('/proced.html', methods=['GET', 'POST'])
 @app.route('/proced', methods=['GET', 'POST'])
 def proced():
-    """Handle the checkout process."""
+    '''Handle the checkout process.'''
     if request.method == 'POST':
         user_data = {
             'first_name': request.form.get('first_name'),
@@ -236,19 +293,29 @@ def proced():
 
         if 'order' in session:
             total_price = sum(float(item['price']) for item in session['order'])
+            final_price = session.get('final_price', total_price)  # Use final_price from session or fallback to total_price
+            
             # Create payment first
             new_payment = Payment(payment_method=user_data['payment_method'])
             storage.new(new_payment)
             storage.save()
 
-            # Create order with payment_id
+            print(f"Total Price from session: {total_price}")
+            print(f"Final Price from session: {final_price}")
+
+            # Create order with payment_id and final_price
             new_order = Order(
                 user_id=new_user.id,
                 total_price=Decimal(total_price),
+                final_price=Decimal(final_price),  # Use final_price here
                 payment_id=new_payment.id  # Set payment_id
             )
             storage.new(new_order)
             storage.save()
+
+            print(f"Total Price from session: {total_price}")
+            print(f"Final Price from session: {final_price}")
+
 
             for item in session['order']:
                 new_order_item = OrderItem(
@@ -260,11 +327,23 @@ def proced():
                 storage.new(new_order_item)
                 storage.save()
 
+            print(f"Total Price from session: {total_price}")
+            print(f"Final Price from session: {final_price}")
+
+
             session.pop('order', None)
+            session.pop('coupon_id', None)
+            session.pop('coupon_code', None)
+            session.pop('total_price', None)
+            session.pop('final_price', None)  # Clear final_price after processing
+            session.pop('coupon_amount', None)  # Clear coupon_amount after processing
+
+            print(session.keys())  # Print all keys in the session
+            print(session.get('order'))  # Print the 'order' key in the session
+            print(session)
 
         return redirect(url_for('thankyou'))
     return render_template('proced.html')
-
 
 
 
@@ -597,3 +676,57 @@ def admin_dashboard2():
         return render_template('admin_dashboard.html', admin=admin, products=products)
     else:
         return redirect(url_for('admin_login'))'''
+
+"""@app.route('/proced.html', methods=['GET', 'POST'])
+@app.route('/proced', methods=['GET', 'POST'])
+def proced():
+    '''Handle the checkout process.'''
+    if request.method == 'POST':
+        user_data = {
+            'first_name': request.form.get('first_name'),
+            'last_name': request.form.get('last_name'),
+            'contact_number': request.form.get('contact_number'),
+            'email': request.form.get('email'),
+            'country': request.form.get('country'),
+            'company_name': request.form.get('company_name'),
+            'address': request.form.get('address'),
+            'state_or_country': request.form.get('state_or_country'),
+            'postal_or_zip': request.form.get('postal_or_zip'),
+            'order_notes': request.form.get('order_notes'),
+            'payment_method': request.form.get('payment_method')  # Capture payment method
+        }
+
+        new_user = User(**user_data)
+        storage.new(new_user)
+        storage.save()
+
+        if 'order' in session:
+            total_price = sum(float(item['price']) for item in session['order'])
+            # Create payment first
+            new_payment = Payment(payment_method=user_data['payment_method'])
+            storage.new(new_payment)
+            storage.save()
+
+            # Create order with payment_id
+            new_order = Order(
+                user_id=new_user.id,
+                total_price=Decimal(total_price),
+                payment_id=new_payment.id  # Set payment_id
+            )
+            storage.new(new_order)
+            storage.save()
+
+            for item in session['order']:
+                new_order_item = OrderItem(
+                    order_id=new_order.id,
+                    product_id=item['product_id'],
+                    amount=item['amount'],
+                    price=item['price']
+                )
+                storage.new(new_order_item)
+                storage.save()
+
+            session.pop('order', None)
+
+        return redirect(url_for('thankyou'))
+    return render_template('proced.html')"""

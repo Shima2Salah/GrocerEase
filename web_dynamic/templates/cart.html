@@ -33,8 +33,20 @@
                 {% endfor %}
             </ul>
             <p>Total Price: ${{ total_price }}</p>
+            
+            {% if final_price is not none %}
+                <p>Coupon Code Applied: {{ session.get('coupon_code') }}</p>
+                <p>Coupon Amount: ${{ coupon_amount }}</p>
+                <p>Final Price After Discount: ${{ final_price }}</p>
+            {% endif %}
+
             <a href="{{ url_for('proced') }}">Proceed to Checkout</a>
 
+            <form action="{{ url_for('apply_coupon') }}" method="POST">
+                <label for="coupon_code">Enter Coupon Code:</label>
+                <input type="text" name="coupon_code" id="coupon_code" required>
+                <button type="submit">Apply Coupon</button>
+            </form>
             <!-- Clear Cart Button -->
             <form action="{{ url_for('clear_cart') }}" method="POST" style="margin-top: 20px;">
                 <button type="submit" class="clear-cart-button">Clear Cart</button>
