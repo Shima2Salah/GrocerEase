@@ -133,22 +133,25 @@ def page3():
                            selected_category_id=selected_category_id,
                            selected_category=selected_category)
 
-
-
-
 @app.route('/single.html/<int:product_id>', methods=['GET', 'POST'])
 @app.route('/single/<int:product_id>', methods=['GET', 'POST'])
 def single(product_id):
     """Display a single product page and handle adding to cart."""
+    product = storage.get(Product, product_id)
+
+    if not product:
+        return 'Product not found', 404
+
+    discount = product.discount  # Fetch the discount if available
+    price_after_discount = round(
+        product.unit_price * (1 - discount.discount_percentage / 100), 2
+    ) if discount else product.unit_price
+
     if request.method == 'POST':
-        product_id = int(request.form.get('product_id'))
-        amount = int(request.form.get('amount'))
+        amount = Decimal(request.form.get('amount'))
 
-        product = storage.get(Product, product_id)
-
-        if product and amount > 0 and amount <= product.stock_weight:
-            discount = storage.get(Discount, product.discount_id) if product.discount_id else None
-            price = round(product.unit_price * amount, 2)
+        if amount > 0 and amount <= product.stock_weight:
+            price = round(price_after_discount * amount, 2)
             order_item = {'product_id': product_id, 'amount': amount, 'price': price}
 
             if 'order' not in session:
@@ -157,19 +160,22 @@ def single(product_id):
             # Append the new order item to the existing list in the session
             session['order'].append(order_item)
             session.modified = True
-            print(session.keys()) # Debug: Print all keys in the session
-            print(session.get('order')) # Debug: Print the 'order' key in the session
+
+            # Debug prints
+            print(session.keys())  # Print all keys in the session
+            print(session.get('order'))  # Print the 'order' key in the session
             print(session)
+
             return redirect(url_for('cart'))
         else:
-            return 'Product not found, invalid amount, or insufficient stock'
-    else:
-        product = storage.get(Product, product_id)
-        discount = storage.get(Discount, product.discount_id) if product.discount_id else None
-        return render_template('single.html', product=product, discount=discount)
+            return 'Invalid amount or insufficient stock'
 
-
-
+    return render_template(
+        'single.html',
+        product=product,
+        discount=discount,
+        price_after_discount=price_after_discount
+    )
 
 @app.route('/cart', methods=['GET', 'POST'])
 def cart():
@@ -189,11 +195,21 @@ def cart():
                 if product:
                     item['product_name'] = product.product_name
                     item['image_url'] = product.image_url
-                    item['unit_price'] = product.unit_price
+                    item['price_after_discount'] = product.price_after_discount
 
             return render_template('cart.html', order_items=order_items, total_price=total_price)
         else:
             return render_template('cart.html', order_items=[], total_price=0)
+
+@app.route('/clear_cart', methods=['POST'])
+def clear_cart():
+    """Clear the shopping cart."""
+    if 'order' in session:
+        session.pop('order', None)  # Remove the 'order' key from the session
+        session.modified = True  # Mark the session as modified
+
+    flash('Cart has been cleared successfully.', 'success')
+    return redirect(url_for('cart'))
 
 @app.route('/proced.html', methods=['GET', 'POST'])
 @app.route('/proced', methods=['GET', 'POST'])

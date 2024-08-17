@@ -4,7 +4,7 @@ import models
 from models.base_model import BaseModel, Base
 from os import getenv
 import sqlalchemy
-from sqlalchemy import Column, String, Integer, Float, ForeignKey, DECIMAL, DateTime
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, DECIMAL, DateTime, case
 from sqlalchemy.orm import relationship
 
 
@@ -20,7 +20,8 @@ class Product(BaseModel, Base):
         created_by_admin_id = Column(Integer, ForeignKey('admins.id'), nullable=False)
         discount_id = Column(Integer, ForeignKey('discounts.id'))
         stock_weight = Column(DECIMAL(10, 2))
-        weight = Column(DECIMAL(10, 2))
+        unit = Column(String(255))
+        min_order_amount = Column(DECIMAL(10, 2))
         category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
         order_items = relationship("OrderItem",
                               backref="products",
@@ -42,8 +43,15 @@ class Product(BaseModel, Base):
         created_at = None
         updated_at = None
         stock_weight = None
-        weight = None
+        unit = None
+        min_order_amount = None
         category_id = None
+    @property
+    def price_after_discount(self):
+        """Calculate the price after applying the discount."""
+        if self.discount and self.discount.discount_percentage:
+            return round(self.unit_price * (1 - self.discount.discount_percentage / 100), 2)
+        return self.unit_price
 
     def __init__(self, *args, **kwargs):
         """initializes Product"""

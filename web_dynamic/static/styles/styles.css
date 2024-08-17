@@ -65,3 +65,26 @@ th {
 tr:hover {
     background-color: #f1f1f1;
 }
+.flashes {
+    list-style-type: none;
+    padding: 0;
+}
+
+.flashes li {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Example styling for different categories of flash messages */
+.flashes li.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.flashes li.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}

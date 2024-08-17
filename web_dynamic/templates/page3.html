@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='../static/styles/styles.css') }}">
 </head>
 <body>
     <header>
@@ -19,7 +19,7 @@
         </nav>
     </header>
     <main>
-        <h2>Products in {{ selected_category.category_name if selected_category_id else 'All Categories' }}</h2>
+        <h2>Products in {{ selected_category.category_name if selected_category else 'All Categories' }}</h2>
         
         <!-- Category Selection -->
         <div class="category-select">
@@ -33,8 +33,6 @@
                 {% endfor %}
             </select>
         </div>
-        <h2>Products in {{ selected_category.category_name if selected_category else 'All Categories' }}</h2>
-
 
         <!-- Product Listing -->
         <div class="product-list">
@@ -43,7 +41,20 @@
                     <div class="product-item">
                         <img src="{{ product.image_url }}" alt="{{ product.product_name }}">
                         <h3>{{ product.product_name }}</h3>
-                        <p>Price: ${{ product.price }}</p>
+                        
+                        <!-- Unit Price -->
+                        <p><strong>Unit Price:</strong> ${{ product.unit_price }}</p>
+
+                        <!-- Discount Details -->
+                        {% if product.discount and product.discount.discount_percentage > 0 %}
+                            <p><strong>Discount:</strong> {{ product.discount.discount_percentage }}%</p>
+                            <p><strong>Price after discount:</strong> 
+                                ${{ product.unit_price * (1 - product.discount.discount_percentage / 100) | round(2) }}
+                            </p>
+                        {% else %}
+                            <p><strong> </strong> </p>
+                        {% endif %}
+
                         <a href="{{ url_for('single', product_id=product.id) }}">View Details</a>
                     </div>
                 {% endfor %}
@@ -51,7 +62,6 @@
                 <p>No products available.</p>
             {% endif %}
         </div>
-        
 
         <!-- Pagination -->
         <div class="pagination">

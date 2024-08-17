@@ -4,7 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ product.product_name }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const amountInput = document.getElementById('amount');
+            const minOrderAmount = parseFloat(amountInput.min);
+
+            document.getElementById('increase').addEventListener('click', function() {
+                let currentAmount = parseFloat(amountInput.value) || minOrderAmount;
+                let newAmount = currentAmount + minOrderAmount;
+                amountInput.value = newAmount.toFixed(2); // Set value with two decimal places
+            });
+
+            document.getElementById('decrease').addEventListener('click', function() {
+                let currentAmount = parseFloat(amountInput.value) || minOrderAmount;
+                let newAmount = Math.max(minOrderAmount, currentAmount - minOrderAmount);
+                amountInput.value = newAmount.toFixed(2); // Set value with two decimal places
+            });
+        });
+    </script>
 </head>
 <body>
     <header>
@@ -26,26 +44,25 @@
         <p><strong>Description:</strong> {{ product.description }}</p>
 
         <!-- Unit Price -->
-        <p><strong>Unit Price:</strong> ${{ product.unit_price }}</p>
+        <p><strong>Unit Price:</strong> ${{ product.unit_price }} per {{ product.unit }}</p>
 
         <!-- Discount Details -->
         {% if discount and discount.discount_percentage > 0 %}
             <p><strong>Discount:</strong> {{ discount.discount_percentage }}%</p>
             <p><strong>Price after discount:</strong> 
-                ${{ (product.unit_price * (1 - (discount.discount_percentage / 100))) | round(2) }}
+                ${{ product.price_after_discount | round(2) }}
             </p>
         {% else %}
             <p><strong>No Discount Available</strong></p>
         {% endif %}
 
-        <!-- Price per unit -->
-        <p><strong>Price per unit:</strong> ${{ product.unit_price }}</p>
-
         <!-- Add to Cart Form -->
         <form method="POST">
             <input type="hidden" name="product_id" value="{{ product.id }}">
-            <label for="amount">Amount (kg):</label>
-            <input type="number" name="amount" id="amount" required>
+            <label for="amount">Amount ({{ product.unit }}):</label>
+            <button type="button" id="decrease">-</button>
+            <input type="number" name="amount" id="amount" min="{{ product.min_order_amount }}" required value="{{ product.min_order_amount }}" step="{{ product.min_order_amount }}">
+            <button type="button" id="increase">+</button>
             <button type="submit">Add to Cart</button>
         </form>
     </main>

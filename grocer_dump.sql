@@ -126,10 +126,12 @@ CREATE TABLE `products` (
     `supplier_id` INT NOT NULL,
     `created_by_admin_id` INT NOT NULL,
     `discount_id` INT,
+    `price_after_discount` DECIMAL(10, 2),
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `stock_weight` DECIMAL(10, 2),
-    `weight` DECIMAL(10, 2),
+    `unit` VARCHAR(255),
+    `min_order_amount` DECIMAL(10, 2),
     `category_id` INT NOT NULL,
     `is_deleted` BOOLEAN DEFAULT FALSE,
     `deleted_at` DATETIME DEFAULT NULL,
@@ -142,6 +144,34 @@ CREATE TABLE `products` (
     CONSTRAINT `fk_products_created_by_admin_id` FOREIGN KEY (`created_by_admin_id`) REFERENCES admins(`id`),
     CONSTRAINT `fk_products_discount_id` FOREIGN KEY (`discount_id`) REFERENCES discounts(`id`)
 );
+
+DROP TRIGGER IF EXISTS calculate_price_after_discount;
+DELIMITER //
+CREATE TRIGGER calculate_price_after_discount
+BEFORE INSERT ON products
+FOR EACH ROW
+BEGIN
+    IF NEW.discount_id IS NOT NULL THEN
+        SET NEW.price_after_discount = NEW.unit_price - (NEW.unit_price * (SELECT discount_percentage FROM discounts WHERE discounts.id = NEW.discount_id) / 100);
+    ELSE
+        SET NEW.price_after_discount = NEW.unit_price;
+    END IF;
+END;
+//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER update_stock_after_order
+AFTER INSERT ON order_items
+FOR EACH ROW
+BEGIN
+    UPDATE products
+    SET stock_weight = stock_weight - NEW.amount
+    WHERE id = NEW.product_id;
+END;
+//
+DELIMITER ;
+
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
@@ -273,36 +303,37 @@ INSERT INTO suppliers (supplier_name, contact_number, address, created_by_admin_
 ('Green Harvest', '678-901-2345', '303 Green Way', 2, 'Green Harvest LLC', 'contact@greenharvest.com', 'Vegetables & fruits supplier', NOW(), NOW(), FALSE, NULL);
 
 -- Insert data into products table
-INSERT INTO products (product_name, unit_price, description, image_url, supplier_id, created_by_admin_id, discount_id, stock_weight, weight, category_id, created_at, updated_at, is_deleted, deleted_at) VALUES
-('Whole Wheat Bread', 2.99, 'Freshly baked whole wheat bread', 'whole_wheat_bread.jpg', 1, 1, 1, 50.00, 1.00, 1, NOW(), NOW(), FALSE, NULL),
-('Croissants', 4.99, 'Flaky buttery croissants', 'croissants.jpg', 1, 1, 2, 30.00, 0.50, 1, NOW(), NOW(), FALSE, NULL),
-('Bagels', 3.49, 'Assorted bagels', 'bagels.jpg', 1, 1, 1, 40.00, 1.00, 1, NOW(), NOW(), FALSE, NULL),
-('Chicken Breast', 6.99, 'Boneless skinless chicken breast', 'chicken_breast.jpg', 2, 2, 3, 100.00, 2.00, 2, NOW(), NOW(), FALSE, NULL),
-('Salmon Fillets', 12.99, 'Fresh Atlantic salmon fillets', 'salmon_fillets.jpg', 2, 2, NULL, 50.00, 1.00, 2, NOW(), NOW(), FALSE, NULL),
-('Ground Beef', 8.49, 'Lean ground beef', 'ground_beef.jpg', 2, 2, NULL, 80.00, 2.00, 2, NOW(), NOW(), FALSE, NULL),
-('Frozen Pizza', 7.99, 'Pepperoni frozen pizza', 'frozen_pizza.jpg', 3, 1, NULL, 60.00, 1.50, 3, NOW(), NOW(), FALSE, NULL),
-('Ice Cream', 4.49, 'Vanilla ice cream', 'ice_cream.jpg', 3, 1, NULL, 40.00, 1.00, 3, NOW(), NOW(), FALSE, NULL),
-('Frozen Vegetables', 3.99, 'Mixed frozen vegetables', 'frozen_vegetables.jpg', 3, 1, NULL, 100.00, 2.00, 3, NOW(), NOW(), FALSE, NULL),
-('Chocolate Bar', 1.99, 'Dark chocolate bar', 'chocolate_bar.jpg', 4, 3, NULL, 200.00, 0.10, 4, NOW(), NOW(), FALSE, NULL),
-('Potato Chips', 2.49, 'Salted potato chips', 'potato_chips.jpg', 4, 3, NULL, 150.00, 0.20, 4, NOW(), NOW(), FALSE, NULL),
-('Gummy Bears', 3.29, 'Fruit-flavored gummy bears', 'gummy_bears.jpg', 4, 3, NULL, 120.00, 0.25, 4, NOW(), NOW(), FALSE, NULL),
-('Orange Juice', 4.99, 'Freshly squeezed orange juice', 'orange_juice.jpg', 5, 1, NULL, 60.00, 2.00, 5, NOW(), NOW(), FALSE, NULL),
-('Cola', 1.29, 'Carbonated cola drink', 'cola.jpg', 5, 1, NULL, 100.00, 0.50, 5, NOW(), NOW(), FALSE, NULL),
-('Bottled Water', 0.99, 'Spring bottled water', 'bottled_water.jpg', 5, 1, NULL, 500.00, 1.00, 5, NOW(), NOW(), FALSE, NULL),
-('Lettuce', 1.79, 'Fresh iceberg lettuce', 'lettuce.jpg', 6, 2, NULL, 80.00, 1.00, 6, NOW(), NOW(), FALSE, NULL),
-('Tomatoes', 2.49, 'Juicy red tomatoes', 'tomatoes.jpg', 6, 2, NULL, 120.00, 1.50, 6, NOW(), NOW(), FALSE, NULL),
-('Bananas', 1.29, 'Bunch of ripe bananas', 'bananas.jpg', 6, 2, NULL, 200.00, 2.00, 6, NOW(), NOW(), FALSE, NULL),
-('Broccoli', 2.49, 'Fresh organic broccoli', 'broccoli.jpg', 6, 2, NULL, 100.00, 1.00, 6, NOW(), NOW(), FALSE, NULL),
-('Carrots', 1.99, 'Bag of fresh carrots', 'carrots.jpg', 6, 2, NULL, 200.00, 1.00, 6, NOW(), NOW(), FALSE, NULL),
-('Spinach', 3.49, 'Fresh organic spinach leaves', 'spinach.jpg', 6, 2, NULL, 150.00, 0.75, 6, NOW(), NOW(), FALSE, NULL),
-('Cucumbers', 1.99, 'Bag of fresh cucumber', 'cucumbers.jpg', 6, 2, NULL, 300.00, 0.50, 6, NOW(), NOW(), FALSE, NULL),
-('Bell Peppers', 3.99, 'Mixed color bell peppers', 'bell_peppers.jpg', 6, 2, NULL, 120.00, 0.50, 6, NOW(), NOW(), FALSE, NULL),
-('Potatoes', 2.79, 'Bag of fresh potatoes', 'potatoes.jpg', 6, 2, NULL, 300.00, 2.00, 6, NOW(), NOW(), FALSE, NULL),
-('Apples', 4.99, 'Bag of fresh apples', 'apples.jpg', 6, 2, NULL, 100.00, 1.50, 6, NOW(), NOW(), FALSE, NULL),
-('Oranges', 3.49, 'Fresh juicy oranges', 'oranges.jpg', 6, 2, NULL, 200.00, 2.00, 6, NOW(), NOW(), FALSE, NULL),
-('Strawberries', 5.99, 'Box of fresh strawberries', 'strawberries.jpg', 6, 2, NULL, 100.00, 0.50, 6, NOW(), NOW(), FALSE, NULL),
-('Blueberries', 4.99, 'Box of fresh blueberries', 'blueberries.jpg', 6, 2, NULL, 80.00, 0.50, 6, NOW(), NOW(), FALSE, NULL),
-('Grapes', 3.99, 'Bag of seedless grapes', 'grapes.jpg', 6, 2, NULL, 120.00, 1.00, 6, NOW(), NOW(), FALSE, NULL);
+INSERT INTO products (product_name, unit_price, description, image_url, supplier_id, created_by_admin_id, discount_id, stock_weight, unit, min_order_amount, category_id, created_at, updated_at, is_deleted, deleted_at) VALUES
+('Whole Wheat Bread', 2.99, 'Freshly baked whole wheat bread', 'whole_wheat_bread.jpg', 1, 1, 1, 50.00, 'kg', 1.00, 1, NOW(), NOW(), FALSE, NULL),
+('Croissants', 4.99, 'Flaky buttery croissants', 'croissants.jpg', 1, 1, 2, 30.00, 'kg', 1.00, 1, NOW(), NOW(), FALSE, NULL),
+('Bagels', 3.49, 'Assorted bagels', 'bagels.jpg', 1, 1, 1, 40.00, 'kg', 1.00, 1, NOW(), NOW(), FALSE, NULL),
+('Chicken Breast', 6.99, 'Boneless skinless chicken breast', 'chicken_breast.jpg', 2, 2, 3, 100.00, 'kg', 2.00, 2, NOW(), NOW(), FALSE, NULL),
+('Salmon Fillets', 12.99, 'Fresh Atlantic salmon fillets', 'salmon_fillets.jpg', 2, 2, NULL, 50.00, 'kg', 2.00, 2, NOW(), NOW(), FALSE, NULL),
+('Ground Beef', 8.49, 'Lean ground beef', 'ground_beef.jpg', 2, 2, NULL, 80.00, 'kg', 2.00, 2, NOW(), NOW(), FALSE, NULL),
+('Frozen Pizza', 7.99, 'Pepperoni frozen pizza', 'frozen_pizza.jpg', 3, 1, NULL, 60.00, 'kg', 1.50, 3, NOW(), NOW(), FALSE, NULL),
+('Ice Cream', 4.49, 'Vanilla ice cream', 'ice_cream.jpg', 3, 1, NULL, 40.00, 'kg', 1.00, 3, NOW(), NOW(), FALSE, NULL),
+('Frozen Vegetables', 3.99, 'Mixed frozen vegetables', 'frozen_vegetables.jpg', 3, 1, NULL, 100.00, 'kg', 2.00, 3, NOW(), NOW(), FALSE, NULL),
+('Chocolate Bar', 1.99, 'Dark chocolate bar', 'chocolate_bar.jpg', 4, 3, NULL, 200.00, 'kg', 0.10, 4, NOW(), NOW(), FALSE, NULL),
+('Potato Chips', 2.49, 'Salted potato chips', 'potato_chips.jpg', 4, 3, NULL, 150.00, 'kg', 0.20, 4, NOW(), NOW(), FALSE, NULL),
+('Gummy Bears', 3.29, 'Fruit-flavored gummy bears', 'gummy_bears.jpg', 4, 3, NULL, 120.00, 'kg', 0.25, 4, NOW(), NOW(), FALSE, NULL),
+('Orange Juice', 4.99, 'Freshly squeezed orange juice', 'orange_juice.jpg', 5, 1, NULL, 60.00, 'L', 1.00, 5, NOW(), NOW(), FALSE, NULL),
+('Cola', 1.29, 'Carbonated cola drink', 'cola.jpg', 5, 1, NULL, 100.00, 'L', 0.50, 5, NOW(), NOW(), FALSE, NULL),
+('Bottled Water', 0.99, 'Spring bottled water', 'bottled_water.jpg', 5, 1, NULL, 500.00, 'ml', 1.00, 5, NOW(), NOW(), FALSE, NULL),
+('Lettuce', 1.79, 'Fresh iceberg lettuce', 'lettuce.jpg', 6, 2, NULL, 80.00, 'kg', 1.00, 6, NOW(), NOW(), FALSE, NULL),
+('Tomatoes', 2.49, 'Juicy red tomatoes', 'tomatoes.jpg', 6, 2, NULL, 120.00, 'kg', 1.50, 6, NOW(), NOW(), FALSE, NULL),
+('Bananas', 1.29, 'Bunch of ripe bananas', 'bananas.jpg', 6, 2, NULL, 200.00, 'kg', 2.00, 6, NOW(), NOW(), FALSE, NULL),
+('Broccoli', 2.49, 'Fresh organic broccoli', 'broccoli.jpg', 6, 2, NULL, 100.00, 'kg', 1.00, 6, NOW(), NOW(), FALSE, NULL),
+('Carrots', 1.99, 'Bag of fresh carrots', 'carrots.jpg', 6, 2, NULL, 200.00, 'kg', 1.00, 6, NOW(), NOW(), FALSE, NULL),
+('Spinach', 3.49, 'Fresh organic spinach leaves', 'spinach.jpg', 6, 2, NULL, 150.00, 'kg', 0.75, 6, NOW(), NOW(), FALSE, NULL),
+('Cucumbers', 1.99, 'Bag of fresh cucumbers', 'cucumbers.jpg', 6, 2, NULL, 300.00, 'kg', 0.50, 6, NOW(), NOW(), FALSE, NULL),
+('Bell Peppers', 3.99, 'Mixed color bell peppers', 'bell_peppers.jpg', 6, 2, NULL, 120.00, 'kg', 0.50, 6, NOW(), NOW(), FALSE, NULL),
+('Potatoes', 2.79, 'Bag of fresh potatoes', 'potatoes.jpg', 6, 2, NULL, 300.00, 'kg', 2.00, 6, NOW(), NOW(), FALSE, NULL),
+('Apples', 4.99, 'Bag of fresh apples', 'apples.jpg', 6, 2, NULL, 100.00, 'kg', 1.50, 6, NOW(), NOW(), FALSE, NULL),
+('Oranges', 3.49, 'Fresh juicy oranges', 'oranges.jpg', 6, 2, NULL, 200.00, 'kg', 2.00, 6, NOW(), NOW(), FALSE, NULL),
+('Strawberries', 5.99, 'Box of fresh strawberries', 'strawberries.jpg', 6, 2, NULL, 100.00, 'kg', 0.50, 6, NOW(), NOW(), FALSE, NULL),
+('Blueberries', 4.99, 'Box of fresh blueberries', 'blueberries.jpg', 6, 2, NULL, 80.00, 'kg', 0.50, 6, NOW(), NOW(), FALSE, NULL),
+('Grapes', 3.99, 'Bag of seedless grapes', 'grapes.jpg', 6, 2, NULL, 120.00, 'kg', 1.00, 6, NOW(), NOW(), FALSE, NULL);
+
 
 -- Insert data into users table
 INSERT INTO users (first_name, last_name, email, contact_number, country, company_name, address, state_or_country, postal_or_zip, order_notes, password_hash, created_at, updated_at, is_create_account, is_deleted, deleted_at) VALUES
