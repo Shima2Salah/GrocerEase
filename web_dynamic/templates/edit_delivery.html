@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='../static/styles/styles.css') }}">
+    <title>Edit Delivery</title>
+</head>
+<body>
+    <h1>Edit Delivery</h1>
+    <form action="{{ url_for('edit_delivery', delivery_id=delivery.id) }}" method="post">
+        <label for="delivery_name">Delivery Name:</label>
+        <input type="text" id="delivery_name" name="delivery_name" value="{{ delivery.delivery_name }}" required><br>
+        <label for="contact_number">Contact Number:</label>
+        <input type="text" id="contact_number" name="contact_number" value="{{ delivery.contact_number }}" required><br>
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" value="{{ delivery.address }}" required><br>
+        <label for="is_active">Is Active:</label>
+        <select id="is_active" name="is_active">
+            <option value="1" {% if delivery.is_active %}selected{% endif %}>Yes</option>
+            <option value="0" {% if not delivery.is_active %}selected{% endif %}>No</option>
+        </select>
+        <button type="submit">Update Delivery</button>
+    </form>
+</body>
+</html>

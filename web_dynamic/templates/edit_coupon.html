@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Category</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='../static/styles/styles.css') }}">
+    <title>Edit Coupon</title>
+</head>
+<body>
+    <h1>Edit Coupon</h1>
+    <form action="{{ url_for('edit_coupon', coupon_id=coupon.id) }}" method="post">
+        <label for="coupon_code">Coupon Code:</label>
+        <input type="text" id="coupon_code" name="coupon_code" value="{{ coupon.coupon_code }}" required><br>
+        <label for="coupon_amount">Coupon Amount:</label>
+        <input type="number" id="coupon_amount" name="coupon_amount" value="{{ coupon.coupon_amount }}" required><br>
+        <label for="start_date">Start Date:</label>
+        <input type="datetime-local" id="start_date" name="start_date" value="{{ coupon.start_date|datetimeformat }}" required><br>
+        <label for="end_date">End Date:</label>
+        <input type="datetime-local" id="end_date" name="end_date" value="{{ coupon.end_date|datetimeformat }}" required><br>
+        <button type="submit">Edit Coupon</button>
+    </form>
+</body>
+</html>

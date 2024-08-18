@@ -13,6 +13,7 @@ class Category(BaseModel, Base):
     if models.storage_t == 'db':
         __tablename__ = 'categories'
         category_name = Column(String(255), unique=True, nullable=False)
+        image_url = Column(String(255))
         products = relationship(
             "Product",
             backref="categories",  # Singular form since this is a many-to-one relationship
@@ -24,6 +25,7 @@ class Category(BaseModel, Base):
         admin = relationship('Admin', back_populates='categories')
     else:
         category_name = ""
+        image_url = ""
         created_by_admin_id = None
 
     def __init__(self, *args, **kwargs):

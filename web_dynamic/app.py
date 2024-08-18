@@ -19,12 +19,22 @@ from models.user import User
 from models.supplier import Supplier
 from decimal import Decimal
 from datetime import datetime
+from werkzeug.utils import secure_filename
+import os
+
 
 app = Flask(__name__)
 app.config['SESSION_REFRESH_EACH_REQUEST'] = False
 app.secret_key = "5NrvVndJurj7iZLj0Kgg2A1T1h5XGKOgbv2LmWzX1B8Vxo"
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
+
+# Folder to store uploaded images
+app.config['UPLOAD_FOLDER'] = 'web_dynamic/static/images'  # Correct path
+
+# Ensure the upload folder exists
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 
 @app.route('/index.html')
 @app.route('/home')
@@ -387,7 +397,86 @@ def admin_dashboard():
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/admin/categories')
+def admin_categories():
+    if 'admin_id' in session:
+        admin_id = session.get('admin_id')
+        admin = storage.get(Admin, admin_id)
+        categories = [cat for cat in storage.all(Category).values() if not cat.is_deleted]
+        return render_template('categories.html', admin=admin, categories=categories)
+    else:
+        return redirect(url_for('admin_login'))
+
+@app.route('/add_category', methods=['GET', 'POST'])
+def add_category():
+    if 'admin_id' in session:
+        if request.method == 'POST':
+            admin_id = session.get('admin_id')
+            category_name = request.form.get('category_name')
+            image = request.files.get('image_url')
+
+            if image and image.filename != '':
+                filename = secure_filename(image.filename)
+                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image.save(image_path)
+                image_url = f'images/{filename}'
+            else:
+                image_url = None
+
+            new_category = Category(
+                category_name=category_name,
+                image_url=image_url,
+                created_by_admin_id=admin_id,
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+            storage.new(new_category)
+            storage.save()
+
+            return redirect(url_for('admin_categories'))
+        return render_template('add_category.html')
+    else:
+        return redirect(url_for('admin_login'))
+
+@app.route('/edit_category/<int:category_id>', methods=['GET', 'POST'])
+def edit_category(category_id):
+    if 'admin_id' in session:
+        category = storage.get(Category, category_id)
+
+        if request.method == 'POST':
+            category_name = request.form.get('category_name')
+            image = request.files.get('image_url')
+
+            if image and image.filename != '':
+                filename = secure_filename(image.filename)
+                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image.save(image_path)
+                category.image_url = f'images/{filename}'  # Save relative path
+
+            category.category_name = category_name
+            category.updated_at = datetime.utcnow()
+            storage.save()
+
+            return redirect(url_for('admin_categories'))
+
+        return render_template('edit_category.html', category=category)
+    else:
+        return redirect(url_for('admin_login'))
+
+@app.route('/delete_category/<int:category_id>')
+def delete_category(category_id):
+    if 'admin_id' in session:
+        category = storage.get(Category, category_id)
+        if category:
+            category.is_deleted = True
+            category.deleted_at = datetime.utcnow()
+            storage.save()
+        return redirect(url_for('admin_categories'))
+    else:
+        return redirect(url_for('admin_login'))
+
+"""@app.route('/admin/categories')
 def admin_categories():
     # Check if admin is logged in
     if 'admin_id' in session:
@@ -399,21 +488,6 @@ def admin_categories():
         return render_template('categories.html', admin=admin, categories=categories)
     else:
         return redirect(url_for('admin_login'))
-
-
-
-'''@app.route('/admin/categories')
-def admin_categories():
-    # Check if admin is logged in
-    if 'admin_id' in session:
-        admin_id = session.get('admin_id')
-        admin = storage.get(Admin, admin_id)
-
-        categories = storage.all(Category).values()  # Retrieve all categories
-        return render_template('categories.html', admin=admin, categories=categories)
-    else:
-        return redirect(url_for('admin_login'))'''
-
 
 @app.route('/add_category', methods=['POST'])
 def add_category():
@@ -459,6 +533,156 @@ def delete_category(category_id):
         if category:
             category.delete()  # Call the soft delete method from BaseModel
         return redirect(url_for('admin_categories'))
+    else:
+        return redirect(url_for('admin_login'))"""
+    
+# Admin coupons route
+@app.route('/admin/coupons')
+def admin_coupons():
+    if 'admin_id' in session:
+        admin_id = session.get('admin_id')
+        admin = storage.get(Admin, admin_id)
+
+        # Retrieve only non-deleted coupons
+        coupons = [coupon for coupon in storage.all(Coupon).values() if not coupon.is_deleted]
+        return render_template('coupons.html', admin=admin, coupons=coupons)
+    else:
+        return redirect(url_for('admin_login'))
+
+# Add coupon route
+@app.route('/add_coupon', methods=['GET', 'POST'])
+def add_coupon():
+    if 'admin_id' in session:
+        if request.method == 'POST':
+            admin_id = session.get('admin_id')
+            coupon_code = request.form.get('coupon_code')
+            coupon_amount = request.form.get('coupon_amount')
+            start_date = request.form.get('start_date')
+            end_date = request.form.get('end_date')
+
+            new_coupon = Coupon(
+                coupon_code=coupon_code,
+                coupon_amount=coupon_amount,
+                start_date=start_date,
+                end_date=end_date,
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+            
+            storage.new(new_coupon)
+            storage.save()
+
+            return redirect(url_for('admin_coupons'))  # Redirect to coupons page after adding
+        else:
+            return render_template('add_coupon.html')  # Render the form for GET request
+    else:
+        return redirect(url_for('admin_login'))
+
+
+# Edit coupon route
+@app.route('/edit_coupon/<int:coupon_id>', methods=['GET', 'POST'])
+def edit_coupon(coupon_id):
+    if 'admin_id' in session:
+        coupon = storage.get(Coupon, coupon_id)
+
+        if request.method == 'POST':
+            coupon.coupon_code = request.form.get('coupon_code')
+            coupon.coupon_amount = request.form.get('coupon_amount')
+            coupon.start_date = request.form.get('start_date')
+            coupon.end_date = request.form.get('end_date')
+            coupon.updated_at = datetime.utcnow()
+            storage.save()
+            return redirect(url_for('admin_coupons'))
+
+        return render_template('edit_coupon.html', coupon=coupon)
+    else:
+        return redirect(url_for('admin_login'))
+
+@app.template_filter('datetimeformat')
+def datetimeformat(value, format='%Y-%m-%dT%H:%M'):
+    return value.strftime(format)
+
+
+# Delete coupon route
+@app.route('/delete_coupon/<int:coupon_id>')
+def delete_coupon(coupon_id):
+    if 'admin_id' in session:
+        coupon = storage.get(Coupon, coupon_id)
+        if coupon:
+            coupon.is_deleted = True
+            coupon.deleted_at = datetime.utcnow()
+            storage.save()
+        return redirect(url_for('admin_coupons'))
+    else:
+        return redirect(url_for('admin_login'))
+
+@app.route('/admin/deliveries')
+def admin_deliveries():
+    if 'admin_id' in session:
+        admin_id = session.get('admin_id')
+        admin = storage.get(Admin, admin_id)
+
+        # Retrieve only non-deleted deliveries
+        deliveries = [delivery for delivery in storage.all(Delivery).values() if not delivery.is_deleted]
+        return render_template('deliveries.html', admin=admin, deliveries=deliveries)
+    else:
+        return redirect(url_for('admin_login'))
+
+@app.route('/add_delivery', methods=['GET', 'POST'])
+def add_delivery():
+    if 'admin_id' in session:
+        if request.method == 'POST':
+            delivery_name = request.form.get('delivery_name')
+            contact_number = request.form.get('contact_number')
+            address = request.form.get('address')
+            is_active = int(request.form.get('is_active'))
+
+            new_delivery = Delivery(
+                delivery_name=delivery_name,
+                contact_number=contact_number,
+                address=address,
+                is_active=is_active,
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+            
+            storage.new(new_delivery)
+            storage.save()
+
+            return redirect(url_for('admin_deliveries'))
+        else:
+            return render_template('add_delivery.html')
+    else:
+        return redirect(url_for('admin_login'))
+
+@app.route('/edit_delivery/<int:delivery_id>', methods=['GET', 'POST'])
+def edit_delivery(delivery_id):
+    if 'admin_id' in session:
+        delivery = storage.get(Delivery, delivery_id)
+
+        if request.method == 'POST':
+            delivery.delivery_name = request.form.get('delivery_name')
+            delivery.contact_number = request.form.get('contact_number')
+            delivery.address = request.form.get('address')
+            delivery.is_active = int(request.form.get('is_active'))
+            delivery.updated_at = datetime.utcnow()
+
+            storage.save()
+            return redirect(url_for('admin_deliveries'))
+
+        return render_template('edit_delivery.html', delivery=delivery)
+    else:
+        return redirect(url_for('admin_login'))
+
+@app.route('/delete_delivery/<int:delivery_id>')
+def delete_delivery(delivery_id):
+    if 'admin_id' in session:
+        delivery = storage.get(Delivery, delivery_id)
+        if delivery:
+            delivery.is_deleted = True
+            delivery.deleted_at = datetime.utcnow()
+            storage.save()
+        return redirect(url_for('admin_deliveries'))
     else:
         return redirect(url_for('admin_login'))
 
@@ -512,15 +736,15 @@ def admin_discounts():
     # Add your logic here to retrieve and display discounts
     return render_template('discounts.html')
 
-@app.route('/admin/coupons')
+"""@app.route('/admin/coupons')
 def admin_coupons():
     # Add your logic here to retrieve and display coupons
-    return render_template('coupons.html')
+    return render_template('coupons.html')"""
 
-@app.route('/admin/deliveries')
+"""@app.route('/admin/deliveries')
 def admin_deliveries():
     # Add your logic here to retrieve and display deliveries
-    return render_template('deliveries.html')
+    return render_template('deliveries.html')"""
 
 @app.route('/admin/orders')
 def admin_orders():
@@ -610,14 +834,14 @@ def add_supplier():
     return redirect(url_for('admin_dashboard'))
 
 # Route to add new coupon
-@app.route('/add_coupon', methods=['POST'])
+"""@app.route('/add_coupon', methods=['POST'])
 def add_coupon():
     coupon_code = request.form['coupon_code']
     discount_id = request.form['discount_id']
     new_coupon = Coupon(code=coupon_code, discount_id=discount_id)
     storage.new(new_coupon)
     storage.save()
-    return redirect(url_for('admin_dashboard'))
+    return redirect(url_for('admin_dashboard'))"""
 
 # Route to add new discount
 @app.route('/add_discount', methods=['POST'])

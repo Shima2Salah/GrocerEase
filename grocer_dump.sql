@@ -90,6 +90,7 @@ DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `category_name` VARCHAR(255) UNIQUE NOT NULL,
+    `image_url` VARCHAR(255),
     `created_by_admin_id` INT NOT NULL,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -314,13 +315,13 @@ INSERT INTO admins (admin_name, email, password_hash, admin_role_id, status, cre
 ('Mark Johnson', 'mark.johnson@example.com', 'hashed_password3', 3, 1, NOW(), NOW(), FALSE, NULL);
 
 -- Insert data into categories table
-INSERT INTO categories (category_name, created_by_admin_id, created_at, updated_at, is_deleted, deleted_at) VALUES
-('Bakery & Bread', 1, NOW(), NOW(), FALSE, NULL),
-('Meat & Seafood', 2, NOW(), NOW(), FALSE, NULL),
-('Frozen Foods', 1, NOW(), NOW(), FALSE, NULL),
-('Snacks & Sweets', 1, NOW(), NOW(), FALSE, NULL),
-('Beverages', 1, NOW(), NOW(), FALSE, NULL),
-('Vegetables & Fruits', 2, NOW(), NOW(), FALSE, NULL);
+INSERT INTO categories (category_name, image_url, created_by_admin_id, created_at, updated_at, is_deleted, deleted_at) VALUES
+('Bakery & Bread', 'images/Bakery & Bread.jpg', 1, NOW(), NOW(), FALSE, NULL),
+('Meat & Seafood', 'images/Meat & Seafood.jpg', 2, NOW(), NOW(), FALSE, NULL),
+('Frozen Foods', 'images/Frozen Foods.jpg', 1, NOW(), NOW(), FALSE, NULL),
+('Snacks & Sweets', 'images/Snacks & Sweets.jpg', 1, NOW(), NOW(), FALSE, NULL),
+('Beverages', 'images/Beverages.jpg', 1, NOW(), NOW(), FALSE, NULL),
+('Vegetables & Fruits', 'images/Vegetables.jpg', 2, NOW(), NOW(), FALSE, NULL);
 
 -- Insert data into suppliers table
 INSERT INTO suppliers (supplier_name, contact_number, address, created_by_admin_id, company_name, email, notes, created_at, updated_at, is_deleted, deleted_at) VALUES
