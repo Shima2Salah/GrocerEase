@@ -13,6 +13,7 @@ class Admin(BaseModel, Base):
         __tablename__ = 'admins'
         admin_name = Column(String(100), nullable=False)
         email = Column(String(100), unique=True, nullable=False)
+        image_url = Column(String(255))
         password_hash = Column(String(1024), nullable=False)
         admin_role_id = Column(Integer, ForeignKey('admin_roles.id'), nullable=False)
         status = Column(Integer)  # This field is optional based on your schema
@@ -29,6 +30,7 @@ class Admin(BaseModel, Base):
     else:
         admin_name = ""
         email = ""
+        image_url = ""
         password_hash = ""
         admin_role_id = None
         status = None

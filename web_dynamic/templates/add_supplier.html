@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Supplier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h2>Add Supplier</h2>
+    <form method="POST">
+        <label for="supplier_name">Supplier Name:</label>
+        <input type="text" name="supplier_name" id="supplier_name" required><br>
+
+        <label for="contact_number">Contact Number:</label>
+        <input type="text" name="contact_number" id="contact_number" required><br>
+
+        <label for="address">Address:</label>
+        <input type="text" name="address" id="address" required><br>
+
+        <label for="company_name">Company Name:</label>
+        <input type="text" name="company_name" id="company_name" required><br>
+
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" required><br>
+
+        <label for="notes">Notes:</label>
+        <input type="text" name="notes" id="notes"><br>
+
+        <input type="submit" value="Add Supplier">
+    </form>
+    <br>
+    <a href="{{ url_for('admin_suppliers') }}">Back to Supplier List</a>
+</body>
+</html>

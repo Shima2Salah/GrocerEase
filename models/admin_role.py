@@ -18,6 +18,11 @@ class AdminRole(BaseModel, Base):
         )
         # Relationship to Product
         admins = relationship('Admin', back_populates='admin_role')
+        # Override BaseModel columns to remove them
+        created_at = None
+        updated_at = None
+        is_deleted = None
+        deleted_at = None
     else:
         admin_role_name = ""
         admin_role_description = ""

@@ -74,6 +74,7 @@ CREATE TABLE `admins` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `admin_name` VARCHAR(100) NOT NULL,
     `email` VARCHAR(100) UNIQUE NOT NULL,
+    `image_url` VARCHAR(255),
     `password_hash` VARCHAR(1024) NOT NULL,
     `admin_role_id` INT NOT NULL,
     `status` INT,
@@ -309,10 +310,10 @@ INSERT INTO deliveries (delivery_name, contact_number, address, is_active, creat
 ('Standard Delivery', '098-765-4321', '456 Market St, City, Country', 1, NOW(), NOW(), FALSE, NULL);
 
 -- Insert data into admins table
-INSERT INTO admins (admin_name, email, password_hash, admin_role_id, status, created_at, updated_at, is_deleted, deleted_at) VALUES
-('John Doe', 'john.doe@example.com', 'scrypt:32768:8:1$o1ZrINufvzvjYtSZ$b83c2094292cd85132cdd7eac55f5204f587ec5e4272b8685daa903c3149562b96b7c0ad5a9662d2c3daec7d0e0b5d0f69dd4cf55e1cbe68558fe8fec32e9501', 1, 1, NOW(), NOW(), FALSE, NULL),
-('Jane Smith', 'jane.smith@example.com', 'hashed_password2', 2, 1, NOW(), NOW(), FALSE, NULL),
-('Mark Johnson', 'mark.johnson@example.com', 'hashed_password3', 3, 1, NOW(), NOW(), FALSE, NULL);
+INSERT INTO admins (admin_name, email, image_url, password_hash, admin_role_id, status, created_at, updated_at, is_deleted, deleted_at) VALUES
+('John Doe', 'john.doe@example.com', 'images/john.jpg', 'scrypt:32768:8:1$o1ZrINufvzvjYtSZ$b83c2094292cd85132cdd7eac55f5204f587ec5e4272b8685daa903c3149562b96b7c0ad5a9662d2c3daec7d0e0b5d0f69dd4cf55e1cbe68558fe8fec32e9501', 1, 1, NOW(), NOW(), FALSE, NULL),
+('Jane Smith', 'jane.smith@example.com', 'images/jane.jpg', 'hashed_password2', 2, 1, NOW(), NOW(), FALSE, NULL),
+('Mark Johnson', 'mark.johnson@example.com', 'images/mark.jpg', 'hashed_password3', 3, 1, NOW(), NOW(), FALSE, NULL);
 
 -- Insert data into categories table
 INSERT INTO categories (category_name, image_url, created_by_admin_id, created_at, updated_at, is_deleted, deleted_at) VALUES
