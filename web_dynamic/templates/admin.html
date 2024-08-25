@@ -13,14 +13,28 @@
     </form>
     <h2>Admin Dashboard</h2>
     <div class="admin-buttons">
-        <button onclick="window.location.href='{{ url_for('admin_suppliers') }}'">Suppliers</button>
-        <button onclick="window.location.href='{{ url_for('admin_categories') }}'">Categories</button>
-        <button onclick="window.location.href='{{ url_for('admin_products') }}'">Products</button>
-        <button onclick="window.location.href='{{ url_for('admin_admins') }}'">Admins</button>
-        <button onclick="window.location.href='{{ url_for('admin_discounts') }}'">Discounts</button>
-        <button onclick="window.location.href='{{ url_for('admin_coupons') }}'">Coupons</button>
-        <button onclick="window.location.href='{{ url_for('admin_deliveries') }}'">Deliveries</button>
-        <button onclick="window.location.href='{{ url_for('admin_orders') }}'">Orders</button>
+        {% if admin.admin_role.admin_role_name == 'Super Admin' %}
+            <button onclick="window.location.href='{{ url_for('admin_suppliers') }}'">Suppliers</button>
+            <button onclick="window.location.href='{{ url_for('admin_categories') }}'">Categories</button>
+            <button onclick="window.location.href='{{ url_for('admin_products') }}'">Products</button>
+            <button onclick="window.location.href='{{ url_for('admin_admins') }}'">Admins</button>
+            <button onclick="window.location.href='{{ url_for('admin_discounts') }}'">Discounts</button>
+            <button onclick="window.location.href='{{ url_for('admin_coupons') }}'">Coupons</button>
+            <button onclick="window.location.href='{{ url_for('admin_deliveries') }}'">Deliveries</button>
+            <button onclick="window.location.href='{{ url_for('admin_orders') }}'">Orders</button>
+        {% elif admin.admin_role.admin_role_name == 'Product Manager' %}
+            <button onclick="window.location.href='{{ url_for('admin_categories') }}'">Categories</button>
+            <button onclick="window.location.href='{{ url_for('admin_products') }}'">Products</button>
+        {% elif admin.admin_role.admin_role_name == 'Supplier Manager' %}
+            <button onclick="window.location.href='{{ url_for('admin_suppliers') }}'">Suppliers</button>
+            <button onclick="window.location.href='{{ url_for('admin_categories') }}'">Categories</button>
+            <button onclick="window.location.href='{{ url_for('admin_products') }}'">Products</button>
+            <button onclick="window.location.href='{{ url_for('admin_discounts') }}'">Discounts</button>
+            <button onclick="window.location.href='{{ url_for('admin_coupons') }}'">Coupons</button>
+        {% elif admin.admin_role.admin_role_name == 'Order Manager' %}
+            <button onclick="window.location.href='{{ url_for('admin_orders') }}'">Orders</button>
+            <button onclick="window.location.href='{{ url_for('admin_deliveries') }}'">Deliveries</button>
+        {% endif %}
     </div>
 </body>
 </html>

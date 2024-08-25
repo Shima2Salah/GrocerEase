@@ -22,7 +22,7 @@ class Supplier(BaseModel, Base):
             cascade="all, delete, delete-orphan"
         )
         # Relationship to Category
-        admin = relationship('Admin', back_populates='suppliers')
+        admin = relationship('Admin', back_populates='suppliers', overlaps="admin_relationship")
         products = relationship('Product', back_populates='supplier')
     else:
         supplier_name = ""

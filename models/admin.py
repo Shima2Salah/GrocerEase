@@ -23,7 +23,7 @@ class Admin(BaseModel, Base):
             cascade="all, delete, delete-orphan"
         )
         # Relationship to Category
-        suppliers = relationship('Supplier', backref='admin_relationship')
+        suppliers = relationship('Supplier', back_populates='admin', overlaps="admin_relationship")
         categories = relationship('Category', back_populates='admin')
         products = relationship('Product', back_populates='admin')
         admin_role = relationship('AdminRole', back_populates='admins')

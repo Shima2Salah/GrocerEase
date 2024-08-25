@@ -1,17 +1,25 @@
-// Function to increment the quantity
-function increment() {
-    var quantityInput = document.getElementById('quantity');
-    var quantity = parseInt(quantityInput.value);
-    if (quantity < 10) {
-        quantityInput.value = quantity + 1;
-    }
-}
+document.addEventListener('DOMContentLoaded', function() {
+    const amountInput = document.getElementById('amount');
+    const minOrderAmount = parseFloat(amountInput.min);
 
-// Function to decrement the quantity
-function decrement() {
-    var quantityInput = document.getElementById('quantity');
-    var quantity = parseInt(quantityInput.value);
-    if (quantity > 1) {
-        quantityInput.value = quantity - 1;
-    }
-}
+    // Ensure the input value is a number
+    amountInput.value = parseFloat(amountInput.value) || minOrderAmount;
+
+    document.getElementById('increase').addEventListener('click', function() {
+        let currentAmount = parseFloat(amountInput.value);
+        if (isNaN(currentAmount)) {
+            currentAmount = minOrderAmount;
+        }
+        let newAmount = currentAmount + minOrderAmount;
+        amountInput.value = newAmount.toFixed(2); // Set value with two decimal places
+    });
+
+    document.getElementById('decrease').addEventListener('click', function() {
+        let currentAmount = parseFloat(amountInput.value);
+        if (isNaN(currentAmount)) {
+            currentAmount = minOrderAmount;
+        }
+        let newAmount = Math.max(minOrderAmount, currentAmount - minOrderAmount);
+        amountInput.value = newAmount.toFixed(2); // Set value with two decimal places
+    });
+});

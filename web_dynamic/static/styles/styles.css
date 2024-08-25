@@ -9,6 +9,14 @@ h1, h2 {
     text-align: center;
 }
 
+.product-img {
+    max-width: 100%; /* Ensures image doesn't exceed the container width */
+    max-height: 200px; /* Adjust height as needed */
+    width: auto; /* Maintain aspect ratio */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: cover; /* Ensure the image fits within its container */
+}
+
 form {
     max-width: 300px;
     margin: 50px auto;

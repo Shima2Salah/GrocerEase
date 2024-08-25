@@ -3,49 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orders Management</title>
+    <title>Admin - Orders</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='../static/styles/styles.css') }}">
 </head>
 <body>
+    <h1>Welcome, {{ admin.admin_name }} <img src="{{ url_for('static', filename=admin.image_url) }}" alt="Admin Image" width="50" height="50"></h1>
+    <form action="{{ url_for('admin_logout') }}" method="post">
+        <button type="submit">Logout</button>
+    </form>
     <h1>Orders Management</h1>
-    <table>
+    <a href="/admin">Back to Dashboard</a>
+    <table border="1">
         <thead>
             <tr>
                 <th>Order ID</th>
-                <th>first name</th>
-                <th>last name</th>
-                <th>Contact Number</th>
-                <th>Address</th>
-                <th>order date</th>
-                <th>Status</th>
+                <th>User</th>
+                <th>Total Price</th>
+                <th>Final Price</th>
                 <th>Delivery</th>
-                <th>Items</th>
+                <th>Status</th>
+                <th>Order Date</th>
                 <th>Actions</th>
-
             </tr>
         </thead>
         <tbody>
             {% for order in orders %}
             <tr>
                 <td>{{ order.id }}</td>
-                <td>{{ order.user.first_name }}</td>
-                <td>{{ order.user.last_name }}</td>
-                <td>{{ order.user.contact_number }}</td>
-                <td>{{ order.user.address }}</td>
-                <td>{{ order.order_date }}</td>
-                <td>{{ order.order_status.status_name }}</td>
+                <td>{{ order.user.first_name }} {{ order.user.last_name }}</td>
+                <td>{{ order.total_price }}</td>
+                <td>{{ order.final_price }}</td>
                 <td>{{ order.delivery.delivery_name }}</td>
-                <td>
-                    {% for item in order.order_items %}
-                    <p>{{ item.product.product_name }} ({{ item.amount }})</p>
-                    {% endfor %}
-                </td>
+                <td>{{ order.order_status.status_name }}</td>
+                <td>{{ order.order_date }}</td>
                 <td>
                     <a href="{{ url_for('edit_order', order_id=order.id) }}">Edit</a>
+                    <button onclick="toggleDetails({{ order.id }})">View Details</button>
+                </td>
+            </tr>
+            <tr id="details-{{ order.id }}" style="display:none;">
+                <td colspan="7">
+                    <h3>Order Items</h3>
+                    <ul>
+                        {% for item in order.order_items %}
+                        <li>
+                            Product: {{ item.product.product_name }} - Amount: {{ item.amount }} - Price: {{ item.price }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <h3>Categories</h3>
+                    <ul>
+                        {% for category in order.categories %}
+                        <li>{{ category.category_name }}</li>
+                        {% endfor %}
+                    </ul>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <script>
+        function toggleDetails(orderId) {
+            var detailsRow = document.getElementById('details-' + orderId);
+            if (detailsRow.style.display === 'none') {
+                detailsRow.style.display = 'table-row';
+            } else {
+                detailsRow.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>

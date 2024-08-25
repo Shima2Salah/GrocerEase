@@ -51,6 +51,10 @@ class Order(BaseModel, Base):
         """initializes Order"""
         super().__init__(*args, **kwargs)
 
+    @property
+    def categories(self):
+        return list({item.product.category for item in self.order_items})
+
     '''@property
     def calculate_final_price(self):
         """Calculate the final price after applying a coupon."""

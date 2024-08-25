@@ -52,7 +52,7 @@ GROCER_MYSQL_USER=grocer_dev GROCER_MYSQL_PWD=grocer_dev_pwd GROCER_MYSQL_HOST=l
 python3 app.py
 python3 -m http.server
  sudo lsof -i :5000
- sudo kill 1362 4135
+ sudo kill 9289 9776
 _____________________________________________________________________________________________
 sudo apt-get remove python3
 sudo apt-get autoremove

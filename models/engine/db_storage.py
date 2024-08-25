@@ -156,3 +156,7 @@ class DBStorage:
         if self.__session is None:
             self.reload()  # Ensure the session is loaded
         return self.__session.query(model_class).filter_by(category_id=category_id).all()
+
+    def filter_by_discount(self, cls, discount_id):
+        """Return a list of objects of class `cls` filtered by `discount_id`."""
+        return self.__session.query(cls).filter(cls.discount_id == discount_id).all()

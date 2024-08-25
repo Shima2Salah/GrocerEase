@@ -1,62 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Cart</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='../static/styles/styles.css') }}">
-</head>
-<body>
-    <header>
-        <h1>About Our Grocery Shop</h1>
-        <nav>
-            <ul>
-                <li><a href="{{ url_for('home') }}">Home</a></li>
-                <li><a href="{{ url_for('about') }}">About</a></li>
-                <li><a href="{{ url_for('page3') }}">Products</a></li>
-                <li><a href="{{ url_for('cart') }}">Cart</a></li>
-            </ul>
-        </nav>
-        <h1>Your Cart</h1>
-    </header>
-    <main>
-        {% if order_items %}
-            <ul>
-                {% for item in order_items %}
-                    <li>
-                        <img src="{{ item.image_url }}" alt="{{ item.product_name }}">
-                        <p>{{ item.product_name }}</p>
-                        <p>Price: ${{ item.price_after_discount }}</p>
-                        <p>Amount: {{ item.amount }} kg</p>
-                        <p>Total: ${{ item.price }}</p>
-                    </li>
-                {% endfor %}
-            </ul>
-            <p>Total Price: ${{ total_price }}</p>
-            
-            {% if final_price is not none %}
-                <p>Coupon Code Applied: {{ session.get('coupon_code') }}</p>
-                <p>Coupon Amount: ${{ coupon_amount }}</p>
-                <p>Final Price After Discount: ${{ final_price }}</p>
-            {% endif %}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GrocerEase</title>
+    <link href="{{ url_for('static', filename='../static/styles/styles1.css') }}" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/4fbcb9a71e.js" crossorigin="anonymous"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container-fluid">
+        <div class="col-lg-3 d-flex align-items-center">
+          <span class="material-symbols-outlined text-white me-1">
+            shopping_cart
+          </span>
+          <a class="navbar-brand me-0 text-white fs-3" href="/index.html"
+            ><span class="fw-bolder text-warning">G</span>rocerEase</a
+          >
+        </div>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarsExample11"
+          aria-controls="navbarsExample11"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <a href="{{ url_for('proced') }}">Proceed to Checkout</a>
+        <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
+          <ul class="navbar-nav col-lg-6 justify-content-lg-center">
+            <li class="nav-item">
+              <a class="nav-link active text-white" aria-current="page" href="/index.html"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/shop.html">Shop</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/about.html">About</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle text-white"
+                href="#"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                >Join Us</a
+              >
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/sign-up.html">Sign Up</a></li>
+                <li><a class="dropdown-item" href="/sign-in.html">Login In</a></li>
+                <li>
+                  <a class="dropdown-item" href="#">Sign Out</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <div class="d-lg-flex col-lg-6 justify-content-lg-end">
+            <form class="d-flex" role="search">
+              <input
+                class="form-control me-2"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+              />
+              <button class="btn btn-outline-warning" type="submit">
+                Search
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </nav>
 
-            <form action="{{ url_for('apply_coupon') }}" method="POST">
-                <label for="coupon_code">Enter Coupon Code:</label>
-                <input type="text" name="coupon_code" id="coupon_code" required>
-                <button type="submit">Apply Coupon</button>
-            </form>
-            <!-- Clear Cart Button -->
-            <form action="{{ url_for('clear_cart') }}" method="POST" style="margin-top: 20px;">
-                <button type="submit" class="clear-cart-button">Clear Cart</button>
-            </form>
-        {% else %}
-            <p>Your cart is empty.</p>
-        {% endif %}
-    </main>
-    <footer>
-        <p>&copy; 2024 Grocery Shop. All rights reserved.</p>
+      <section class="container">
+
+        <div class="container h-100 py-5">
+            <div class="container my-2">
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb p-3 bg-body-tertiary rounded-3">
+                    <li class="breadcrumb-item"><a href="/index.html">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/shop.html">Shop</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Cart</li>
+                  </ol>
+                </nav>
+              </div>
+          <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-10">
+      
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-normal mb-0">Shopping Cart</h3>
+                <div>
+                  <p class="mb-0"><span class="text-muted">Sort by:</span> <a href="#!" class="text-body">price <i
+                        class="fas fa-angle-down mt-1"></i></a></p>
+                </div>
+              </div>
+              {% if order_items %}
+                  <ul>
+                      {% for item in order_items %}
+                      <form action="{{ url_for('cart') }}" method="post" class="mb-4">
+                        <div class="card rounded-3 mb-4">
+                          <div class="card-body p-4">
+                            <div class="row d-flex justify-content-between align-items-center">
+                              <div class="col-md-2 col-lg-2 col-xl-2">
+                                <img src="../static/images/{{ item.image_url }}" class="img-fluid rounded-3" alt="{{ item.product_name }}">
+                              </div>
+                              <div class="col-md-3 col-lg-3 col-xl-3">
+                                <p class="lead fw-normal mb-2">{{ item.product_name }}</p>
+                                <p><span class="text-muted">Price: </span>${{ item.price_after_discount }} <span class="text-muted">Amount: </span>{{ item.amount }} {{ item.unit }}</p>
+                              </div>
+                              <div class="col-md-3 col-lg-3 col-xl-2 d-flex align-items-center">
+                                <button type="button" class="btn btn-link px-2" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                                  <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" name="amount" id="amount_{{ item.product_id }}" min="{{ item.min_order_amount }}" required value="{{ item.amount }}" step="{{ item.min_order_amount }}" class="form-control form-control-sm" />
+                                <input type="hidden" name="product_id" value="{{ item.product_id }}">
+                                <button type="button" class="btn btn-link px-2" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                                  <i class="fas fa-plus"></i>
+                                </button>
+                              </div>
+                              <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                <h5 class="mb-0">${{ item.price }}</h5>
+                              </div>
+                              <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                                <button type="submit" name="delete" value="{{ item.product_id }}" class="btn btn-link text-danger">
+                                  <i class="fas fa-trash fa-lg"></i>
+                                </button>
+                              </div>
+                              <div class="col-md-12 text-center">
+                                <button type="submit" class="btn btn-primary">Update Amount</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    {% endfor %}
+                  
+                  </ul>
+                  <p>Total Price: ${{ total_price }}</p>
+                  
+                  {% if final_price is not none %}
+                      <p>Coupon Code Applied: {{ session.get('coupon_code') }}</p>
+                      <p>Coupon Amount: ${{ session.get('coupon_amount') }}</p>
+                      <p>Final Price After Discount: ${{ final_price }}</p>
+                  {% endif %}
+
+      
+                  <!-- Clear Cart Button -->
+                  <form action="{{ url_for('clear_cart') }}" method="POST" style="margin-top: 20px;">
+                      <button type="submit" class="clear-cart-button">Clear Cart</button>
+                  </form>
+
+
+                  <div class="card mb-4">
+                    <div class="card-body p-4 d-flex flex-row">
+                        <!-- Form starts here -->
+                        <form action="{{ url_for('apply_coupon') }}" method="POST" class="d-flex flex-fill">
+                            <input type="hidden" name="source_page" value="cart">
+                            <div data-mdb-input-init class="form-outline flex-fill">
+                                <input type="text" name="coupon_code" id="coupon_code" class="form-control form-control-lg" required />
+                                <label class="form-label" for="coupon_code">Enter Coupon Code:</label>
+                            </div>
+                            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-warning btn-lg ms-3">Apply Coupon</button>
+                        </form>
+                        <!-- Form ends here -->
+                    </div>
+                  </div>
+                       
+                  <div class="card">
+                    <div class="card-body">
+                      <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-warning btn-block btn-lg">
+                        <a href="/checkout.html" class="link-remove text-dark">Proceed to Checkout</a>
+                    </button>
+                    </div>
+                  </div>
+              {% else %}
+                  <p>Your cart is empty.</p>
+              {% endif %}      
+            </div>
+          </div>
+        </div>
+      </section>
+
+  <!-- footer -->
+  <div class="container">
+    <footer class="py-5">
+      <div class="row">
+        <div class="col-6 col-md-2 mb-3">
+          <h5>Section</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+          </ul>
+        </div>
+  
+        <div class="col-6 col-md-2 mb-3">
+          <h5>Section</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+          </ul>
+        </div>
+  
+        <div class="col-6 col-md-2 mb-3">
+          <h5>Section</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+          </ul>
+        </div>
+  
+        <div class="col-md-5 offset-md-1 mb-3">
+          <form>
+            <h5>Subscribe to our newsletter</h5>
+            <p>Monthly digest of what's new and exciting from us.</p>
+            <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+              <label for="newsletter1" class="visually-hidden">Email address</label>
+              <input id="newsletter1" type="text" class="form-control" placeholder="Email address">
+              <button class="btn btn-primary" type="button">Subscribe</button>
+            </div>
+          </form>
+        </div>
+      </div>
+  
+      <div class="d-flex flex-column flex-sm-row justify-content-between py-2 my-2 border-top">
+        <p>&copy; 2024 Company, Inc. All rights reserved.</p>
+        <ul class="list-unstyled d-flex">
+          <li class="ms-3"><a class="link-body-emphasis" href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
+          <li class="ms-3"><a class="link-body-emphasis" href="#"><i class="fa-brands fa-facebook"></i></a></li>
+          <li class="ms-3"><a class="link-body-emphasis" href="#"><i class="fa-brands fa-instagram"></i></a></li>
+        </ul>
+      </div>
     </footer>
+  </div>
+<script defer type="text/javascript" src="../static/scripts/main.js"></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+  crossorigin="anonymous"
+></script>
 </body>
 </html>
