@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GrocerEase</title>
-    <link href="{{ url_for('static', filename='../static/styles/styles1.css') }}" rel="stylesheet" />
+    <link href="style.css" rel="stylesheet" />
     <script src="https://kit.fontawesome.com/4fbcb9a71e.js" crossorigin="anonymous"></script>
     <link
       rel="stylesheet"
@@ -93,7 +93,7 @@
       <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
         <div class="col-10 col-sm-8 col-lg-6">
           <img
-            src="../static/images/vegetables-7357585_640.png"
+            src="images/vegetables-7357585_640.png"
             class="d-block mx-lg-auto img-fluid"
             alt="Bootstrap Themes"
             width="700"
@@ -182,8 +182,6 @@
       </div>
     </div>
 
-
-    
     <!-- market category -->
     <div class="product-category mt-5">
       <div class="container">
@@ -193,100 +191,192 @@
         <div class="prod-container d-flex  align-items-center justify-content-between flex-wrap mt-4 px-3">
         <div class="product d-flex flex-column align-items-center">
           <div class="product-img">
-            <img src="../static/images/strawberry_13643533.png" alt="" width="80" height="80">
+            <img src="images/strawberry_13643533.png" alt="" width="80" height="80">
           </div>
           <div class="product-info text-black-50 fs-3">Fruits</div>
         </div>
         <div class="product d-flex flex-column align-items-center">
           <div class="product-img">
-            <img src="../static/images/vegetables_862860.png" alt="" width="80" height="80">
+            <img src="images/vegetables_862860.png" alt="" width="80" height="80">
           </div>
           <div class="product-info text-black-50 fs-3">Vegetables</div>
         </div>
         <div class="product d-flex flex-column align-items-center">
           <div class="product-img">
-            <img src="../static/images/diet_561611.png" alt="" width="80" height="80">
+            <img src="images/diet_561611.png" alt="" width="80" height="80">
           </div>
           <div class="product-info text-black-50 fs-3">Food</div>
         </div>
         <div class="product d-flex flex-column align-items-center">
           <div class="product-img">
-            <img src="../static/images/soft-drink_2405479.png" alt="" width="80" height="80">
+            <img src="images/soft-drink_2405479.png" alt="" width="80" height="80">
           </div>
           <div class="product-info text-black-50 fs-3text-black-50 fs-3">Drinks</div>
         </div>
         </div>
-
-
-
         <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5 mt-4">
-          {% for category in sorted_categories %}   
-            <div class="col">
-              <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('../static/{{ category.image_url }}');background-repeat: no-repeat;background-size: cover;">
-                <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-                  <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">{{ category.category_name }}</h3>
-                  <button type="button" class="btn btn-warning btn-lg px-4 me-md-2">
-                    <a class="text-dark" href="/shop.html" >Shop Now</a>
-                  </button>
-                    </li>
-                  </ul>
-                </div>
+          <div class="col">
+            <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('images/orange-7669963_640.jpg');background-repeat: no-repeat;background-size: cover;">
+              <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Healthy & Fresh Fruits</h3>
+                <button type="button" class="btn btn-warning btn-lg px-4 me-md-2">
+                  <a class="text-dark" href="/shop.html" >Shop Now</a>
+                </button>
+                  </li>
+                </ul>
               </div>
             </div>
-          {% endfor %}
+          </div>
+    
+          <div class="col">
+            <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('images/food-1898194_640.jpg');background-repeat: no-repeat;background-size: cover;">
+              <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Healthy & Fresh Vegetables</h3>
+                <button type="button" class="btn btn-danger btn-lg px-4 me-md-2">
+                  <a class="text-dark" href="/shop.html" >Shop Now</a>
+                </button>
+              </div>
+            </div>
+          </div>
+    
+          <div class="col">
+            <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('images/drink-4475363_640.jpg');background-repeat: no-repeat;background-size: cover">
+              <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
+                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Best Fruit Juices</h3>
+                <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">
+                  <a class="text-white" href="/shop.html" >Shop Now</a>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-
+      </div>
+    </div>
     <!-- fresh grocery -->
     <div class="fresh-veg py-5">
       <div class="container">
         <div class="section-title">
-          <h3>Fresh Vegetables and fruits</h3>
+          <h3>Fresh Vegetables</h3>
         </div>
         <div class="fresh-section">
           <div class="row g-5">
-
-            {% for product in sorted_products_by_category %}
-
-              <div class="col-xl-3 col-lg-4 col-sm-6">
-                <div class="card h-100">
-                  <img src="../static/images/{{ product.image_url }}" class="card-img-top p-3 rounded"  alt="{{ product.product_name }}">
-                  <div class="card-body text-center">
-                    <div class="rating">
-                      <span><i class="fa-solid fa-star"></i></span>
-                      <span><i class="fa-solid fa-star"></i></span>
-                      <span><i class="fa-solid fa-star"></i></span>
-                      <span><i class="fa-solid fa-star"></i></span>
-                      <span><i class="fa-solid fa-star"></i></span>
-                    </div>
-                    <h5 class="card-title fs-2">{{ product.product_name }}</h5>
-                    <p class="card-text">
-                      <div class="prices fs-4 fw-bold">
-                        <span class="text-decoration-line-through">${{ product.unit_price }}</span>
-                          {% if product.discount and product.discount.discount_percentage > 0 %}
-                              <span class="text-danger"> 
-                                ${{ product.price_after_discount | round(2) }}
-                              </span>                
-                          {% else %}
-                              <p><strong>No discount</strong></p>
-                          {% endif %}
-                      </div>
-                    </p>
-                    <!-- Add to Cart Form -->
-                    <form action="{{ url_for('cart') }}" method="POST">
-                      <input type="hidden" name="product_id" value="{{ product.id }}">
-                      <input class="rounded-input" type="number" name="amount" id="amount" min="{{ product.min_order_amount }}" required value="{{ product.min_order_amount }}" step="{{ product.min_order_amount }}">
-                      <button type="submit" class="btn btn-success ms-2 d-flex align-items-center btn-bottom">
-                        <span class="material-symbols-outlined">
-                          add_shopping_cart
-                        </span>
-                        Add to Cart
-                      </button>
-                    </form>
+            <div class="col-xl-3 col-lg-4 col-sm-6">
+              <div class="card h-100">
+                <img src="images/banana.jpg" class="card-img-top p-3 rounded"  alt="oranges">
+                <div class="card-body text-center">
+                  <div class="rating">
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
                   </div>
+                  <h5 class="card-title fs-2">Orange</h5>
+                  <p class="card-text">
+                    <div class="prices fs-4 fw-bold">
+                      <span class="text-decoration-line-through">$10</span>
+                      <span class="text-danger">$6.5</span>
+                    </div>
+                  </p>
+                  <div class="input mb-2">
+                    <input type="number">
+                  </div>
+                  <a href="#" class="btn text-white d-flex align-items-center justify-content-center btn-success"> 
+                    <span class="material-symbols-outlined">
+                    add_shopping_cart
+                    </span>
+                    Add to Cart</a>
                 </div>
               </div>
-
-            {% endfor %}
+            </div>
+            <div class="col-xl-3 col-lg-4 col-sm-6">
+              <div class="card h-100">
+                
+                <img src="images/drink-4475363_640.jpg" class="card-img-top p-3 rounded" alt="oranges">
+                <div class="card-body text-center">
+                  <div class="rating">
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                  </div>
+                  <h5 class="card-title fs-2">Orange</h5>
+                  <p class="card-text">
+                    <div class="prices fs-4 fw-bold">
+                      <span class="text-decoration-line-through">$10</span>
+                      <span class="text-danger">$6.5</span>
+                    </div>
+                  </p>
+                  <div class="input mb-2">
+                    <input type="number">
+                  </div>
+                  <a href="#" class="btn text-white d-flex align-items-center justify-content-center btn-success"> 
+                    <span class="material-symbols-outlined">
+                    add_shopping_cart
+                    </span>
+                    Add to Cart</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-sm-6">
+              <div class="card h-100">
+                <img src="images/food-1898194_640.jpg" class="card-img-top p-3 rounded" alt="oranges">
+                <div class="card-body text-center">
+                  <div class="rating">
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                  </div>
+                  <h5 class="card-title fs-2">Orange</h5>
+                  <p class="card-text">
+                    <div class="prices fs-4 fw-bold">
+                      <span class="text-decoration-line-through">$10</span>
+                      <span class="text-danger">$6.5</span>
+                    </div>
+                  </p>
+                  <div class="input mb-2">
+                    <input type="number">
+                  </div>
+                  <a href="#" class="btn text-white d-flex align-items-center justify-content-center btn-success"> 
+                    <span class="material-symbols-outlined">
+                    add_shopping_cart
+                    </span>
+                    Add to Cart</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-sm-6">
+              <div class="card h-100">
+                <img src="images/sambosa.jpg" class="card-img-top p-3 rounded" alt="oranges">
+                <div class="card-body text-center">
+                  <div class="rating">
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                  </div>
+                  <h5 class="card-title fs-2">Orange</h5>
+                  <p class="card-text">
+                    <div class="prices fs-4 fw-bold">
+                      <span class="text-decoration-line-through">$10</span>
+                      <span class="text-danger">$6.5</span>
+                    </div>
+                  </p>
+                  <div class="input mb-2">
+                    <input type="number">
+                  </div>
+                  <a href="#" class="btn text-white d-flex align-items-center justify-content-center btn-success"> 
+                    <span class="material-symbols-outlined">
+                    add_shopping_cart
+                    </span>
+                    Add to Cart</a>
+                </div>
+              </div>
+            </div>
 
             </div>
           </div>
@@ -303,7 +393,7 @@
             <p class="lead">
               You get into the 2k+ best Products in br Flash offer with as in 
               <br>
-              Use this Coupon code for your first order WELCOME10.
+              shaped sofa for sale.
             </p>
             <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
               <button type="button" class="btn btn-warning btn-lg px-4 me-md-2">
@@ -312,69 +402,230 @@
             </div>
           </div>
           <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
-              <img class="rounded-lg-3" src="../static/images/sambosa.jpg" alt="" width="720">
+              <img class="rounded-lg-3" src="images/sambosa.jpg" alt="" width="720">
           </div>
         </div>
       </div>
     </div>
 
-    <!-- top sales  -->
+    <!-- top selling  -->
 
     <div class="top-sell">
       <div class="container">
         <div class="section-title my-3">
-          <h3>Top Sales</h3>
+          <h3>Top Selling</h3>
         </div>
       <div class="row g-5">
-
-        {% for product in sorted_products_by_discount %}
-
-          <div class="col-lg-4 col-md-6">
-            <div class="card" >
-              <div class="row g-0">
-                <div class="col-md-4">
-                  <img src="../static/images/{{ product.image_url }}" class="img-fluid rounded-start h-100" alt="{{ product.product_name }}">
-                </div>
-                <div class="col-md-8">
-                  <div class="card-body ">
-                    <div class="rating">
-                      <span><i class="fa-solid fa-star"></i></span>
-                      <span><i class="fa-solid fa-star"></i></span>
-                      <span><i class="fa-solid fa-star"></i></span>
-                      <span><i class="fa-solid fa-star"></i></span>
-                      <span><i class="fa-solid fa-star"></i></span>
-                    </div>
-                    <h5 class="card-title fs-2">{{ product.product_name }}</h5>
-                    <p class="card-text">
-                      <div class="prices fs-4 fw-bold">
-                        <span class="text-decoration-line-through">${{ product.unit_price }}</span>
-                          {% if product.discount and product.discount.discount_percentage > 0 %}
-                              <span class="text-danger"> 
-                                ${{ product.price_after_discount | round(2) }}
-                              </span>                
-                          {% else %}
-                              <p><strong>No discount</strong></p>
-                          {% endif %}
-                      </div>
-                    </p>
-                    <!-- Add to Cart Form -->
-                    <form action="{{ url_for('cart') }}" method="POST">
-                      <input type="hidden" name="product_id" value="{{ product.id }}">
-                      <input class="rounded-input" type="number" name="amount" id="amount" min="{{ product.min_order_amount }}" required value="{{ product.min_order_amount }}" step="{{ product.min_order_amount }}">
-                      <button type="submit" class="btn btn-success ms-2 d-flex align-items-center btn-bottom">
-                        <span class="material-symbols-outlined">
-                          add_shopping_cart
-                        </span>
-                        Add to Cart
-                      </button>
-                    </form>
+        <div class="col-lg-4 col-md-6">
+          <div class="card" >
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="images/tomato2.jpg" class="img-fluid rounded-start h-100" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body ">
+                  <div class="rating">
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
                   </div>
+                  <h5 class="card-title fs-2">Tomato</h5>
+                  <p class="card-text">
+                    <div class="prices fs-4 fw-bold">
+                      <span class="text-decoration-line-through">$10</span>
+                      <span class="text-danger">$6.5</span>
+                    </div>
+                  </p>
+                  <div class="input mb-2">
+                    <input type="number">
+                  </div>
+                  <a href="#" class="btn text-white d-flex align-items-center justify-content-center btn-success"> 
+                    <span class="material-symbols-outlined">
+                    add_shopping_cart
+                    </span>
+                    Add to Cart</a>
                 </div>
               </div>
             </div>
           </div>
-
-        {% endfor %}
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="card" >
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="images/tomato2.jpg" class="img-fluid rounded-start h-100" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body ">
+                  <div class="rating">
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                  </div>
+                  <h5 class="card-title fs-2">Tomato</h5>
+                  <p class="card-text">
+                    <div class="prices fs-4 fw-bold">
+                      <span class="text-decoration-line-through">$10</span>
+                      <span class="text-danger">$6.5</span>
+                    </div>
+                  </p>
+                  <div class="input mb-2">
+                    <input type="number">
+                  </div>
+                  <a href="#" class="btn text-white d-flex align-items-center justify-content-center btn-success"> 
+                    <span class="material-symbols-outlined">
+                    add_shopping_cart
+                    </span>
+                    Add to Cart</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="card" >
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="images/tomato2.jpg" class="img-fluid rounded-start h-100" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body ">
+                  <div class="rating">
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                  </div>
+                  <h5 class="card-title fs-2">Tomato</h5>
+                  <p class="card-text">
+                    <div class="prices fs-4 fw-bold">
+                      <span class="text-decoration-line-through">$10</span>
+                      <span class="text-danger">$6.5</span>
+                    </div>
+                  </p>
+                  <div class="input mb-2">
+                    <input type="number">
+                  </div>
+                  <a href="#" class="btn text-white d-flex align-items-center justify-content-center btn-success"> 
+                    <span class="material-symbols-outlined">
+                    add_shopping_cart
+                    </span>
+                    Add to Cart</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="card" >
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="images/tomato2.jpg" class="img-fluid rounded-start h-100" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body ">
+                  <div class="rating">
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                  </div>
+                  <h5 class="card-title fs-2">Tomato</h5>
+                  <p class="card-text">
+                    <div class="prices fs-4 fw-bold">
+                      <span class="text-decoration-line-through">$10</span>
+                      <span class="text-danger">$6.5</span>
+                    </div>
+                  </p>
+                  <div class="input mb-2">
+                    <input type="number">
+                  </div>
+                  <a href="#" class="btn text-white d-flex align-items-center justify-content-center btn-success"> 
+                    <span class="material-symbols-outlined">
+                    add_shopping_cart
+                    </span>
+                    Add to Cart</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="card" >
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="images/tomato2.jpg" class="img-fluid rounded-start h-100" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body ">
+                  <div class="rating">
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                  </div>
+                  <h5 class="card-title fs-2">Tomato</h5>
+                  <p class="card-text">
+                    <div class="prices fs-4 fw-bold">
+                      <span class="text-decoration-line-through">$10</span>
+                      <span class="text-danger">$6.5</span>
+                    </div>
+                  </p>
+                  <div class="input mb-2">
+                    <input type="number">
+                  </div>
+                  <a href="#" class="btn text-white d-flex align-items-center justify-content-center btn-success"> 
+                    <span class="material-symbols-outlined">
+                    add_shopping_cart
+                    </span>
+                    Add to Cart</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="card" >
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="images/tomato2.jpg" class="img-fluid rounded-start h-100" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body ">
+                  <div class="rating">
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                    <span><i class="fa-solid fa-star"></i></span>
+                  </div>
+                  <h5 class="card-title fs-2">Tomato</h5>
+                  <p class="card-text">
+                    <div class="prices fs-4 fw-bold">
+                      <span class="text-decoration-line-through">$10</span>
+                      <span class="text-danger">$6.5</span>
+                    </div>
+                  </p>
+                  <div class="input mb-2">
+                    <input type="number">
+                  </div>
+                  <a href="#" class="btn text-white d-flex align-items-center justify-content-center btn-success"> 
+                    <span class="material-symbols-outlined">
+                    add_shopping_cart
+                    </span>
+                    Add to Cart</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -411,14 +662,13 @@
       <div class="fresh-veg py-5">
         <div class="container">
           <div class="section-title">
-            <h3>Meat and sea food</h3>
+            <h3>Fresh Vegetables</h3>
           </div>
           <div class="fresh-section">
             <div class="row g-5">
-              {% for product in sorted_products_by_category_2 %}
               <div class="col-xl-3 col-lg-4 col-sm-6">
                 <div class="card h-100">
-                  <img src="../static/images/{{ product.image_url }}" class="card-img-top p-3 rounded" alt="{{ product.product_name }}">
+                  <img src="images/orange-7669963_640.jpg" class="card-img-top p-3 rounded" alt="oranges">
                   <div class="card-body text-center">
                     <div class="rating">
                       <span><i class="fa-solid fa-star"></i></span>
@@ -427,35 +677,112 @@
                       <span><i class="fa-solid fa-star"></i></span>
                       <span><i class="fa-solid fa-star"></i></span>
                     </div>
-                    <h5 class="card-title fs-2">{{ product.product_name }}</h5>
+                    <h5 class="card-title fs-2">Orange</h5>
                     <p class="card-text">
                       <div class="prices fs-4 fw-bold">
-                        <span class="text-decoration-line-through">${{ product.unit_price }}</span>
-                          {% if product.discount and product.discount.discount_percentage > 0 %}
-                              <span class="text-danger"> 
-                                ${{ product.price_after_discount | round(2) }}
-                              </span>                
-                          {% else %}
-                              <p><strong>No discount</strong></p>
-                          {% endif %}
+                        <span class="text-decoration-line-through">$10</span>
+                        <span class="text-danger">$6.5</span>
                       </div>
                     </p>
-                    <!-- Add to Cart Form -->
-                    <form action="{{ url_for('cart') }}" method="POST">
-                      <input type="hidden" name="product_id" value="{{ product.id }}">
-                      <input class="rounded-input" type="number" name="amount" id="amount" min="{{ product.min_order_amount }}" required value="{{ product.min_order_amount }}" step="{{ product.min_order_amount }}">
-                      <button type="submit" class="btn btn-success ms-2 d-flex align-items-center btn-bottom">
-                        <span class="material-symbols-outlined">
-                          add_shopping_cart
-                        </span>
-                        Add to Cart
-                      </button>
-                  </form>
+                    <div class="input mb-2">
+                      <input type="number">
+                    </div>
+                    <a href="#" class="btn text-white d-flex align-items-center justify-content-center btn-success"> 
+                      <span class="material-symbols-outlined">
+                      add_shopping_cart
+                      </span>
+                      Add to Cart</a>
                   </div>
                 </div>
               </div>
-              {% endfor %}
-
+              <div class="col-xl-3 col-lg-4 col-sm-6">
+                <div class="card h-100">
+                  <img src="images/orange-7669963_640.jpg" class="card-img-top p-3 rounded" alt="oranges">
+                  <div class="card-body text-center">
+                    <div class="rating">
+                      <span><i class="fa-solid fa-star"></i></span>
+                      <span><i class="fa-solid fa-star"></i></span>
+                      <span><i class="fa-solid fa-star"></i></span>
+                      <span><i class="fa-solid fa-star"></i></span>
+                      <span><i class="fa-solid fa-star"></i></span>
+                    </div>
+                    <h5 class="card-title fs-2">Orange</h5>
+                    <p class="card-text">
+                      <div class="prices fs-4 fw-bold">
+                        <span class="text-decoration-line-through">$10</span>
+                        <span class="text-danger">$6.5</span>
+                      </div>
+                    </p>
+                    <div class="input mb-2">
+                      <input type="number">
+                    </div>
+                    <a href="#" class="btn text-white d-flex align-items-center justify-content-center btn-success"> 
+                      <span class="material-symbols-outlined">
+                      add_shopping_cart
+                      </span>
+                      Add to Cart</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-lg-4 col-sm-6">
+                <div class="card h-100">
+                  <img src="images/orange-7669963_640.jpg" class="card-img-top p-3 rounded" alt="oranges">
+                  <div class="card-body text-center">
+                    <div class="rating">
+                      <span><i class="fa-solid fa-star"></i></span>
+                      <span><i class="fa-solid fa-star"></i></span>
+                      <span><i class="fa-solid fa-star"></i></span>
+                      <span><i class="fa-solid fa-star"></i></span>
+                      <span><i class="fa-solid fa-star"></i></span>
+                    </div>
+                    <h5 class="card-title fs-2">Orange</h5>
+                    <p class="card-text">
+                      <div class="prices fs-4 fw-bold">
+                        <span class="text-decoration-line-through">$10</span>
+                        <span class="text-danger">$6.5</span>
+                      </div>
+                    </p>
+                    <div class="input mb-2">
+                      <input type="number">
+                    </div>
+                    <a href="#" class="btn text-white d-flex align-items-center justify-content-center btn-success"> 
+                      <span class="material-symbols-outlined">
+                      add_shopping_cart
+                      </span>
+                      Add to Cart</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-lg-4 col-sm-6">
+                <div class="card h-100">
+                  <img src="images/orange-7669963_640.jpg" class="card-img-top p-3 rounded" alt="oranges">
+                  <div class="card-body text-center">
+                    <div class="rating">
+                      <span><i class="fa-solid fa-star"></i></span>
+                      <span><i class="fa-solid fa-star"></i></span>
+                      <span><i class="fa-solid fa-star"></i></span>
+                      <span><i class="fa-solid fa-star"></i></span>
+                      <span><i class="fa-solid fa-star"></i></span>
+                    </div>
+                    <h5 class="card-title fs-2">Orange</h5>
+                    <p class="card-text">
+                      <div class="prices fs-4 fw-bold">
+                        <span class="text-decoration-line-through">$10</span>
+                        <span class="text-danger">$6.5</span>
+                      </div>
+                    </p>
+                    <div class="input mb-2">
+                      <input type="number">
+                    </div>
+                    <a href="#" class="btn text-white d-flex align-items-center justify-content-center btn-success"> 
+                      <span class="material-symbols-outlined">
+                      add_shopping_cart
+                      </span>
+                      Add to Cart</a>
+                  </div>
+                </div>
+              </div>
+  
               </div>
             </div>
           </div>
@@ -463,7 +790,7 @@
 
 
       <div class=" container my-5">
-        <div class="p-5 text-center  rounded-3" style="background-image:url('../static/images/cucumber2.jpg') ;">
+        <div class="p-5 text-center  rounded-3" style="background-image:url('images/cucumber2.jpg') ;">
           <h1 class=" text-white">Get The Best Deals With Modern Grocery</h1>
           <button type="button" class="btn btn-warning btn-lg px-4 me-md-2">
             <a class="text-dark" href="/shop.html" >Shop Now</a>
@@ -532,7 +859,7 @@
           </div>
         </footer>
       </div>
-    <script defer type="text/javascript" src="../static/styles/main.js"></script>
+    <script defer type="text/javascript" src="/main.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
