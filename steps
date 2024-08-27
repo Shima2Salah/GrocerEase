@@ -160,3 +160,14 @@ curl -sI 100.26.246.108/
 curl 100.26.246.108/
 curl -s 100.26.246.108/
 sudo systemctl stop gunicorn
+_____________________________________________________________________________________________
+# to run test files:
+recommended to run this code: export PYTHONPATH=/root/GrocerEase
+
+pip install pytest-mock
+
+pip install pytest
+
+cd test/
+
+python3 -m unittest test_file_name.py
