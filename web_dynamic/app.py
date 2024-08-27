@@ -471,6 +471,7 @@ def thankyou():
     """ display a HTML page only if n is an integer """
     return render_template('thankyou.html')
 
+@app.route('/admin_login.html', methods=['GET', 'POST'])
 @app.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
