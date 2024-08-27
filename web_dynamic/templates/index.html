@@ -266,12 +266,12 @@
                       </div>
                     </p>
                     <!-- Add to Cart Form -->
-                    <form action="{{ url_for('cart') }}" method="POST">
+                    <form action="{{ url_for('cart') }}" class="w-100" method="POST">
                       <input type="hidden" name="product_id" value="{{ product.id }}">
                       <div class="input mb-2">
                         <input class="rounded-input" type="number" name="amount" id="amount" min="{{ product.min_order_amount }}" required value="{{ product.min_order_amount }}" step="{{ product.min_order_amount }}">
                       </div>
-                      <button type="submit" class="btn text-white d-flex align-items-center justify-content-center btn-success">
+                      <button type="submit" class="w-100 btn text-white d-flex align-items-center justify-content-center btn-success">
                         <span class="material-symbols-outlined">
                           add_shopping_cart
                         </span>
@@ -352,12 +352,12 @@
                       </div>
                     </p>
                     <!-- Add to Cart Form -->
-                    <form action="{{ url_for('cart') }}" method="POST">
+                    <form action="{{ url_for('cart') }}" class="w-100" method="POST">
                       <input type="hidden" name="product_id" value="{{ product.id }}">
                       <div class="input mb-2">                      
                         <input class="rounded-input" type="number" name="amount" id="amount" min="{{ product.min_order_amount }}" required value="{{ product.min_order_amount }}" step="{{ product.min_order_amount }}">
                       </div>                      
-                        <button type="submit" class="btn text-white d-flex align-items-center justify-content-center btn-success">
+                        <button type="submit" class="w-100 btn text-white d-flex align-items-center justify-content-center btn-success">
                         <span class="material-symbols-outlined">
                           add_shopping_cart
                         </span>
@@ -435,12 +435,12 @@
                       </div>
                     </p>
                     <!-- Add to Cart Form -->
-                    <form action="{{ url_for('cart') }}" method="POST">
+                    <form action="{{ url_for('cart') }}" class="w-100" method="POST">
                       <input type="hidden" name="product_id" value="{{ product.id }}">
                       <div class="input mb-2">
                         <input class="rounded-input" type="number" name="amount" id="amount" min="{{ product.min_order_amount }}" required value="{{ product.min_order_amount }}" step="{{ product.min_order_amount }}">
                       </div>                      
-                        <button type="submit" class="btn text-white d-flex align-items-center justify-content-center btn-success">
+                        <button type="submit" class="w-100 btn text-white d-flex align-items-center justify-content-center btn-success">
                         <span class="material-symbols-outlined">
                           add_shopping_cart
                         </span>
