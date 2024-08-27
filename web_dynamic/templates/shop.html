@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GrocerEase</title>
-    <link href="{{ url_for('static', filename='../static/styles/styles.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='../static/styles/style.css') }}" rel="stylesheet" />
     <script
       src="https://kit.fontawesome.com/4fbcb9a71e.js"
       crossorigin="anonymous"
@@ -293,11 +293,11 @@
                                     <!-- Pagination -->
                                     <div class="result d-flex align-items-center ">
                                       {% if page > 1 %}
-                                          <a href="{{ url_for('shop', category=selected_category_id, page=page-1) }}">&laquo; Previous </a>
+                                          <a class="fw-bold" href="{{ url_for('shop', category=selected_category_id, page=page-1) }}">&laquo; Previous </a>
                                       {% endif %}
-                                      <span> Showing Page {{ page }} of {{ total_pages }} </span>
+                                      <span class="mx-3"> Showing Page {{ page }} of {{ total_pages }} </span>
                                       {% if page < total_pages %}
-                                          <a href="{{ url_for('shop', category=selected_category_id, page=page+1) }}"> Next &raquo;</a>
+                                          <a class="fw-bold" href="{{ url_for('shop', category=selected_category_id, page=page+1) }}"> Next &raquo;</a>
                                       {% endif %}
                                     </div>
                                     
@@ -342,17 +342,17 @@
                                         </div>
                                       </p>
                                         <!-- Add to Cart Form -->
-                                        <form action="{{ url_for('cart') }}" method="POST">
+                                        <form class="w-100" action="{{ url_for('cart') }}" method="POST">
                                           <input type="hidden" name="product_id" value="{{ product.id }}">
                                           <input class="rounded-input" type="number" name="amount" id="amount" min="{{ product.min_order_amount }}" required value="{{ product.min_order_amount }}" step="{{ product.min_order_amount }}">
-                                          <button type="submit" class="btn btn-success ms-2 d-flex align-items-center btn-bottom">
+                                          <button type="submit" class="mt-2 w-100 justify-content-center btn btn-success ms-2 d-flex align-items-center btn-bottom">
                                             <span class="material-symbols-outlined">
                                               add_shopping_cart
                                             </span>
-                                            Add to Cart
+                                              Add to Cart
                                           </button>
                                         </form>
-                                          <a href="{{ url_for('single', product_id=product.id) }}">View Details</a>
+                                          <a class="fw-bold" href="{{ url_for('single', product_id=product.id) }}">View Details >></a>
                                       </div>
                                   </div>
                                 </div>
@@ -360,21 +360,17 @@
                             {% else %}
                                 <p>No products available.</p>
                             {% endif %}
-
-
-
-
-                          <div class="col-lg-12">
-                            <div class="p-5 text-center  rounded-3" style="background-image:url('../static/images/cucumber2.jpg') ;">
-                                <h1 class=" text-white">Get The Best Deals With Modern Grocery</h1>
-                                <button class="btn btn-warning text-white" type="button">Shop Now ></button>
-                            </div>
-                          </div>
                             <div class="col-lg-12">
                               <button class="btn btn-lg btn-primary w-100 fs-3">
                                 <a href="/cart.html" class="link-remove text-white">Cart</a>
                               </button>
                             </div>
+                            <div class="col-lg-12">
+                            <div class="p-5 text-center  rounded-3" style="background-image:url('../static/images/cucumber2.jpg') ;">
+                                <h1 class=" text-white">Get The Best Deals With Modern Grocery</h1>
+                                <button class="btn btn-warning text-white" type="button">Shop Now ></button>
+                            </div>
+                          </div>
                         </div>
                     </div>
                     
@@ -500,7 +496,7 @@
         </div>
       </footer>
     </div>
-    <script defer type="text/javascript" src="../static/styles/main.js"></script>
+    <script defer type="text/javascript" src="../static/scripts/main.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
