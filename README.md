@@ -159,5 +159,5 @@ For any inquiries or support, please reach out to the project team members:
 
 - **Ahmed Ibrahim Ali Ahmed**: eng.ahmedads@gmail.com
 - **Habiba Fernas**: habibafernas@gmail.com
-- **Shimaa Salah Sayed Abdelrhman**: email@example.com
+- **Shimaa Salah Sayed Abdelrhman**: shimaasalah91.13@gmail.com
 - **Mohamed Hamdy Arafa**: mohamedhamdy994@gmail.com
