@@ -7,6 +7,8 @@
     <title>Coupons</title>
 </head>
 <body>
+
+    <!-- veiwing coupon page and editing it  -->
     <h1>Welcome, {{ admin.admin_name }} <img src="{{ url_for('static', filename=admin.image_url) }}" alt="Admin Image" width="50" height="50"></h1>
     <form action="{{ url_for('admin_logout') }}" method="post">
         <button type="submit">Logout</button>

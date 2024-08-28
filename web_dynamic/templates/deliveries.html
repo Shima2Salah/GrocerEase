@@ -8,6 +8,8 @@
     <title>Manage Deliveries</title>
 </head>
 <body>
+
+    <!-- delivery dashboard  -->
     <h1>Welcome, {{ admin.admin_name }} <img src="{{ url_for('static', filename=admin.image_url) }}" alt="Admin Image" width="50" height="50"></h1>
     <form action="{{ url_for('admin_logout') }}" method="post">
         <button type="submit">Logout</button>
