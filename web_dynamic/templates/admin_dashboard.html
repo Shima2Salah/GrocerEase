@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='../static/styles/styles.css') }}">
 </head>
 <body>
+
+    <!-- main page for admin to control everything   -->
+
     <h1>Welcome, {{ admin.admin_name }}</h1>
     <a href="{{ url_for('admin_logout') }}">Logout</a>
     <h2>Admin Dashboard</h2>
