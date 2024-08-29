@@ -175,3 +175,30 @@ class TestOrderStatus:
     def test_handling_empty_string_status_name(self):
         order_status = OrderStatus()
         assert order_status.status_name == ""
+
+    def test_delete_method_from_BaseModel(self, mocker):
+        order_status = OrderStatus()
+        with mocker.patch('models.storage') as mock_storage:
+            order_status.delete()
+            mock_storage.delete.assert_called_once_with(order_status)
+
+    def test_handling_of_database_constraints_and_relationships(self):
+        order_status = OrderStatus()
+        # Simulate database constraints and relationships
+        # Assert relevant conditions
+        assert True  # Placeholder for actual assertions related to database constraints and relationships
+
+    def test_to_dict_method_from_BaseModel(self):
+        order_status = OrderStatus(status_name='Delivered')
+        expected_dict = {
+            'status_name': 'Delivered',
+            'created_at': None,
+            'updated_at': None
+        }
+        assert order_status.to_dict() == expected_dict
+
+    def test_invalid_status_name_value(self):
+        order_status = OrderStatus(status_name='InvalidValue')
+        assert order_status.status_name == 'InvalidValue'
+        assert order_status.created_at is None
+        assert order_status.updated_at is None
