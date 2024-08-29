@@ -25,10 +25,10 @@ The admin panel provides tools for managing:
 
 ## Learning Objectives
 
-- **Ahmed**: To enhance understanding of RESTful API design and backend performance optimization using Flask.
-- **Habiba**: To gain experience in secure user authentication, session management, and data encryption.
-- **Shimaa**: To master advanced SQL techniques, including query optimization, database normalization, and data security.
-- **Mohamed**: To develop a highly responsive, intuitive user interface, and ensure cross-browser compatibility.
+- **Ahmed**: Enhance understanding of RESTful API design and backend performance optimization using Flask.
+- **Habiba**: Gain experience in secure user authentication, session management, and data encryption.
+- **Shimaa**: Master advanced SQL techniques, including query optimization, database normalization, and data security.
+- **Mohamed**: Develop a highly responsive, intuitive user interface, and ensure cross-browser compatibility.
 
 ## Technologies Used
 
@@ -67,14 +67,13 @@ The admin panel provides tools for managing:
 - **Order Tracking**: Users can track the status of their orders from processing to delivery.
 - **Admin Dashboard**: A secure admin interface for managing inventory, orders, and user accounts.
 
-
-
 ## Color Reference
 
-| Color             | Hex                                                                |
-| ----------------- | ------------------------------------------------------------------ |
-| Example Color | #ffc107 |
-| Example Color | ![#198754](https://via.placeholder.com/10/00b48a?text=+) #198754 |
+| Color          | Hex Code                                                        |
+| -------------- | --------------------------------------------------------------- |
+| Example Yellow | ![#ffc107](https://via.placeholder.com/10/ffc107?text=+) #ffc107 |
+| Example Green  | ![#198754](https://via.placeholder.com/10/198754?text=+) #198754 |
+
 ## Database Schema Overview
 
 - **Users**: Stores user information including login credentials, address, and order history.
@@ -96,8 +95,7 @@ The admin panel provides tools for managing:
 - **Integration**: Ensuring smooth communication between the frontend and backend, particularly during asynchronous operations.
 - **Database Management**: Handling complex queries and relationships efficiently without compromising performance.
 - **Security**: Protecting user data through secure coding practices, encryption, and regular security audits.
-- **Time**: it was not by our side admin panel frontend wasnt finished verifing forms wasnt finished.
-
+- **Time Constraints**: The admin panel frontend and form validation features were not fully completed due to time limitations.
 
 ## Getting Started
 
@@ -116,27 +114,77 @@ The admin panel provides tools for managing:
     cd grocerease
     ```
 
-2. **Set Up a Virtual Environment**:
+2. **GrocerEase Setup Guide**:
 
     ```bash
+    # Update and install Python 3.10
+    sudo apt update
+    sudo apt install python3.10
+    python3.10 --version
+
+    # Install net-tools
+    sudo apt install -y net-tools
+
+    # Set up Python virtual environment
     python3 -m venv venv
     source venv/bin/activate
-    ```
+    pip3 install flask
 
-3. **Install Dependencies**:
+    # Install MySQLdb module version 2.0.x
+    sudo apt-get install python3-dev libmysqlclient-dev zlib1g-dev pkg-config
+    sudo pip3 install mysqlclient
+    sudo apt-get install python3-mysql.connector
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+    # Deactivate virtual environment
+    deactivate
 
-4. **Configure the Database**:
+    # Working with MySQL DB
+    python3 -c "
+    import MySQLdb
+    print(MySQLdb.version_info)
+    "
 
-    Create a MySQL database and update the connection settings in `config.py`.
+    # Install SQLAlchemy module version 1.4.x
+    sudo pip3 install SQLAlchemy
 
-5. **Run the Application**:
+    python3 -c "
+    import sqlalchemy
+    print(sqlalchemy.__version__)
+    "
 
-    ```bash
-    flask run
+    # Install additional packages
+    pip install Flask-SQLAlchemy python-dotenv PyMySQL
+    pip install -U Flask-SQLAlchemy
+
+    # Check MySQL service status and restart
+    sudo service mysql status
+    sudo service mysql restart
+
+    # Insert tables and data into MySQL DB
+    cat grocer_dump.sql | mysql -uroot -p
+
+    sudo mysql -e "
+    use grocerease;
+    show tables;
+    select * from grocerease.users;
+    select * from grocerease.products;
+    "
+
+    cat setup_grocerease.sql | mysql -hlocalhost -uroot -p
+
+    # Run the application
+    sudo service mysql restart
+    GROCER_MYSQL_USER=grocer_dev GROCER_MYSQL_PWD=grocer_dev_pwd GROCER_MYSQL_HOST=localhost GROCER_MYSQL_DB=grocerease GROCER_TYPE_STORAGE=db python3 -m web_dynamic.app
+
+    # Run Python app
+    python3 app.py
+
+    # Run a simple HTTP server
+    python3 -m http.server
+
+    # If port 5000 is in use
+    sudo lsof -i :5000
+    sudo kill 9289 9776
     ```
 
 ### Usage
@@ -151,7 +199,6 @@ We welcome contributions to improve GrocerEase. Please follow the guidelines bel
 1. **Fork the Repository**: Create a fork of the project to your GitHub account.
 2. **Create a New Branch**: Work on your feature or bugfix in a new branch.
 3. **Submit a Pull Request**: Once your changes are ready, submit a pull request for review.
-
 
 ## Authors
 
