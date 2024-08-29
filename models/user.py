@@ -56,6 +56,4 @@ class User(BaseModel, Base):
         """to set an encryption password"""
         if name == "password":
             value = md5(value.encode()).hexdigest()
-        super().__setattr__(name, value)''
-
-'
+        super().__setattr__(name, value)'''
