@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 """Start web application with a route to display categories."""
 
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash
+from flask import Flask, render_template, request
+from flask import redirect, url_for, session, jsonify, flash
 from models import storage
 from models.admin import Admin
 from models.admin_role import AdminRole
@@ -30,34 +31,44 @@ app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
 
 # Folder to store uploaded images
-app.config['UPLOAD_FOLDER'] = 'web_dynamic/static/images'  # Correct path
+app.config['UPLOAD_FOLDER'] = 'web_dynamic/static/images'
 
 # Ensure the upload folder exists
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
-    
+
 notifications = []
+
+
 @app.route('/index.html')
 @app.route('/home')
 @app.route('/')
 def home():
-    """Displays the home page with the first three categories, first four products with category_id=6, first six products with discount_id=4, and first six products with category_id=4."""
+    """Displays the home page with the first three categories,
+    first four products with category_id=6,
+    first six products with discount_id=4,
+    and first six products with category_id=4."""
     categories = storage.all(Category)
-    sorted_categories = sorted(categories.values(), key=lambda category: category.category_name)[:3]
+    sorted_categories = sorted(categories.values(),
+                               key=lambda
+                               category: category.category_name)[:3]
 
     # Get the first four products where category_id = 6
-    products_by_category = storage.filter_by_category(Product, category_id=6)[:4]
+    products_by_category = storage.filter_by_category(
+        Product, category_id=6)[:4]
 
     # Get the first six products where discount_id = 4
-    products_by_discount = storage.filter_by_discount(Product, discount_id=4)[:6]
+    products_by_discount = storage.filter_by_discount(
+        Product, discount_id=4)[:6]
 
     # Get the first six products where category_id = 2
-    products_by_category_2 = storage.filter_by_category(Product, category_id=2)[:6]
+    products_by_category_2 = storage.filter_by_category(
+        Product, category_id=2)[:6]
 
     return render_template(
-        'index.html', 
-        sorted_categories=sorted_categories, 
-        sorted_products_by_category=products_by_category, 
+        'index.html',
+        sorted_categories=sorted_categories,
+        sorted_products_by_category=products_by_category,
         sorted_products_by_discount=products_by_discount,
         sorted_products_by_category_2=products_by_category_2
     )
@@ -69,58 +80,20 @@ def about():
     """ Prints a Message when /hbnb is called """
     return render_template('about.html')
 
-"""@app.route('/page3.html', methods=['GET'])
-@app.route('/page3', methods=['GET'])
-def page3():
-    """'''Displays specific category without all categories'''"""
-    # Get all categories
-    categories = storage.all(Category)
-    sorted_categories = sorted(categories.values(), key=lambda category: category.category_name)
 
-    # Get selected category ID from query parameters
-    selected_category_id = request.args.get('category', None)
-    if selected_category_id:
-        selected_category_id = int(selected_category_id)
-
-    # Filter products based on selected category
-    if selected_category_id:
-        products = storage.filter_by_category(Product, selected_category_id)
-    else:
-        products = storage.all(Product)
-    
-    # Filter out any strings if they are not supposed to be there
-    products = [product for product in products if isinstance(product, Product)]
-
-    # Now sort the remaining products by their name
-    sorted_products = sorted(products, key=lambda product: product.product_name)
-
-    # Pagination logic
-    page = int(request.args.get('page', 1))
-    per_page = 10
-    total_products = len(sorted_products)
-    total_pages = (total_products + per_page - 1) // per_page
-    paged_products = sorted_products[(page - 1) * per_page: page * per_page]
-
-    # Ensure all variables are defined before rendering
-    return render_template('page3.html', 
-                           sorted_categories=sorted_categories,
-                           paged_products=paged_products,
-                           page=page,
-                           total_pages=total_pages,
-                           selected_category_id=selected_category_id,
-                           int=int)"""
 @app.route('/shop.html', methods=['GET'])
 @app.route('/shop', methods=['GET'])
 def shop():
-    """Displays categories and paginated products based on selected category."""
+    """Displays categories and paginated products"""
     # Get all categories
     categories = storage.all(Category)
-    sorted_categories = sorted(categories.values(), key=lambda category: category.category_name)
+    sorted_categories = sorted(categories.values(),
+                               key=lambda category: category.category_name)
 
     # Get selected category ID from query parameters
     selected_category_id = request.args.get('category', None)
 
-    # Convert selected_category_id to an integer if it is not None and is numeric
+    # Convert selected_category_id to an integer
     if selected_category_id and selected_category_id.isnumeric():
         selected_category_id = int(selected_category_id)
     else:
@@ -141,12 +114,14 @@ def shop():
     # Convert products dict to a list
     if isinstance(products, dict):
         products = list(products.values())
-    
+
     # Filter out any strings if they are not supposed to be there
-    products = [product for product in products if isinstance(product, Product)]
+    products = [product for product in products
+                if isinstance(product, Product)]
 
     # Now sort the remaining products by their name
-    sorted_products = sorted(products, key=lambda product: product.product_name)
+    sorted_products = sorted(
+        products, key=lambda product: product.product_name)
 
     # Pagination logic
     page = int(request.args.get('page', 1))
@@ -156,13 +131,14 @@ def shop():
     paged_products = sorted_products[(page - 1) * per_page: page * per_page]
 
     # Ensure all variables are defined before rendering
-    return render_template('shop.html', 
+    return render_template('shop.html',
                            sorted_categories=sorted_categories,
                            paged_products=paged_products,
                            page=page,
                            total_pages=total_pages,
                            selected_category_id=selected_category_id,
                            selected_category=selected_category)
+
 
 @app.route('/single.html/<int:product_id>', methods=['GET', 'POST'])
 @app.route('/single/<int:product_id>', methods=['GET', 'POST'])
@@ -183,7 +159,8 @@ def single(product_id):
 
         if amount > 0 and amount <= product.stock_weight:
             price = round(price_after_discount * amount, 2)
-            order_item = {'product_id': product_id, 'amount': amount, 'price': price}
+            order_item = {'product_id': product_id,
+                          'amount': amount, 'price': price}
 
             if 'order' not in session:
                 session['order'] = []
@@ -194,7 +171,7 @@ def single(product_id):
 
             # Debug prints
             print(session.keys())  # Print all keys in the session
-            print(session.get('order'))  # Print the 'order' key in the session
+            print(session.get('order'))
             print(session)
 
             return redirect(url_for('cart'))
@@ -208,6 +185,7 @@ def single(product_id):
         price_after_discount=price_after_discount
     )
 
+
 @app.route('/cart.html', methods=['GET', 'POST'])
 @app.route('/cart', methods=['GET', 'POST'])
 def cart():
@@ -220,7 +198,10 @@ def cart():
         if delete:
             product_id_to_delete = delete
             if 'order' in session:
-                session['order'] = [item for item in session['order'] if item['product_id'] != product_id_to_delete]
+                session['order'] = [item for item in
+                                    session['order']
+                                    if item['product_id'] !=
+                                    product_id_to_delete]
                 session.modified = True
             return redirect(url_for('cart'))
 
@@ -238,7 +219,7 @@ def cart():
         if not product_id.isdigit():
             return 'Invalid product ID', 400
 
-        product = storage.get(Product, int(product_id))  # Ensure ID is an integer
+        product = storage.get(Product, int(product_id))
         if not product:
             return 'Product not found', 404
 
@@ -247,7 +228,7 @@ def cart():
         price_after_discount = round(
             product.unit_price * (1 - discount.discount_percentage / 100), 2
         ) if discount else product.unit_price
-        
+
         price = round(price_after_discount * amount, 2)
 
         cart_item = {
@@ -289,12 +270,12 @@ def cart():
         print("Session order data after updating item:", session.get('order'))
         return redirect(url_for('cart'))
     else:
-        if 'order' in session: 
+        if 'order' in session:
             order_items = session['order']
-            total_price = round(sum(float(item['price']) for item in order_items), 2)
+            total_price = round(sum(
+                float(item['price']) for item in order_items), 2)
 
             final_price = session.get('final_price', total_price)
-
 
             for item in order_items:
                 product = storage.get(Product, item['product_id'])
@@ -307,7 +288,9 @@ def cart():
             print(session.get('order'))  # Print the 'order' key in the session
             print(session)
 
-            return render_template('cart.html', order_items=order_items, total_price=total_price, final_price=final_price)
+            return render_template('cart.html', order_items=order_items,
+                                   total_price=total_price,
+                                   final_price=final_price)
         else:
             return render_template('cart.html', order_items=[], total_price=0)
 
@@ -316,74 +299,67 @@ def cart():
 def apply_coupon():
     """Apply a coupon code and update the total price."""
     coupon_code = request.form.get('coupon_code')
-    source_page = request.form.get('source_page')  # Get the source page
-    
+    source_page = request.form.get('source_page')
     # Debugging: Print source_page to verify
     print("Source Page:", source_page)
-    
     # Handle case where source_page is None
     if not source_page:
         flash("An error occurred. Please try again.")
-        return redirect(url_for('cart'))  # Default to 'cart' if source_page is None
-    
-    # Rest of the function continues...
+        return redirect(url_for('cart'))
 
-    
     # Check if coupon code is provided
     if not coupon_code:
         flash("Coupon code is required.")
-        return redirect(url_for(source_page))  # Redirect back to the source page
+        return redirect(url_for(source_page))
 
     # Fetch the coupon details from the database
-    coupon = storage.query(Coupon).filter_by(coupon_code=coupon_code, is_deleted=False).first()
-    
+    coupon = storage.query(Coupon).filter_by(
+        coupon_code=coupon_code, is_deleted=False).first()
+
     # Debugging: Print the coupon object
     print("Coupon Retrieved:", coupon)
 
     if coupon and coupon.start_date <= datetime.utcnow() <= coupon.end_date:
         if 'order' in session:
             order_items = session['order']
-            total_price = round(sum(float(item['price']) for item in order_items), 2)
-            
+            total_price = round(sum(
+                float(item['price']) for item in order_items), 2)
+
             # Calculate the final price after applying the coupon
             coupon_amount = float(coupon.coupon_amount)
             final_price = round(total_price - coupon_amount, 2)
-            final_price = max(final_price, 0)  # Ensure price doesn't go negative
-            
+            final_price = max(final_price, 0)
+
             # Store final price and coupon details in session
             session['total_price'] = total_price
             session['final_price'] = final_price
             session['coupon_amount'] = coupon_amount
-            session['coupon_code'] = coupon_code  # Store coupon code for display
+            session['coupon_code'] = coupon_code
 
-            # Optionally, you can redirect to checkout or cart with a success message
             flash("Coupon code applied successfully!")
-            return redirect(url_for(source_page))  # Redirect to the original page
+            return redirect(url_for(source_page))
     else:
         flash("Invalid or expired coupon code.")
-        return redirect(url_for(source_page))  # Redirect back to the source page
-
-
+        return redirect(url_for(source_page))
 
 
 @app.route('/clear_cart', methods=['POST'])
 def clear_cart():
     """Clear the shopping cart."""
     if 'order' in session:
-        session.pop('order', None)  # Remove the 'order' key from the session
+        session.pop('order', None)
         session.pop('coupon_id', None)
         session.pop('coupon_code', None)
-        session.pop('final_price', None)  # Clear final_price after processing
+        session.pop('final_price', None)
         session.pop('coupon_amount', None)
-        session.modified = True  # Mark the session as modified
+        session.modified = True
 
-        print(session.keys())  # Print all keys in the session
-        print(session.get('order'))  # Print the 'order' key in the session
+        print(session.keys())
+        print(session.get('order'))
         print(session)
 
     flash('Cart has been cleared successfully.', 'success')
     return redirect(url_for('cart'))
-
 
 
 @app.route('/checkout.html', methods=['GET', 'POST'])
@@ -402,7 +378,7 @@ def checkout():
             'state_or_country': request.form.get('state_or_country'),
             'postal_or_zip': request.form.get('postal_or_zip'),
             'order_notes': request.form.get('order_notes'),
-            'payment_method': request.form.get('payment_method')  # Capture payment method
+            'payment_method': request.form.get('payment_method')
         }
 
         new_user = User(**user_data)
@@ -410,9 +386,9 @@ def checkout():
         storage.save()
 
         if 'order' in session:
-            total_price = sum(float(item['price']) for item in session['order'])
-            final_price = session.get('final_price', total_price)  # Use final_price from session or fallback to total_price
-            
+            total_price = sum(
+                float(item['price']) for item in session['order'])
+            final_price = session.get('final_price', total_price)
             # Create payment first
             new_payment = Payment(payment_method=user_data['payment_method'])
             storage.new(new_payment)
@@ -425,7 +401,7 @@ def checkout():
             new_order = Order(
                 user_id=new_user.id,
                 total_price=Decimal(total_price),
-                final_price=Decimal(final_price),  # Use final_price here
+                final_price=Decimal(final_price),
                 payment_id=new_payment.id  # Set payment_id
             )
             storage.new(new_order)
@@ -433,7 +409,6 @@ def checkout():
 
             print(f"Total Price from session: {total_price}")
             print(f"Final Price from session: {final_price}")
-
 
             for item in session['order']:
                 new_order_item = OrderItem(
@@ -448,13 +423,12 @@ def checkout():
             print(f"Total Price from session: {total_price}")
             print(f"Final Price from session: {final_price}")
 
-
             session.pop('order', None)
             session.pop('coupon_id', None)
             session.pop('coupon_code', None)
             session.pop('total_price', None)
-            session.pop('final_price', None)  # Clear final_price after processing
-            session.pop('coupon_amount', None)  # Clear coupon_amount after processing
+            session.pop('final_price', None)
+            session.pop('coupon_amount', None)
 
             print(session.keys())  # Print all keys in the session
             print(session.get('order'))  # Print the 'order' key in the session
@@ -464,23 +438,26 @@ def checkout():
     return render_template('checkout.html')
 
 
-
 @app.route('/thankyou.html')
 @app.route('/thankyou')
 def thankyou():
     """ display a HTML page only if n is an integer """
     return render_template('thankyou.html')
 
+
 @app.route('/admin_login.html', methods=['GET', 'POST'])
 @app.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
+    """function for admin login"""
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
 
         # Assuming storage.all() returns a dictionary of all objects
         admins = storage.all(Admin).values()
-        admin = next((admin for admin in admins if admin.admin_name == username), None)
+        admin = next((
+            admin for admin in admins if admin.admin_name == username),
+                     None)
 
         if admin and admin.verify_password(password):
             # Successful login
@@ -488,13 +465,15 @@ def admin_login():
             return redirect(url_for('admin_dashboard'))
         else:
             # Failed login
-            return render_template('admin_login.html', error="Invalid username or password")
+            return render_template('admin_login.html',
+                                   error="Invalid username or password")
 
     return render_template('admin_login.html')
 
+
 @app.route('/admin')
 def admin_dashboard():
-    # Ensure admin is logged in
+    """Ensure admin is logged in"""
     if 'admin_id' in session:
         admin_id = session.get('admin_id')
         admin = storage.get(Admin, admin_id)
@@ -516,16 +495,21 @@ def admin_dashboard():
 
 @app.route('/admin/categories')
 def admin_categories():
+    """function to manage categories"""
     if 'admin_id' in session:
         admin_id = session.get('admin_id')
         admin = storage.get(Admin, admin_id)
-        categories = [cat for cat in storage.all(Category).values() if not cat.is_deleted]
-        return render_template('categories.html', admin=admin, categories=categories)
+        categories = [cat for cat in storage.all(
+            Category).values() if not cat.is_deleted]
+        return render_template('categories.html',
+                               admin=admin, categories=categories)
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/add_category', methods=['GET', 'POST'])
 def add_category():
+    """function to add new category"""
     if 'admin_id' in session:
         if request.method == 'POST':
             admin_id = session.get('admin_id')
@@ -534,7 +518,8 @@ def add_category():
 
             if image and image.filename != '':
                 filename = secure_filename(image.filename)
-                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image_path = os.path.join(
+                    app.config['UPLOAD_FOLDER'], filename)
                 image.save(image_path)
                 image_url = f'images/{filename}'
             else:
@@ -555,8 +540,10 @@ def add_category():
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/edit_category/<int:category_id>', methods=['GET', 'POST'])
 def edit_category(category_id):
+    """function to edit categories"""
     if 'admin_id' in session:
         category = storage.get(Category, category_id)
 
@@ -566,7 +553,8 @@ def edit_category(category_id):
 
             if image and image.filename != '':
                 filename = secure_filename(image.filename)
-                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image_path = os.path.join(
+                    app.config['UPLOAD_FOLDER'], filename)
                 image.save(image_path)
                 category.image_url = f'images/{filename}'  # Save relative path
 
@@ -576,12 +564,15 @@ def edit_category(category_id):
 
             return redirect(url_for('admin_categories'))
 
-        return render_template('edit_category.html', category=category)
+        return render_template('edit_category.html',
+                               category=category)
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/delete_category/<int:category_id>')
 def delete_category(category_id):
+    """function to delete category"""
     if 'admin_id' in session:
         category = storage.get(Category, category_id)
         if category:
@@ -592,18 +583,23 @@ def delete_category(category_id):
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/admin/admins')
 def admin_admins():
+    """function to manage admins"""
     if 'admin_id' in session:
         admin_id = session.get('admin_id')
         admin = storage.get(Admin, admin_id)
-        admins = [adm for adm in storage.all(Admin).values() if not adm.is_deleted]
+        admins = [adm for adm in storage.all(
+            Admin).values() if not adm.is_deleted]
         return render_template('admins.html', admin=admin, admins=admins)
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/add_admin', methods=['GET', 'POST'])
 def add_admin():
+    """function to add new admin"""
     if 'admin_id' in session:
         admin_roles = storage.all(AdminRole).values()
         if request.method == 'POST':
@@ -615,7 +611,8 @@ def add_admin():
 
             if image and image.filename != '':
                 filename = secure_filename(image.filename)
-                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image_path = os.path.join(
+                    app.config['UPLOAD_FOLDER'], filename)
                 image.save(image_path)
                 image_url = f'images/{filename}'
             else:
@@ -643,6 +640,7 @@ def add_admin():
 
 @app.route('/edit_admin/<int:admin_id>', methods=['GET', 'POST'])
 def edit_admin(admin_id):
+    """function to edit admin"""
     if 'admin_id' in session:
         admin = storage.get(Admin, admin_id)
         admin_roles = storage.all(AdminRole).values()
@@ -655,7 +653,8 @@ def edit_admin(admin_id):
 
             if image and image.filename != '':
                 filename = secure_filename(image.filename)
-                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image_path = os.path.join(
+                    app.config['UPLOAD_FOLDER'], filename)
                 image.save(image_path)
                 admin.image_url = f'images/{filename}'
 
@@ -666,12 +665,15 @@ def edit_admin(admin_id):
 
             return redirect(url_for('admin_admins'))
 
-        return render_template('edit_admin.html', admin=admin, admin_roles=admin_roles)
+        return render_template('edit_admin.html',
+                               admin=admin, admin_roles=admin_roles)
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/delete_admin/<int:admin_id>')
 def delete_admin(admin_id):
+    """function to delete admin"""
     if 'admin_id' in session:
         admin = storage.get(Admin, admin_id)
         if admin:
@@ -683,82 +685,27 @@ def delete_admin(admin_id):
         return redirect(url_for('admin_login'))
 
 
-"""@app.route('/admin/categories')
-def admin_categories():
-    # Check if admin is logged in
-    if 'admin_id' in session:
-        admin_id = session.get('admin_id')
-        admin = storage.get(Admin, admin_id)
-
-        # Retrieve only non-deleted categories
-        categories = [cat for cat in storage.all(Category).values() if not cat.is_deleted]
-        return render_template('categories.html', admin=admin, categories=categories)
-    else:
-        return redirect(url_for('admin_login'))
-
-@app.route('/add_category', methods=['POST'])
-def add_category():
-    if 'admin_id' in session:
-        admin_id = session.get('admin_id')
-        category_name = request.form.get('category_name')
-
-        new_category = Category(
-            category_name=category_name,
-            created_by_admin_id=admin_id,
-            created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow()
-        )
-        
-        storage.new(new_category)
-        storage.save()
-
-        return redirect(url_for('admin_categories'))  # Redirect to categories page after adding
-    else:
-        return redirect(url_for('admin_login'))
-
-# Implement similar routes for editing and deleting categories, products, etc.
-
-@app.route('/edit_category/<int:category_id>', methods=['GET', 'POST'])
-def edit_category(category_id):
-    if 'admin_id' in session:
-        category = storage.get(Category, category_id)
-
-        if request.method == 'POST':
-            category.category_name = request.form.get('category_name')
-            category.updated_at = datetime.utcnow()
-            storage.save()
-            return redirect(url_for('admin_categories'))
-
-        return render_template('edit_category.html', category=category)
-    else:
-        return redirect(url_for('admin_login'))
-
-@app.route('/delete_category/<int:category_id>')
-def delete_category(category_id):
-    if 'admin_id' in session:
-        category = storage.get(Category, category_id)
-        if category:
-            category.delete()  # Call the soft delete method from BaseModel
-        return redirect(url_for('admin_categories'))
-    else:
-        return redirect(url_for('admin_login'))"""
-    
 # Admin coupons route
 @app.route('/admin/coupons')
 def admin_coupons():
+    """function to manage coupons"""
     if 'admin_id' in session:
         admin_id = session.get('admin_id')
         admin = storage.get(Admin, admin_id)
 
         # Retrieve only non-deleted coupons
-        coupons = [coupon for coupon in storage.all(Coupon).values() if not coupon.is_deleted]
-        return render_template('coupons.html', admin=admin, coupons=coupons)
+        coupons = [coupon for coupon in storage.all(
+            Coupon).values() if not coupon.is_deleted]
+        return render_template('coupons.html',
+                               admin=admin, coupons=coupons)
     else:
         return redirect(url_for('admin_login'))
+
 
 # Add coupon route
 @app.route('/add_coupon', methods=['GET', 'POST'])
 def add_coupon():
+    """function to add new coupon"""
     if 'admin_id' in session:
         if request.method == 'POST':
             admin_id = session.get('admin_id')
@@ -775,13 +722,13 @@ def add_coupon():
                 created_at=datetime.utcnow(),
                 updated_at=datetime.utcnow()
             )
-            
+
             storage.new(new_coupon)
             storage.save()
 
-            return redirect(url_for('admin_coupons'))  # Redirect to coupons page after adding
+            return redirect(url_for('admin_coupons'))
         else:
-            return render_template('add_coupon.html')  # Render the form for GET request
+            return render_template('add_coupon.html')
     else:
         return redirect(url_for('admin_login'))
 
@@ -789,6 +736,7 @@ def add_coupon():
 # Edit coupon route
 @app.route('/edit_coupon/<int:coupon_id>', methods=['GET', 'POST'])
 def edit_coupon(coupon_id):
+    """function to edit coupon"""
     if 'admin_id' in session:
         coupon = storage.get(Coupon, coupon_id)
 
@@ -805,14 +753,17 @@ def edit_coupon(coupon_id):
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.template_filter('datetimeformat')
 def datetimeformat(value, format='%Y-%m-%dT%H:%M'):
+    """function to return date"""
     return value.strftime(format)
 
 
 # Delete coupon route
 @app.route('/delete_coupon/<int:coupon_id>')
 def delete_coupon(coupon_id):
+    """function to delete coupon"""
     if 'admin_id' in session:
         coupon = storage.get(Coupon, coupon_id)
         if coupon:
@@ -823,20 +774,26 @@ def delete_coupon(coupon_id):
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/admin/deliveries')
 def admin_deliveries():
+    """function to manage deliveries"""
     if 'admin_id' in session:
         admin_id = session.get('admin_id')
         admin = storage.get(Admin, admin_id)
 
         # Retrieve only non-deleted deliveries
-        deliveries = [delivery for delivery in storage.all(Delivery).values() if not delivery.is_deleted]
-        return render_template('deliveries.html', admin=admin, deliveries=deliveries)
+        deliveries = [delivery for delivery in storage.all(
+            Delivery).values() if not delivery.is_deleted]
+        return render_template('deliveries.html',
+                               admin=admin, deliveries=deliveries)
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/add_delivery', methods=['GET', 'POST'])
 def add_delivery():
+    """function to view deliveries"""
     if 'admin_id' in session:
         if request.method == 'POST':
             delivery_name = request.form.get('delivery_name')
@@ -852,7 +809,7 @@ def add_delivery():
                 created_at=datetime.utcnow(),
                 updated_at=datetime.utcnow()
             )
-            
+
             storage.new(new_delivery)
             storage.save()
 
@@ -862,8 +819,10 @@ def add_delivery():
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/edit_delivery/<int:delivery_id>', methods=['GET', 'POST'])
 def edit_delivery(delivery_id):
+    """function to edit delivery"""
     if 'admin_id' in session:
         delivery = storage.get(Delivery, delivery_id)
 
@@ -881,8 +840,10 @@ def edit_delivery(delivery_id):
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/delete_delivery/<int:delivery_id>')
 def delete_delivery(delivery_id):
+    """function to delete delivery"""
     if 'admin_id' in session:
         delivery = storage.get(Delivery, delivery_id)
         if delivery:
@@ -893,18 +854,24 @@ def delete_delivery(delivery_id):
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/admin/discounts')
 def admin_discounts():
+    """function to manage admins"""
     if 'admin_id' in session:
         admin_id = session.get('admin_id')
         admin = storage.get(Admin, admin_id)
-        discounts = [disc for disc in storage.all(Discount).values() if not disc.is_deleted]
-        return render_template('discounts.html', admin=admin, discounts=discounts)
+        discounts = [disc for disc in storage.all(
+            Discount).values() if not disc.is_deleted]
+        return render_template('discounts.html',
+                               admin=admin, discounts=discounts)
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/add_discount', methods=['GET', 'POST'])
 def add_discount():
+    """function to add new discount"""
     if 'admin_id' in session:
         if request.method == 'POST':
             discount_percentage = request.form.get('discount_percentage')
@@ -926,8 +893,10 @@ def add_discount():
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/edit_discount/<int:discount_id>', methods=['GET', 'POST'])
 def edit_discount(discount_id):
+    """function to edit discount"""
     if 'admin_id' in session:
         discount = storage.get(Discount, discount_id)
 
@@ -948,8 +917,10 @@ def edit_discount(discount_id):
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/delete_discount/<int:discount_id>')
 def delete_discount(discount_id):
+    """function to delete discount"""
     if 'admin_id' in session:
         discount = storage.get(Discount, discount_id)
         if discount:
@@ -960,18 +931,24 @@ def delete_discount(discount_id):
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/admin/suppliers')
 def admin_suppliers():
+    """function to manage suppliers"""
     if 'admin_id' in session:
         admin_id = session.get('admin_id')
         admin = storage.get(Admin, admin_id)
-        suppliers = [sup for sup in storage.all(Supplier).values() if not sup.is_deleted]
-        return render_template('suppliers.html', admin=admin, suppliers=suppliers)
+        suppliers = [sup for sup in storage.all(
+            Supplier).values() if not sup.is_deleted]
+        return render_template('suppliers.html',
+                               admin=admin, suppliers=suppliers)
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/add_supplier', methods=['GET', 'POST'])
 def add_supplier():
+    """function to add supplier"""
     if 'admin_id' in session:
         if request.method == 'POST':
             supplier_name = request.form.get('supplier_name')
@@ -1002,8 +979,10 @@ def add_supplier():
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/edit_supplier/<int:supplier_id>', methods=['GET', 'POST'])
 def edit_supplier(supplier_id):
+    """function to edit supplier"""
     if 'admin_id' in session:
         supplier = storage.get(Supplier, supplier_id)
 
@@ -1024,8 +1003,10 @@ def edit_supplier(supplier_id):
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/delete_supplier/<int:supplier_id>')
 def delete_supplier(supplier_id):
+    """function to delete supplier"""
     if 'admin_id' in session:
         supplier = storage.get(Supplier, supplier_id)
         if supplier:
@@ -1035,75 +1016,98 @@ def delete_supplier(supplier_id):
         return redirect(url_for('admin_suppliers'))
     else:
         return redirect(url_for('admin_login'))
-    
+
+
 '''@app.route('/admin/products')
 def admin_products():
     if 'admin_id' in session:
         admin_id = session.get('admin_id')
         admin = storage.get(Admin, admin_id)
-        products = [prod for prod in storage.all(Product).values() if not prod.is_deleted]
+        products = [prod for prod in storage.all(
+            Product).values() if not prod.is_deleted]
         return render_template('products.html', admin=admin, products=products)
     else:
         return redirect(url_for('admin_login'))'''
 
+
 @app.route('/admin/products')
 def admin_products():
+    """function that view and manage pproducts"""
     if 'admin_id' in session:
         admin_id = session.get('admin_id')
         admin = storage.get(Admin, admin_id)
-        products = [prod for prod in storage.all(Product).values() if not prod.is_deleted]
-        
+        products = [prod for prod in storage.all(
+            Product).values() if not prod.is_deleted]
+
         # Check for stock level issues
         notifications = []
         for product in products:
             if product.stock_weight <= product.min_stock:
-                notifications.append(f"Warning: {product.product_name} stock weight is less than or equal to min stock levels.")
-        
+                notifications.append(
+                    f"Warning: {product.product_name} stock weight \
+                        is less than or equal to min stock levels.")
         session['notifications'] = notifications
-
-        return render_template('products.html', admin=admin, products=products, notifications=len(notifications), notifications_list=notifications)
+        return render_template('products.html', admin=admin,
+                               products=products,
+                               notifications=len(notifications),
+                               notifications_list=notifications)
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/mark_notifications_read', methods=['POST'])
 def mark_notifications_read():
-    # Clear the notifications from the session
+    """Clear the notifications from the session"""
     session['notifications'] = []
     return redirect(url_for('admin_products'))
 
+
 @app.route('/notification')
 def notification():
+    """functn for notifications"""
     global notifications
     notifications = []  # Clear notifications when viewed
     return redirect(url_for('admin_products'))
 
+
 @app.route('/products')
 def products():
-    products = get_products()  # Replace with your actual function to get products
+    """function that view products"""
+    products = get_products()
     notifications = len(session.get('notifications', []))
     notifications_list = session.get('notifications', [])
-    return render_template('products.html', products=products, notifications=notifications, notifications_list=notifications_list)
+    return render_template('products.html', products=products,
+                           notifications=notifications,
+                           notifications_list=notifications_list)
+
 
 def get_products():
-    # Replace this function with your actual logic to fetch products
+    """Replace this function with your actual logic to fetch products"""
     return [
-        {'product_name': 'Product 1', 'stock_weight': 5, 'min_stock': 10, 'unit': 'kg'},
-        {'product_name': 'Product 2', 'stock_weight': 15, 'min_stock': 10, 'unit': 'kg'},
+        {'product_name': 'Product 1', 'stock_weight': 5,
+         'min_stock': 10, 'unit': 'kg'},
+        {'product_name': 'Product 2', 'stock_weight': 15,
+         'min_stock': 10, 'unit': 'kg'},
     ]
+
 
 @app.before_request
 def check_notifications():
+    """function to check notifications"""
     products = get_products()
     notifications = []
     for product in products:
         if product['min_stock'] >= product['stock_weight']:
-            notifications.append(f"Warning: {product['product_name']} stock weight is less than or equal to min stock levels.")
-    
+            notifications.append(
+                f"Warning: {product['product_name']} stock \
+                    weight is less than or equal to min stock levels.")
+
     session['notifications'] = notifications
 
 
 @app.route('/add_product', methods=['GET', 'POST'])
 def add_product():
+    """function to add a product"""
     if 'admin_id' in session:
         if request.method == 'POST':
             product_name = request.form.get('product_name')
@@ -1120,7 +1124,8 @@ def add_product():
 
             if image and image.filename != '':
                 filename = secure_filename(image.filename)
-                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image_path = os.path.join(
+                    app.config['UPLOAD_FOLDER'], filename)
                 image.save(image_path)
                 image_url = f'images/{filename}'
             else:
@@ -1149,23 +1154,27 @@ def add_product():
             if discount_id:
                 discount = storage.get(Discount, discount_id)
                 if discount:
-                    new_product.price_after_discount = float(unit_price) * (1 - discount.discount_percentage / 100)
+                    new_product.price_after_discount = float(unit_price) * (
+                        1 - discount.discount_percentage / 100)
 
             storage.new(new_product)
             storage.save()
 
             return redirect(url_for('admin_products'))
-        
+
         suppliers = storage.all(Supplier).values()
         categories = storage.all(Category).values()
         discounts = storage.all(Discount).values()
 
-        return render_template('add_product.html', suppliers=suppliers, categories=categories, discounts=discounts)
+        return render_template('add_product.html', suppliers=suppliers,
+                               categories=categories, discounts=discounts)
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/edit_product/<int:product_id>', methods=['GET', 'POST'])
 def edit_product(product_id):
+    """function to edit products"""
     if 'admin_id' in session:
         product = storage.get(Product, product_id)
 
@@ -1184,7 +1193,8 @@ def edit_product(product_id):
 
             if image and image.filename != '':
                 filename = secure_filename(image.filename)
-                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image_path = os.path.join(
+                    app.config['UPLOAD_FOLDER'], filename)
                 image.save(image_path)
                 product.image_url = f'images/{filename}'  # Save relative path
 
@@ -1192,7 +1202,9 @@ def edit_product(product_id):
             if product.discount_id:
                 discount = storage.get(Discount, product.discount_id)
                 if discount:
-                    product.price_after_discount = float(product.unit_price) * (1 - discount.discount_percentage / 100)
+                    product.price_after_discount = float(
+                        product.unit_price) * (
+                        1 - discount.discount_percentage / 100)
 
             product.updated_at = datetime.utcnow()
             storage.save()
@@ -1203,12 +1215,16 @@ def edit_product(product_id):
         categories = storage.all(Category).values()
         discounts = storage.all(Discount).values()
 
-        return render_template('edit_product.html', product=product, suppliers=suppliers, categories=categories, discounts=discounts)
+        return render_template('edit_product.html', product=product,
+                               suppliers=suppliers, categories=categories,
+                               discounts=discounts)
     else:
         return redirect(url_for('admin_login'))
 
+
 @app.route('/delete_product/<int:product_id>')
 def delete_product(product_id):
+    """function to delete a product"""
     if 'admin_id' in session:
         product = storage.get(Product, product_id)
         if product:
@@ -1222,6 +1238,7 @@ def delete_product(product_id):
 
 @app.route('/admin/orders')
 def admin_orders():
+    """function to view orders"""
     if 'admin_id' in session:
         admin_id = session.get('admin_id')
         admin = storage.get(Admin, admin_id)
@@ -1247,9 +1264,11 @@ def admin_orders():
     else:
         return redirect(url_for('admin_login'))
 
+
 # Edit Order Route
 @app.route('/admin/orders/edit/<int:order_id>', methods=['GET', 'POST'])
 def edit_order(order_id):
+    """function to edit an order"""
     if 'admin_id' in session:
         admin_id = session.get('admin_id')
         admin = storage.get(Admin, admin_id)
@@ -1281,13 +1300,13 @@ def edit_order(order_id):
         return redirect(url_for('admin_login'))
 
 
-
 @app.route('/admin/some_protected_route')
 def some_protected_route():
     """Protected admin route."""
     if 'admin_id' not in session:
         return redirect(url_for('admin_login'))
     # Continue with the rest of the view logic
+
 
 @app.route('/admin/logout', methods=['POST'])
 def admin_logout():
@@ -1298,7 +1317,9 @@ def admin_logout():
 
 @app.teardown_appcontext
 def app_teardown(arg=None):
+    """to close session"""
     storage.close()
+
 
 if __name__ == '__main__':
     app.url_map.strict_slashes = False
