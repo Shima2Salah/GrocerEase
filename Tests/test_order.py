@@ -150,3 +150,41 @@ class TestOrder:
                                'final_price']
         for attr in relevant_attributes:
             assert attr in order_dict
+
+    def test_saving_order_with_changes_updates_updated_at_attribute(self, mocker):
+        order_data = {
+            'user_id': 1,
+            'total_price': 100.00,
+            'delivery_id': 2,
+            'order_date': datetime.utcnow(),
+            'status_id': 1,
+            'payment_id': 3,
+            'coupon_id': 4,
+            'delivery_date': datetime.utcnow(),
+            'payment_date': datetime.utcnow(),
+            'payment_status': 1,
+            'final_price': 90.00
+        }
+        order = Order(**order_data)
+        original_updated_at = order.updated_at
+        # Simulate changes and save
+        order.total_price = 120.00
+        order.save()
+        assert order.updated_at != original_updated_at
+
+    def test_order_initialization_with_invalid_data_raises_errors(self):
+        invalid_data = {
+            'user_id': 'invalid',
+            'total_price': 'invalid',
+            'delivery_id': 2,
+            'order_date': datetime.utcnow(),
+            'status_id': 1,
+            'payment_id': 3,
+            'coupon_id': 4,
+            'delivery_date': datetime.utcnow(),
+            'payment_date': datetime.utcnow(),
+            'payment_status': 1,
+            'final_price': 90.00
+        }
+        with pytest.raises(TypeError):
+            Order(**invalid_data)
