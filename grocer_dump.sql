@@ -4,7 +4,7 @@ DROP DATABASE IF EXISTS grocerease;
 -- Create database + user if doesn't exist
 CREATE DATABASE IF NOT EXISTS grocerease;
 CREATE USER IF NOT EXISTS 'grocer_dev'@'localhost';
-SET PASSWORD FOR 'grocer_dev'@'localhost' = 'grocer_dev_pwd';
+SET PASSWORD FOR 'grocer_dev'@'localhost' = PASSWORD('grocer_dev_pwd');
 GRANT ALL ON grocerease.* TO 'grocer_dev'@'localhost';
 GRANT SELECT ON performance_schema.* TO 'grocer_dev'@'localhost';
 FLUSH PRIVILEGES;
