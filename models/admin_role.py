@@ -5,6 +5,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import relationship
 
+
 class AdminRole(BaseModel, Base):
     """Representation of AdminRole"""
     if models.storage_t == 'db':
@@ -13,7 +14,7 @@ class AdminRole(BaseModel, Base):
         admin_role_description = Column(String(255))
         admins = relationship(
             "Admin",
-            backref="admin_roles",  # Singular form since this is a many-to-one relationship
+            backref="admin_roles",
             cascade="all, delete, delete-orphan"
         )
         # Relationship to Product
