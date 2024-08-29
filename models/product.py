@@ -16,8 +16,10 @@ class Product(BaseModel, Base):
         unit_price = Column(DECIMAL(10, 2))
         image_url = Column(String(255))
         description = Column(String(255))
-        supplier_id = Column(Integer, ForeignKey('suppliers.id'), nullable=False)
-        created_by_admin_id = Column(Integer, ForeignKey('admins.id'), nullable=False)
+        supplier_id = Column(Integer, ForeignKey('suppliers.id'),
+		nullable=False)
+        created_by_admin_id = Column(Integer,
+		ForeignKey('admins.id'), nullable=False)
         discount_id = Column(Integer, ForeignKey('discounts.id'))
         stock_weight = Column(DECIMAL(10, 2))
         min_stock = Column(DECIMAL(10, 2))
