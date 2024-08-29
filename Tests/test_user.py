@@ -5,7 +5,7 @@ import models
 from models.order import Order
 
 
-# Dependencies:
+# requirements:
 # pip install pytest-mock
 import pytest
 
