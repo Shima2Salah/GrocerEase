@@ -5,6 +5,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Integer, String, Numeric, DateTime
 from sqlalchemy.orm import relationship
 
+
 class Coupon(BaseModel, Base):
     """Representation of Coupon"""
     if models.storage_t == 'db':
