@@ -16,7 +16,8 @@ class Category(BaseModel, Base):
         image_url = Column(String(255))
         products = relationship(
             "Product",
-            backref="categories",  # Singular form since this is a many-to-one relationship
+            backref="categories",
+		 # Singular form since this is a many-to-one relationship
             cascade="all, delete, delete-orphan"
         )
         created_by_admin_id = Column(Integer, ForeignKey('admins.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
