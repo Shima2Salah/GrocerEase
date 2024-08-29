@@ -11,7 +11,7 @@ import pytest
 
 class TestUser:
 
-    # User instance creation with all attributes in 'db' mode
+    # User instance creation with all attributes in'db' mode
     def test_user_creation_with_all_attributes_db_mode(self, mocker):
         mocker.patch('models.storage_t', 'db')
         user = User(
