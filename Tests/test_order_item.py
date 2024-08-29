@@ -138,7 +138,6 @@ class TestOrderItem:
 
     # Ensuring relationships are correctly populated in database storage mode
     def test_relationships_correctly_populated(self):
-        # Given
         product_id = 1
         amount = 10.00
         price = 5.99
