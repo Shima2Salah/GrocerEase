@@ -8,6 +8,8 @@ from hashlib import md5
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class Admin(BaseModel, Base):
+
+
     """Representation of Admin"""
     if models.storage_t == 'db':
         __tablename__ = 'admins'
@@ -15,16 +17,19 @@ class Admin(BaseModel, Base):
         email = Column(String(100), unique=True, nullable=False)
         image_url = Column(String(255))
         password_hash = Column(String(1024), nullable=False)
-        admin_role_id = Column(Integer, ForeignKey('admin_roles.id'), nullable=False)
+        admin_role_id = Column(Integer, ForeignKey('admin_roles.id'),
+	nullable=False)
         status = Column(Integer)  # This field is optional based on your schema
         products = relationship(
             "Product",
-            backref="admins",  # Singular form since this is a many-to-one relationship
+            backref="admins",
             cascade="all, delete, delete-orphan"
         )
         # Relationship to Category
-        suppliers = relationship('Supplier', back_populates='admin', overlaps="admin_relationship")
-        categories = relationship('Category', back_populates='admin')
+        suppliers = relationship(
+                'Supplier', back_populates='admin', 
+		overlaps="admin_relationship")
+	categories = relationship('Category', back_populates='admin')
         products = relationship('Product', back_populates='admin')
         admin_role = relationship('AdminRole', back_populates='admins')
     else:
@@ -39,7 +44,6 @@ class Admin(BaseModel, Base):
         """Initializes Admin"""
         super().__init__(*args, **kwargs)'''
 
-
     '''def __setattr__(self, name, value):
         """to set an encryption password"""
         if name == "password":
@@ -49,8 +53,9 @@ class Admin(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """Initializes Admin"""
         if "password" in kwargs:
-            kwargs["password_hash"] = self.hash_password(kwargs.pop("password"))
-        super().__init__(*args, **kwargs)
+            kwargs["password_hash"] =
+	self.hash_password(kwargs.pop("password"))
+	super().__init__(*args, **kwargs)
 
     @staticmethod
     def hash_password(password):
@@ -64,7 +69,8 @@ class Admin(BaseModel, Base):
     @staticmethod
     def get_by_username(cls, username):
         """Retrieve an Admin instance by username."""
-        return models.storage.session.query(cls).filter_by(username=username).first()
+        return models.storage.session.query(cls)
+        .filter_by(username=username).first()
 
     def __setattr__(self, name, value):
         """Custom setter to handle password hashing."""
