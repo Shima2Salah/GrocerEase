@@ -136,3 +136,53 @@ class TestColor:
         from models.color import Color
         color = Color(color_name="Blue")
         assert color.color_name == "Blue"
+
+    def test_relationship_between_color_and_product(self, mocker):
+        mocker.patch('models.storage_t', 'db')
+        from models.color import Color
+        from models.product import Product
+        from models.base_model import Base
+        from sqlalchemy import Column, String, Integer, ForeignKey, Table
+        from sqlalchemy.orm import relationship
+
+        with mocker.patch('models.color.Base', Base):
+            with mocker.patch('models.color.Column', Column):
+                with mocker.patch('models.color.String', String):
+                    with mocker.patch('models.color.Integer', Integer):
+                        with mocker.patch('models.color.ForeignKey', ForeignKey):
+                            with mocker.patch('models.color.Table', Table):
+                                with mocker.patch('models.color.relationship', relationship):
+                                    from models.color import products_colors
+                                    color = Color(color_name="Red")
+                                    product = Product(product_name="Chair")
+                                    color.products.append(product)
+                                    assert product in color.products
+
+    def test_verify_tablename_set_correctly_when_storage_t_is_db(self, mocker):
+        mocker.patch('models.storage_t', 'db')
+        from models.color import Color
+        assert Color.__tablename__ == 'colors'
+
+    def test_relationship_between_color_and_product_when_file_storage(self, mocker):
+        mocker.patch('models.storage_t', 'file')
+        from models.color import Color
+        from models.product import Product
+        from models.base_model import Base
+        from sqlalchemy import Column, String, Integer, ForeignKey, Table
+        from sqlalchemy.orm import relationship
+
+        with mocker.patch('models.color.Base', Base):
+            with mocker.patch('models.color.Column', Column):
+                with mocker.patch('models.color.String', String):
+                    with mocker.patch('models.color.Integer', Integer):
+                        with mocker.patch('models.color.ForeignKey', ForeignKey):
+                            with mocker.patch('models.color.Table', Table):
+                                with mocker.patch('models.color.relationship', relationship):
+                                    from models.color import products_colors
+                                    color = Color(color_name="Red")
+                                    assert hasattr(color, 'products')
+
+    def test_verify_tablename_default_value_when_storage_t_is_file(self, mocker):
+        mocker.patch('models.storage_t', 'file')
+        from models.color import Color
+        assert Color.__tablename__ == 'colors'
