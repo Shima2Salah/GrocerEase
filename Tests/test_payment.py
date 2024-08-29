@@ -148,4 +148,47 @@ class TestPayment:
         }
         payment = Payment(**payment_data)
         assert not hasattr(payment, 'payment_method')  # Should not initialize with invalid type
-        assert not hasattr(payment, 'orders')  # Should not initialize with invalid type
+        assert not hasattr(payment, 'orders')
+
+    def test_soft_deletes_correctly_in_db_mode(self, mocker):
+        payment_data = {
+            'payment_method': 'Credit Card',
+            'orders': []
+        }
+        payment = Payment(**payment_data)
+        with mocker.patch('models.storage') as mock_storage:
+            payment.delete()
+            assert payment.is_deleted == True
+            assert payment.deleted_at is not None
+            mock_storage.save.assert_called_once()
+
+    def test_initializes_with_invalid_attributes(self):
+        payment_data = {
+            'payment_method': 123,  # Invalid type
+            'orders': "Order123"  # Invalid type
+        }
+        payment = Payment(**payment_data)
+        assert not hasattr(payment, 'payment_method')  # Should not initialize with invalid type
+        assert not hasattr(payment, 'orders')
+
+    def test_initializes_with_invalid_attribute_values(self):
+        payment_data = {
+            'payment_method': 123,  # Invalid type
+            'orders': "Order123"  # Invalid type
+        }
+        payment = Payment(**payment_data)
+        assert not hasattr(payment, 'payment_method')  # Should not initialize with invalid type
+        assert not hasattr(payment, 'orders')
+
+    def test_updates_orders_correctly(self):
+        payment_data = {
+            'payment_method': 'Credit Card',
+            'orders': []
+        }
+        payment = Payment(**payment_data)
+    
+        # Update orders attribute
+        new_orders = ['Order1', 'Order2']
+        payment.orders = new_orders
+    
+        assert payment.orders == new_orders  # Should not initialize with invalid type
