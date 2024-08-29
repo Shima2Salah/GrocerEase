@@ -5,7 +5,8 @@ from models.base_model import BaseModel, Base
 from models.coupon import Coupon
 from os import getenv
 import sqlalchemy
-from sqlalchemy import Column, String, Integer, DECIMAL, ForeignKey, DateTime, ForeignKey
+from sqlalchemy import Column, String, Integer, DECIMAL
+from sqlalchemy import ForeignKey, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
@@ -18,7 +19,8 @@ class Order(BaseModel, Base):
         total_price = Column(DECIMAL(10, 2), nullable=False)
         delivery_id = Column(Integer, ForeignKey('deliveries.id'))
         order_date = Column(DateTime, default=datetime.utcnow, nullable=False)
-        status_id = Column(Integer, ForeignKey('orders_statuses.id'), nullable=False, default=1)
+        status_id = Column(Integer, ForeignKey('orders_statuses.id'),
+                           nullable=False, default=1)
         payment_id = Column(Integer, ForeignKey('payments.id'), nullable=False)
         coupon_id = Column(Integer, ForeignKey('coupons.id'))
         delivery_date = Column(DateTime)
@@ -26,8 +28,8 @@ class Order(BaseModel, Base):
         payment_status = Column(Integer)
         final_price = Column(DECIMAL(10, 2), nullable=False)
         order_items = relationship("OrderItem",
-                              backref="orders",
-                              cascade="all, delete, delete-orphan")
+                                   backref="orders",
+                                   cascade="all, delete, delete-orphan")
         # Define the relationship
         payment = relationship('Payment', back_populates='orders')
         user = relationship('User', back_populates='orders')
@@ -53,6 +55,7 @@ class Order(BaseModel, Base):
 
     @property
     def categories(self):
+        """categories list in order_items"""
         return list({item.product.category for item in self.order_items})
 
     '''@property
@@ -60,7 +63,8 @@ class Order(BaseModel, Base):
         """Calculate the final price after applying a coupon."""
         if self.coupon_id:
             coupon = models.storage.get(Coupon, self.coupon_id)
-            if coupon and coupon.start_date <= datetime.utcnow() <= coupon.end_date:
+            if coupon and coupon.start_date <= datetime.utcnow() <=
+            coupon.end_date:
                 return max(self.total_price - float(coupon.coupon_amount), 0)
         return self.total_price
 
