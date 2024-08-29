@@ -25,7 +25,7 @@ class Size(BaseModel, Base):
         __tablename__ = 'sizes'
         size_name = Column(String(255), unique=True, nullable=False)
         products = relationship("Product",
-		secondary=products_sizes)
+                                 secondary=products_sizes)
     else:
         size_name = ""
 

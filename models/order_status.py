@@ -5,7 +5,6 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-
 class OrderStatus(BaseModel, Base):
     """Representation of OrderStatus"""
     if models.storage_t == 'db':

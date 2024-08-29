@@ -5,8 +5,7 @@ from models.base_model import BaseModel, Base
 from models.coupon import Coupon
 from os import getenv
 import sqlalchemy
-from sqlalchemy import Column, String, Integer,
-	DECIMAL, ForeignKey, DateTime, ForeignKey
+from sqlalchemy import Column, String, Integer, DECIMAL, ForeignKey, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
 

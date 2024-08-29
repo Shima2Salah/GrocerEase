@@ -5,7 +5,6 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import relationship
 
-
 class AdminRole(BaseModel, Base):
     """Representation of AdminRole"""
     if models.storage_t == 'db':

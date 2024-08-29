@@ -12,7 +12,7 @@ class Delivery(BaseModel, Base):
         delivery_name = Column(String(100), nullable=False)
         contact_number = Column(String(50), nullable=False)
         address = Column(String(100), nullable=False)
-        is_active = Column(Integer, nullable=False)
+        is_active = Column(Integer, nullable=False)  # Using Integer to match schema
 
         orders = relationship('Order', back_populates='delivery')
     else:

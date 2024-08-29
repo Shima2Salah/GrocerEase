@@ -9,11 +9,11 @@ from sqlalchemy.orm import relationship
 
 if models.storage_t == 'db':
     products_colors = Table('products_colors', Base.metadata,
-				Column('product_id', Integer,
+                          Column('product_id', Integer,
                                  ForeignKey('products.id', onupdate='CASCADE',
                                             ondelete='CASCADE'),
                                  primary_key=True),
-                   	       Column('color_id', Integer,
+                          Column('color_id', Integer,
                                  ForeignKey('colors.id', onupdate='CASCADE',
                                             ondelete='CASCADE'),
                                  primary_key=True))
@@ -25,7 +25,7 @@ class Color(BaseModel, Base):
         __tablename__ = 'colors'
         color_name = Column(String(255), unique=True, nullable=False)
         products = relationship("Product",
-		secondary=products_colors)
+                                 secondary=products_colors)
     else:
         color_name = ""
 

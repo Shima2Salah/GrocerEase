@@ -5,7 +5,6 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Integer, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
-
 class Supplier(BaseModel, Base):
     """Representation of Supplier"""
     if models.storage_t == 'db':

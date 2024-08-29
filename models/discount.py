@@ -5,7 +5,6 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Integer, Numeric, DateTime
 from sqlalchemy.orm import relationship
 
-
 class Discount(BaseModel, Base):
     """Representation of Discount"""
     if models.storage_t == 'db':

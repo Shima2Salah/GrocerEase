@@ -7,10 +7,9 @@ from sqlalchemy.orm import relationship
 from hashlib import md5
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 class Admin(BaseModel, Base):
-
-
-    """Representation of Admin"""
+    """Representation of Admin class"""
     if models.storage_t == 'db':
         __tablename__ = 'admins'
         admin_name = Column(String(100), nullable=False)
@@ -18,7 +17,7 @@ class Admin(BaseModel, Base):
         image_url = Column(String(255))
         password_hash = Column(String(1024), nullable=False)
         admin_role_id = Column(Integer, ForeignKey('admin_roles.id'),
-	nullable=False)
+                               nullable=False)
         status = Column(Integer)  # This field is optional based on your schema
         products = relationship(
             "Product",
@@ -26,8 +25,7 @@ class Admin(BaseModel, Base):
             cascade="all, delete, delete-orphan"
         )
         # Relationship to Category
-        suppliers = relationship('Supplier', 
-                                 back_populates='admin', 
+        suppliers = relationship('Supplier', back_populates='admin',
                                  overlaps="admin_relationship")
         categories = relationship('Category', back_populates='admin')
         products = relationship('Product', back_populates='admin')
@@ -43,7 +41,6 @@ class Admin(BaseModel, Base):
     '''def __init__(self, *args, **kwargs):
         """Initializes Admin"""
         super().__init__(*args, **kwargs)'''
-
     '''def __setattr__(self, name, value):
         """to set an encryption password"""
         if name == "password":
@@ -53,8 +50,8 @@ class Admin(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """Initializes Admin"""
         if "password" in kwargs:
-            kwargs["password_hash"] =self.hash_password
-            (kwargs.pop("password"))
+            kwargs["password_hash"] = self.hash_password(
+                kwargs.pop("password"))
         super().__init__(*args, **kwargs)
 
     @staticmethod
