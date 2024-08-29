@@ -16,7 +16,7 @@ sudo pip3 install mysqlclient
 sudo apt-get install python3-mysql.connector
 deactivate
 ________________________________________________
-"working on mysql db"
+"working on mysql  db"
 $ python3
 >>> import MySQLdb
 >>> MySQLdb.version_info 
