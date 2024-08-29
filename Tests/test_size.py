@@ -138,3 +138,39 @@ class TestSize:
         mocker.patch('models.base_model.BaseModel.__init__', return_value=None)
         size = Size()
         assert size.size_name is None
+
+    def test_correct_table_name_db_storage(self, mocker):
+        from models.size import Size
+        from models.base_model import BaseModel
+        from sqlalchemy import Column, String, Integer, ForeignKey, Table
+        from sqlalchemy.orm import relationship
+
+        mocker.patch('models.base_model.Base.__subclasses__', return_value=[Size])
+        mocker.patch('models.storage_t', return_value='db')
+        mocker.patch('models.base_model.Base.metadata', create=True)
+        mocker.patch('sqlalchemy.Column')
+        mocker.patch('sqlalchemy.ForeignKey')
+        mocker.patch('sqlalchemy.Table')
+
+        size = Size()
+
+        assert size.__tablename__ == 'sizes'
+
+    def test_handles_duplicate_size_name_db_storage(self, mocker):
+        from models.size import Size
+        from models.base_model import BaseModel
+        from sqlalchemy import Column, String, Integer, ForeignKey, Table
+        from sqlalchemy.orm import relationship
+
+        mocker.patch('models.base_model.Base.__subclasses__', return_value=[Size])
+        mocker.patch('models.storage_t', return_value='db')
+        mocker.patch('models.base_model.Base.metadata', create=True)
+        mocker.patch('sqlalchemy.Column')
+        mocker.patch('sqlalchemy.ForeignKey')
+        mocker.patch('sqlalchemy.Table')
+
+        size1 = Size(size_name="Large")
+        size2 = Size(size_name="Large")
+
+        assert size1.size_name == "Large"
+        assert size2.size_name == "Large"
