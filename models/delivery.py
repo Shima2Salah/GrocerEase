@@ -5,6 +5,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 
+
 class Delivery(BaseModel, Base):
     """Representation of Delivery"""
     if models.storage_t == 'db':
@@ -12,7 +13,7 @@ class Delivery(BaseModel, Base):
         delivery_name = Column(String(100), nullable=False)
         contact_number = Column(String(50), nullable=False)
         address = Column(String(100), nullable=False)
-        is_active = Column(Integer, nullable=False)  # Using Integer to match schema
+        is_active = Column(Integer, nullable=False)
 
         orders = relationship('Order', back_populates='delivery')
     else:
