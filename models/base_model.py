@@ -18,6 +18,7 @@ if models.storage_t == "db":
 else:
     Base = object
 
+
 class BaseModel:
     """The BaseModel class from which future classes will be derived"""
 
@@ -44,7 +45,7 @@ class BaseModel:
             else:
                 self.updated_at = datetime.utcnow()
         else:
-            self.id = None  # Allow the database to auto-generate this if in 'db' mode
+            self.id = None
             self.created_at = datetime.utcnow()
             self.updated_at = self.created_at
 
@@ -75,7 +76,7 @@ class BaseModel:
         return new_dict
 
     def delete(self):
-        """Soft delete the current instance by setting 'is_deleted' and 'deleted_at'"""
+        """Soft delete the current instance"""
         if models.storage_t == "db":
             self.is_deleted = True
             self.deleted_at = datetime.utcnow()
