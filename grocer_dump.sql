@@ -314,9 +314,9 @@ INSERT INTO deliveries (delivery_name, contact_number, address, is_active, creat
 -- Insert data into admins table
 INSERT INTO admins (admin_name, email, image_url, password_hash, admin_role_id, status, created_at, updated_at, is_deleted, deleted_at) VALUES
 ('John Doe', 'john.doe@example.com', 'images/john.jpg', 'scrypt:32768:8:1$o1ZrINufvzvjYtSZ$b83c2094292cd85132cdd7eac55f5204f587ec5e4272b8685daa903c3149562b96b7c0ad5a9662d2c3daec7d0e0b5d0f69dd4cf55e1cbe68558fe8fec32e9501', 1, 1, NOW(), NOW(), FALSE, NULL),
-('Jane Smith', 'jane.smith@example.com', 'images/jane.jpg', 'hashed_password2', 2, 1, NOW(), NOW(), FALSE, NULL),
+('Jane Smith', 'jane.smith@example.com', 'images/jane.jpg', 'scrypt:32768:8:1$Ofd4FxBQblNCb42e$d83caa44dd545c8d282e6c527f1cbbd9d59dfd067821588c404cb608549f49621c70232012cf9a0b27843ca5e68eae0500e2164cc09d5f0d8573c8c028c34ff1', 2, 1, NOW(), NOW(), FALSE, NULL),
 ('Hala Ali', 'hala.ali@example.com', 'images/hala.jpg', 'scrypt:32768:8:1$Ofd4FxBQblNCb42e$d83caa44dd545c8d282e6c527f1cbbd9d59dfd067821588c404cb608549f49621c70232012cf9a0b27843ca5e68eae0500e2164cc09d5f0d8573c8c028c34ff1', 3, 1, NOW(), NOW(), FALSE, NULL),
-('Mark Johnson', 'mark.johnson@example.com', 'images/mark.jpg', 'hashed_password3', 4, 1, NOW(), NOW(), FALSE, NULL);
+('Mark Johnson', 'mark.johnson@example.com', 'images/mark.jpg', 'scrypt:32768:8:1$Ofd4FxBQblNCb42e$d83caa44dd545c8d282e6c527f1cbbd9d59dfd067821588c404cb608549f49621c70232012cf9a0b27843ca5e68eae0500e2164cc09d5f0d8573c8c028c34ff1', 4, 1, NOW(), NOW(), FALSE, NULL);
 
 -- Insert data into categories table
 INSERT INTO categories (category_name, image_url, created_by_admin_id, created_at, updated_at, is_deleted, deleted_at) VALUES
