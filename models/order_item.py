@@ -29,5 +29,3 @@ class OrderItem(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """initializes OrderItem"""
         super().__init__(*args, **kwargs)
-
-
