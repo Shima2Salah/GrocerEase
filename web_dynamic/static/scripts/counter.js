@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const amountInput = document.getElementById('amount');
     const minOrderAmount = parseFloat(amountInput.min);
-
+    // counter function 
     // Ensure the input value is a number
     amountInput.value = parseFloat(amountInput.value) || minOrderAmount;
 
