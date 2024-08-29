@@ -5,6 +5,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Integer, Numeric, DateTime
 from sqlalchemy.orm import relationship
 
+
 class Discount(BaseModel, Base):
     """Representation of Discount"""
     if models.storage_t == 'db':
@@ -14,7 +15,7 @@ class Discount(BaseModel, Base):
         end_date = Column(DateTime, nullable=False)
         products = relationship(
             "Product",
-            backref="discounts",  # Singular form since this is a many-to-one relationship
+            backref="discounts",
             cascade="all, delete, delete-orphan")
         products = relationship('Product', back_populates='discount')
         # Override BaseModel columns to remove them
