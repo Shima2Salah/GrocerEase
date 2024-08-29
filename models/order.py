@@ -12,7 +12,7 @@ from datetime import datetime
 
 
 class Order(BaseModel, Base):
-    """Representation of Order """
+    """Representation of Orders """
     if models.storage_t == "db":
         __tablename__ = 'orders'
         user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
