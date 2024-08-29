@@ -26,10 +26,10 @@ class Admin(BaseModel, Base):
             cascade="all, delete, delete-orphan"
         )
         # Relationship to Category
-        suppliers = relationship(
-                'Supplier', back_populates='admin', 
-		overlaps="admin_relationship")
-	categories = relationship('Category', back_populates='admin')
+        suppliers = relationship('Supplier', 
+                                 back_populates='admin', 
+                                 overlaps="admin_relationship")
+        categories = relationship('Category', back_populates='admin')
         products = relationship('Product', back_populates='admin')
         admin_role = relationship('AdminRole', back_populates='admins')
     else:
@@ -53,9 +53,9 @@ class Admin(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """Initializes Admin"""
         if "password" in kwargs:
-            kwargs["password_hash"] =
-	self.hash_password(kwargs.pop("password"))
-	super().__init__(*args, **kwargs)
+            kwargs["password_hash"] =self.hash_password
+            (kwargs.pop("password"))
+        super().__init__(*args, **kwargs)
 
     @staticmethod
     def hash_password(password):
@@ -69,8 +69,8 @@ class Admin(BaseModel, Base):
     @staticmethod
     def get_by_username(cls, username):
         """Retrieve an Admin instance by username."""
-        return models.storage.session.query(cls)
-        .filter_by(username=username).first()
+        return (models.storage.session.query
+                (cls).filter_by(username=username).first())
 
     def __setattr__(self, name, value):
         """Custom setter to handle password hashing."""
