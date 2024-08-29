@@ -24,3 +24,5 @@ class Payment(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """Initializes Payment"""
         super().__init__(*args, **kwargs)
+
+
