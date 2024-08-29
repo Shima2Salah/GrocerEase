@@ -277,3 +277,17 @@ class TestSupplier:
         expected_keys = ['supplier_name', 'contact_number', 'address', 'created_by_admin_id', 'company_name', 'email', 'notes']
         unexpected_attributes = [attr for attr in supplier.__dict__ if attr not in expected_keys]
         assert not unexpected_attributes, f"Unexpected attributes found: {unexpected_attributes}"
+
+    def test_supplier_instance_saved_to_database(self):
+        supplier_data = {
+            'supplier_name': 'Test Supplier',
+            'contact_number': '1234567890',
+            'address': '123 Test St',
+            'created_by_admin_id': 1,
+            'company_name': 'Test Company',
+            'email': 'test@supplier.com',
+            'notes': 'Test notes'
+        }
+        supplier = Supplier(**supplier_data)
+        supplier.save()
+        assert supplier.id is not None
