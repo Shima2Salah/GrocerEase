@@ -4,7 +4,7 @@
 
 - **Ahmed Ibrahim Ali Ahmed**: Backend Developer
 - **Habiba Fernas**: Backend Developer
-- **Shimaa Salah Sayed Abdelrhman**: Database Administrator
+- **Shimaa Salah Sayed Abdelrhman**: Database Administrator , Backend Developer 
 - **Mohamed Arafa**: Frontend Developer
 
 ## Project Overview
